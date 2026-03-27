@@ -479,9 +479,9 @@ textarea.form-control{resize:none;height:80px;}
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
-          <div class="metric-val">3 avr.</div>
+          <div class="metric-val" id="next-meeting-val">--</div>
           <div class="metric-label">Prochaine réunion</div>
-          <span class="metric-delta delta-neutral">Le Vintage</span>
+          <span class="metric-delta delta-neutral" id="next-meeting-place"></span>
         </div>
       </div>
       <div class="charts-row">
@@ -905,6 +905,8 @@ const MON=['Jan','F\u00e9v','Mar','Avr','Mai','Jun','Jul','Ao\u00fb','Sep','Oct'
 const MONF=['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
 const TL={regular:'Petit-d\u00e9jeuner',special:'R\u00e9union sp\u00e9ciale',agm:'Assembl\u00e9e G\u00e9n\u00e9rale'};
 const TC={regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
+function getMtgType(t){ return TL[t]||t||'R\u00e9union'; }
+function getMtgClass(t){ return TC[t]||'tb-regular'; }
 const SL={new:'Nouveau',progress:'En cours',done:'R\u00e9alis\u00e9'};
 const SC={new:'st-new',progress:'st-prog',done:'st-done'};
 
@@ -1260,7 +1262,7 @@ function renderMtgList(){
         <span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${m.place}</span>
         ${m.capacity?`<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>${m.capacity} places</span>`:''}
       </div>
-      <span class="mtg-badge ${TC[m.type]}">${TL[m.type]}</span>
+      <span class="mtg-badge ${getMtgClass(m.type)}">${getMtgType(m.type)}</span>
     </div>`;
     w.appendChild(c);
   });
@@ -1306,7 +1308,7 @@ function openMtgDetail(m){
         <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1">${String(dt.getDate()).padStart(2,'0')}</div>
         <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:2px">${MON[dt.getMonth()]} ${dt.getFullYear()}</div>
       </div>
-      <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px">${m.title}</div><span class="mtg-badge ${TC[m.type]}">${TL[m.type]}</span></div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px">${m.title}</div><span class="mtg-badge ${getMtgClass(m.type)}">${getMtgType(m.type)}</span></div>
     </div>
     <div class="info-row"><span class="info-key">Heure</span><span class="info-val">${m.time}</span></div>
     <div class="info-row"><span class="info-key">Lieu</span><span class="info-val">${m.place}</span></div>
