@@ -329,7 +329,7 @@ textarea.form-control{resize:none;height:80px;}
       </div>
     </div>
     <label class="lf-label">Identifiant</label>
-    <input class="lf-input" type="text" id="li-user" placeholder="votre@email.fr" autocomplete="username">
+    <input class="lf-input" type="text" id="li-user" placeholder="identifiant ou email" autocomplete="username">
     <label class="lf-label">Mot de passe</label>
     <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">Se connecter</button>
@@ -801,7 +801,7 @@ let recos=[];
 let meetings=[];
 
 let accounts=[
-  {name:'Administrateur',username:'cafedesaffaires.cholet@gmail.com',email:'cafedesaffaires.cholet@gmail.com',role:'admin',status:'active',created:'27/03/2026'},
+  {name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',role:'admin',status:'active',created:'27/03/2026'},
 ];
 
 const caData={2025:[18,22,31,27,24,19,21,28,25,32,0,0],2024:[14,17,22,20,19,16,18,23,21,25,27,29]};
@@ -821,7 +821,7 @@ function doLogin(){
   const p=document.getElementById('li-pass').value;
   const err=document.getElementById('li-err');
   // Compte admin fixe
-  if(u==='cafedesaffaires.cholet@gmail.com'&&p==='admin1234'){
+  if((u==='admin'||u==='cafedesaffaires.cholet@gmail.com')&&p==='admin1234'){
     curUser={username:u,role:'admin',name:'Administrateur'};
     err.textContent='';
     document.getElementById('login-screen').style.display='none';
@@ -1104,9 +1104,9 @@ function renderAccounts(){
     <td><span class="role-badge ${a.role==='admin'?'rb-admin':'rb-member'}">${a.role==='admin'?'Admin':'Membre'}</span></td>
     <td><span class="${a.status==='active'?'sb-active':'sb-pending'}">${a.status==='active'?'Actif':'En attente'}</span></td>
     <td><div class="td-acts">
-      ${a.username!=='cafedesaffaires.cholet@gmail.com'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
+      ${a.a.username!=='admin'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
       ${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''}
-      ${a.username!=='cafedesaffaires.cholet@gmail.com'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
+      ${a.a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
     </div></td>`;
     tb.appendChild(tr);
   });
