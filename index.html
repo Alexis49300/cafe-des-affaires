@@ -5,15 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Le Café des Affaires</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
-:root {
-  --brown:#9B5E1E; --brown-dark:#6B3F10; --brown-deep:#3D2008;
-  --gold:#C8901A; --gold-light:#E8B84B; --gold-pale:#F5E6C8;
-  --cream:#FDF8F2; --cream-dark:#F5EDE0; --white:#FFFFFF;
-  --text-primary:#2C1A08; --text-secondary:#7A5230; --text-muted:#B08A6A;
-  --border:rgba(155,94,30,0.15); --border-strong:rgba(155,94,30,0.3);
-  --shadow:0 2px 16px rgba(61,32,8,0.08); --shadow-md:0 4px 24px rgba(61,32,8,0.12);
-}
+:root{--brown:#9B5E1E;--brown-dark:#6B3F10;--brown-deep:#3D2008;--gold:#C8901A;--gold-light:#E8B84B;--gold-pale:#F5E6C8;--cream:#FDF8F2;--cream-dark:#F5EDE0;--white:#FFFFFF;--text-primary:#2C1A08;--text-secondary:#7A5230;--text-muted:#B08A6A;--border:rgba(155,94,30,0.15);--border-strong:rgba(155,94,30,0.3);--shadow:0 2px 16px rgba(61,32,8,0.08);--shadow-md:0 4px 24px rgba(61,32,8,0.12);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-primary);min-height:100vh;overflow-x:hidden;}
 
@@ -28,8 +22,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .lf-input:focus{border-color:var(--gold);background:var(--white);}
 .btn-login{width:100%;padding:12px;background:var(--gold);color:white;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
 .btn-login:hover{background:var(--brown);}
-.login-hint{font-size:11px;color:var(--text-muted);text-align:center;margin-top:14px;line-height:1.8;}
-.login-hint code{background:var(--cream-dark);padding:1px 5px;border-radius:4px;font-family:monospace;}
 .login-error{font-size:12px;color:#C0392B;text-align:center;margin-top:8px;min-height:18px;}
 
 /* LAYOUT */
@@ -63,7 +55,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .topbar{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50;}
 .topbar-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:var(--text-primary);flex:1;}
 .topbar-actions{display:flex;align-items:center;gap:10px;}
-.btn-icon{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;}
+.btn-icon{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;position:relative;}
 .btn-icon:hover{background:var(--cream-dark);}
 .btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;}
 .btn-primary{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gold);color:white;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
@@ -80,7 +72,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 /* DASHBOARD */
 .dash-hero{background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown) 100%);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;}
 .dash-hero::before{content:'';position:absolute;right:-20px;top:-30px;width:200px;height:200px;border-radius:50%;border:40px solid rgba(200,144,26,.12);}
-.dash-hero::after{content:'';position:absolute;right:60px;bottom:-50px;width:140px;height:140px;border-radius:50%;border:30px solid rgba(200,144,26,.08);}
 .hero-text h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--gold-light);margin-bottom:6px;}
 .hero-text p{font-size:14px;color:rgba(255,255,255,.55);}
 .hero-stat{text-align:right;position:relative;z-index:1;}
@@ -140,7 +131,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 
 /* RECOS */
 .reco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
-.reco-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:box-shadow .2s,border-color .2s;cursor:pointer;}
+.reco-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:box-shadow .2s,border-color .2s;position:relative;}
 .reco-card:hover{box-shadow:var(--shadow-md);border-color:var(--gold);}
 .reco-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .reco-avs{display:flex;align-items:center;}
@@ -156,6 +147,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .reco-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
 .reco-date{font-size:11px;color:var(--text-muted);}
 .reco-amt{font-size:12px;font-weight:500;color:var(--brown);background:var(--gold-pale);padding:3px 10px;border-radius:20px;}
+.reco-edit-btn{display:none;position:absolute;top:14px;right:14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;}
+.reco-card:hover .reco-edit-btn{display:block;}
 
 /* PLANNING */
 .plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
@@ -171,12 +164,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .cal-day{min-height:76px;padding:8px 6px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;}
 .cal-day:nth-child(7n){border-right:none;}
 .cal-day:hover{background:var(--cream);}
-.cal-day.other .cal-dn{color:var(--border-strong);color:rgba(155,94,30,.3);}
+.cal-day.other .cal-dn{color:rgba(155,94,30,.3);}
 .cal-day.today{background:#FFF8EE;}
 .cal-day.today .cal-dn{background:var(--gold);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
 .cal-dn{font-size:13px;font-weight:500;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
 .cal-evt{font-size:10px;background:var(--gold-pale);color:var(--brown);border-radius:4px;padding:2px 5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid var(--gold);cursor:pointer;}
 .cal-evt:hover{background:var(--gold);color:white;}
+.cal-evt-guest{background:#F0E8F8;color:#5E2E8B;border-left-color:#5E2E8B;}
 .meetings-list{display:flex;flex-direction:column;gap:12px;}
 .mtg-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:16px;align-items:flex-start;transition:box-shadow .2s;cursor:pointer;}
 .mtg-card:hover{box-shadow:var(--shadow-md);}
@@ -207,6 +201,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .mst-box{text-align:center;}
 .mst-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--gold);}
 .mst-lbl{font-size:9px;color:var(--text-muted);margin-top:1px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* INVITES */
+.guests-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.guests-table{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.guests-table table{width:100%;border-collapse:collapse;}
+.guests-table th{padding:11px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;background:var(--cream-dark);border-bottom:1px solid var(--border);}
+.guests-table td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.guests-table tr:last-child td{border-bottom:none;}
+.guests-table tr:hover td{background:var(--cream);}
+.guest-tag{font-size:11px;background:#F0E8F8;color:#5E2E8B;padding:2px 8px;border-radius:20px;font-weight:500;}
 
 /* ADMIN */
 .admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
@@ -262,16 +266,27 @@ textarea.form-control{resize:none;height:80px;}
 .mini-reco{background:var(--cream);border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px;}
 .mini-reco-top{display:flex;justify-content:space-between;font-weight:500;margin-bottom:3px;}
 .mini-reco-desc{color:var(--text-secondary);}
-
-/* TEMP PASS BOX */
 .temp-box{background:var(--cream-dark);border:1px dashed var(--gold);border-radius:10px;padding:16px;text-align:center;margin-top:14px;}
 .temp-box-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
 .temp-box-val{font-family:monospace;font-size:18px;font-weight:700;color:var(--brown);letter-spacing:.1em;}
 .temp-box-hint{font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6;}
 .success-banner{background:#EAF5E9;border-radius:10px;padding:12px 14px;font-size:13px;color:#2E7D32;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.success-banner svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
 
-/* MOBILE NAV */
+/* NOTIFICATIONS */
+.notif-panel{position:fixed;top:60px;right:16px;width:320px;max-height:400px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-md);z-index:400;display:none;overflow:hidden;flex-direction:column;}
+.notif-panel.open{display:flex;}
+.notif-head{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.notif-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;}
+.notif-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-muted);}
+.notif-list{overflow-y:auto;flex:1;}
+.notif-item{padding:12px 18px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5;display:flex;gap:10px;align-items:flex-start;}
+.notif-item:last-child{border-bottom:none;}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#C0392B;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.notif-empty{padding:24px;text-align:center;color:var(--text-muted);font-size:13px;}
+.sync-banner{position:fixed;top:64px;right:16px;z-index:500;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:500;display:none;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.1);transition:opacity .4s;}
+
+/* MOBILE */
 .mob-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--brown-deep);padding:8px 0 16px;z-index:100;}
 .mob-nav-inner{display:flex;}
 .mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 2px;color:rgba(255,255,255,.45);font-size:9px;font-family:'DM Sans',sans-serif;transition:color .15s;}
@@ -279,7 +294,6 @@ textarea.form-control{resize:none;height:80px;}
 .mob-nav-btn.active{color:var(--gold-light);}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
 
-/* RESPONSIVE */
 @media(max-width:1100px){.metrics-row{grid-template-columns:1fr 1fr;}}
 @media(max-width:900px){.charts-row{grid-template-columns:1fr;}}
 @media(max-width:768px){
@@ -303,49 +317,14 @@ textarea.form-control{resize:none;height:80px;}
   .admin-stats{grid-template-columns:1fr 1fr;}
   .cal-evt{display:none;}
   .cal-day{min-height:48px;}
-  .acct-table{overflow-x:auto;}
 }
 @media(max-width:400px){.members-grid{grid-template-columns:1fr;}.metrics-row{grid-template-columns:1fr 1fr;}}
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
-
-/* Invites planning */
-.cal-evt-guest{background:#F0E8F8!important;color:#5E2E8B!important;border-left-color:#5E2E8B!important;}
-/* Edit reco btn */
-.reco-card{position:relative;}
-.reco-edit-btn{display:none;position:absolute;top:14px;right:14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;z-index:2;}
-.reco-card:hover .reco-edit-btn{display:block;}
-/* Guests table */
-.guests-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
-.guests-table{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.guests-table table{width:100%;border-collapse:collapse;}
-.guests-table th{padding:11px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;background:var(--cream-dark);border-bottom:1px solid var(--border);}
-.guests-table td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.guests-table tr:last-child td{border-bottom:none;}
-.guests-table tr:hover td{background:var(--cream);}
-.guest-tag{font-size:11px;background:#F0E8F8;color:#5E2E8B;padding:2px 8px;border-radius:20px;font-weight:500;}
-
-/* PANNEAU NOTIFICATIONS */
-.notif-panel{position:fixed;top:60px;right:16px;width:320px;max-height:400px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-md);z-index:400;display:none;overflow:hidden;flex-direction:column;}
-.notif-panel.open{display:flex;}
-.notif-head{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.notif-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;}
-.notif-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-muted);line-height:1;}
-.notif-list{overflow-y:auto;flex:1;}
-.notif-item{padding:12px 18px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:background .15s;}
-.notif-item:hover{background:var(--cream);}
-.notif-item:last-child{border-bottom:none;}
-.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-.notif-badge{position:absolute;top:10px;right:10px;background:#C0392B;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.btn-icon{position:relative;}
-.notif-empty{padding:24px;text-align:center;color:var(--text-muted);font-size:13px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
 
-<!-- =================== LOGIN =================== -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
@@ -355,26 +334,22 @@ textarea.form-control{resize:none;height:80px;}
         <circle cx="26" cy="26" r="8.5" fill="#C8901A"/>
         <path d="M41.5 25.5L46 25.5" stroke="#C8901A" stroke-width="2.5" stroke-linecap="round"/>
       </svg>
-      <div>
-        <div class="login-logo-name">Le Café des Affaires</div>
-        <div class="login-sub">Espace membres -- Connexion</div>
-      </div>
+      <div><div class="login-logo-name">Le Cafe des Affaires</div><div class="login-sub">Espace membres</div></div>
     </div>
     <label class="lf-label">Identifiant</label>
-    <input class="lf-input" type="text" id="li-user" placeholder="identifiant" autocomplete="username">
+    <input class="lf-input" type="text" id="li-user" placeholder="identifiant">
     <label class="lf-label">Mot de passe</label>
-    <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn-login" onclick="doLogin()">Se connecter</button>
+    <input class="lf-input" type="password" id="li-pass" placeholder="mot de passe">
+    <button class="btn-login" id="btn-login">Se connecter</button>
     <div class="login-error" id="li-err"></div>
   </div>
 </div>
 
-<!-- =================== APP =================== -->
+<!-- APP -->
 <div class="app-shell" id="app-shell" style="display:none;">
-  <!-- Bannière sync Google Sheets -->
-  <div id="sync-banner" style="display:none;position:fixed;top:60px;right:16px;z-index:500;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:500;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.12);transition:opacity .4s;">
-  </div>
+  <div id="sync-banner" class="sync-banner"></div>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -383,63 +358,60 @@ textarea.form-control{resize:none;height:80px;}
         <circle cx="20" cy="20" r="7" fill="#C8901A"/>
         <path d="M32.5 19.5L36 19.5" stroke="#C8901A" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <div><span class="logo-name">Le Café<br>des Affaires</span></div>
+      <div><span class="logo-name">Le Cafe<br>des Affaires</span></div>
     </div>
     <nav class="sidebar-nav">
-      <button class="nav-item active" onclick="goPage('dashboard',this)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        Tableau de bord
+      <button class="nav-item active" id="nav-dashboard" onclick="goPage('dashboard',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tableau de bord
       </button>
-      <button class="nav-item" onclick="goPage('planning',this)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Planning
+      <button class="nav-item" id="nav-planning" onclick="goPage('planning',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planning
       </button>
-      <button class="nav-item" onclick="goPage('recos',this)">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Recommandations
-        <span class="nav-badge" id="reco-badge">6</span>
+      <button class="nav-item" id="nav-recos" onclick="goPage('recos',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Recommandations
+        <span class="nav-badge" id="reco-badge">0</span>
       </button>
-      <button class="nav-item" onclick="goPage('members',this)">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Membres
-        <span class="nav-badge" id="mbr-badge">12</span>
+      <button class="nav-item" id="nav-members" onclick="goPage('members',this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Membres
+        <span class="nav-badge" id="mbr-badge">0</span>
       </button>
-      <button class="nav-item" onclick="goPage('guests',this)">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Invites
+      <button class="nav-item" id="nav-guests" onclick="goPage('guests',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Invites
         <span class="nav-badge" id="guests-badge">0</span>
       </button>
       <div class="nav-sep" id="admin-sep">Administration</div>
       <button class="nav-item" id="nav-admin" onclick="goPage('admin',this)">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Gestion des comptes
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Gestion des comptes
       </button>
     </nav>
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="user-av" id="sb-av">AD</div>
-        <div class="user-info">
-          <div class="user-name" id="sb-name">Admin</div>
-          <div class="user-role" id="sb-role">Administrateur</div>
-        </div>
+        <div class="user-info"><div class="user-name" id="sb-name">Admin</div><div class="user-role" id="sb-role">Administrateur</div></div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">
-        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Se déconnecter
+      <button class="btn-logout" id="btn-logout">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Se deconnecter
       </button>
     </div>
   </aside>
-  <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar-overlay" id="sb-overlay"></div>
+
+  <!-- NOTIF PANEL -->
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-head"><span class="notif-title">Notifications</span><button class="notif-close" id="notif-close">x</button></div>
+    <div class="notif-list" id="notif-list"></div>
+  </div>
 
   <main class="main">
     <header class="topbar">
-      <button class="mob-menu-btn" onclick="toggleSidebar()">
-        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+      <button class="mob-menu-btn" id="mob-menu-btn"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       <div class="topbar-title" id="page-title">Tableau de bord</div>
       <div class="topbar-actions">
-        <button class="btn-icon" id="notif-btn" onclick="toggleNotif()" title="Notifications" style="position:relative;"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge" id="notif-badge" style="display:none">0</span></button>
-        <button class="btn-primary" onclick="openRecoModal()">
+        <button class="btn-icon" id="notif-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+        </button>
+        <button class="btn-primary" id="btn-new-reco">
           <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           <span>Nouvelle reco</span>
         </button>
@@ -449,63 +421,54 @@ textarea.form-control{resize:none;height:80px;}
     <!-- DASHBOARD -->
     <section class="page active" id="page-dashboard">
       <div class="dash-hero">
-        <div class="hero-text">
-          <h2 id="dash-greet">Bonjour 👋</h2>
-          <p>Bienvenue sur votre espace club -- mars 2026</p>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-val" id="dash-ca-total">--</div>
-          <div class="hero-stat-lbl">CA généré en 2025</div>
-        </div>
+        <div class="hero-text"><h2 id="dash-greet">Bonjour !</h2><p>Bienvenue sur votre espace club</p></div>
+        <div class="hero-stat"><div class="hero-stat-val" id="dash-ca-hero">--</div><div class="hero-stat-lbl">CA total (recos)</div></div>
       </div>
       <div class="metrics-row">
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <div class="metric-val" id="dash-ca-val">--</div>
-          <div class="metric-label">CA total (recos)</div>
-          <span class="metric-delta delta-up">+18%</span>
+          <div class="metric-val" id="dash-ca-val">--</div><div class="metric-label">CA total (recos)</div>
+          <span class="metric-delta delta-up" id="dash-ca-delta"></span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="metric-val" id="dash-invites-val">--</div>
-          <div class="metric-label">Invités</div>
-          <span class="metric-delta delta-up" id="dash-invites-delta"></span>
+          <div class="metric-val" id="dash-invites-val">--</div><div class="metric-label">Invites</div>
+          <span class="metric-delta delta-neutral" id="dash-invites-delta"></span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div class="metric-val" id="dash-recos-val">--</div>
-          <div class="metric-label">Recommandations</div>
+          <div class="metric-val" id="dash-recos-val">--</div><div class="metric-label">Recommandations</div>
           <span class="metric-delta delta-up" id="dash-recos-delta"></span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
-          <div class="metric-val" id="next-meeting-val">--</div>
-          <div class="metric-label">Prochaine réunion</div>
+          <div class="metric-val" id="next-meeting-val">--</div><div class="metric-label">Prochaine reunion</div>
           <span class="metric-delta delta-neutral" id="next-meeting-place"></span>
         </div>
       </div>
       <div class="charts-row">
         <div class="card">
           <div class="card-header">
-            <span class="card-title">Chiffre d'affaires mensuel</span>
+            <span class="card-title">CA mensuel (recos)</span>
             <div class="year-tabs">
-              <button class="year-tab active" onclick="switchYear(2025,this)">2025</button>
-              <button class="year-tab" onclick="switchYear(2024,this)">2024</button>
+              <button class="year-tab active" id="tab-2026" onclick="switchYear(2026,this)">2026</button>
+              <button class="year-tab" id="tab-2025" onclick="switchYear(2025,this)">2025</button>
             </div>
           </div>
           <div class="card-body"><div class="bar-chart" id="ca-chart"></div></div>
         </div>
         <div class="card">
-          <div class="card-header"><span class="card-title">Répartition secteurs</span></div>
+          <div class="card-header"><span class="card-title">Repartition secteurs</span></div>
           <div class="card-body">
             <div class="donut-wrap">
               <canvas id="donut-chart" width="120" height="120" style="display:block;margin:0 auto;"></canvas>
               <div class="donut-legend" id="donut-legend"></div>
             </div>
           </div>
-        </div>     </div>
+        </div>
+      </div>
       <div class="card">
-        <div class="card-header"><span class="card-title">Activité récente</span></div>
+        <div class="card-header"><span class="card-title">Activite recente</span></div>
         <div class="activity-list" id="activity-list"><div style="padding:20px;color:var(--text-muted);font-size:13px">Chargement...</div></div>
       </div>
     </section>
@@ -514,13 +477,12 @@ textarea.form-control{resize:none;height:80px;}
     <section class="page" id="page-planning">
       <div class="plan-header">
         <div class="month-nav">
-          <button class="mnav-btn" onclick="changeMonth(-1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="mnav-btn" id="btn-prev-month"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
           <div class="month-title" id="month-title">Avril 2026</div>
-          <button class="mnav-btn" onclick="changeMonth(1)"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="mnav-btn" id="btn-next-month"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
         </div>
-        <button class="btn-primary" id="btn-add-mtg" onclick="openMtgModal()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Ajouter une réunion</span>
+        <button class="btn-primary" id="btn-add-mtg">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter une reunion</span>
         </button>
       </div>
       <div class="cal-grid">
@@ -531,28 +493,23 @@ textarea.form-control{resize:none;height:80px;}
         <div class="cal-days" id="cal-days"></div>
       </div>
       <div class="card">
-        <div class="card-header"><span class="card-title">Réunions du mois</span></div>
+        <div class="card-header"><span class="card-title">Reunions du mois</span></div>
         <div style="padding:16px 20px;" id="mtg-list"></div>
       </div>
     </section>
 
-    <!-- RECOMMANDATIONS -->
+    <!-- RECOS -->
     <section class="page" id="page-recos">
       <div class="toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" placeholder="Rechercher…" oninput="filterRecos(this.value)">
+          <input class="search-input" id="search-recos" type="text" placeholder="Rechercher...">
         </div>
-        <select class="filter-sel" onchange="filterRecosSt(this.value)">
+        <select class="filter-sel" id="filter-reco-status">
           <option value="">Tous les statuts</option>
-          <option value="new">Nouveau</option>
-          <option value="progress">En cours</option>
-          <option value="done">Réalisé</option>
+          <option value="new">Nouveau</option><option value="progress">En cours</option><option value="done">Realise</option>
         </select>
-        <button class="btn-primary" onclick="openRecoModal()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Ajouter</span>
-        </button>
+        <button class="btn-primary" id="btn-add-reco2"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter</span></button>
       </div>
       <div class="reco-grid" id="reco-grid"></div>
     </section>
@@ -562,115 +519,154 @@ textarea.form-control{resize:none;height:80px;}
       <div class="toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" placeholder="Rechercher un membre…" oninput="filterMbr(this.value)">
+          <input class="search-input" id="search-members" type="text" placeholder="Rechercher un membre...">
         </div>
-        <select class="filter-sel" onchange="filterMbrSector(this.value)">
+        <select class="filter-sel" id="filter-sector">
           <option value="">Tous les secteurs</option>
-          <option>Finance</option><option>Conseil</option><option>Tech</option>
-          <option>Juridique</option><option>Immobilier</option><option>Marketing</option>
-          <option>BTP</option><option>Formation</option><option>Santé</option>
+          <option>Finance</option><option>Conseil</option><option>Tech</option><option>Juridique</option>
+          <option>Immobilier</option><option>Marketing</option><option>BTP</option><option>Formation</option><option>Sante</option>
         </select>
       </div>
       <div class="members-grid" id="members-grid"></div>
     </section>
-
 
     <!-- INVITES -->
     <section class="page" id="page-guests">
       <div class="guests-toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="search-input" type="text" placeholder="Rechercher un invite..." oninput="filterGuests(this.value)">
+          <input class="search-input" id="search-guests" type="text" placeholder="Rechercher un invite...">
         </div>
-        <button class="btn-primary" onclick="openGuestModal()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Ajouter un invite</span>
-        </button>
+        <button class="btn-primary" id="btn-add-guest"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Ajouter un invite</span></button>
       </div>
       <div class="guests-table">
-        <table>
-          <thead><tr><th>Nom</th><th>Societe</th><th>Date</th><th>Invite par</th><th>Notes</th><th>Actions</th></tr></thead>
-          <tbody id="guests-tbody"></tbody>
-        </table>
+        <table><thead><tr><th>Nom</th><th>Societe</th><th>Date</th><th>Invite par</th><th>Notes</th><th>Actions</th></tr></thead>
+        <tbody id="guests-tbody"></tbody></table>
       </div>
     </section>
+
     <!-- ADMIN -->
     <section class="page" id="page-admin">
       <div class="admin-stats">
-        <div class="metric-card">
-          <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="metric-val" id="as-total">13</div>
-          <div class="metric-label">Comptes au total</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <div class="metric-val" id="as-active">12</div>
-          <div class="metric-label">Comptes actifs</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-          <div class="metric-val" id="as-pending">1</div>
-          <div class="metric-label">En attente</div>
-        </div>
+        <div class="metric-card"><div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="metric-val" id="as-total">0</div><div class="metric-label">Comptes total</div></div>
+        <div class="metric-card"><div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="metric-val" id="as-active">0</div><div class="metric-label">Comptes actifs</div></div>
+        <div class="metric-card"><div class="metric-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="metric-val" id="as-pending">0</div><div class="metric-label">En attente</div></div>
       </div>
       <div class="admin-section-title">
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Comptes membres
-        <button class="btn-primary" style="margin-left:auto;" onclick="openCreateAcct()">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Créer un compte
-        </button>
+        <button class="btn-primary" id="btn-create-acct" style="margin-left:auto"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Creer un compte</button>
       </div>
       <div class="acct-table">
-        <table>
-          <thead><tr>
-            <th>Membre</th><th>Identifiant</th><th>Mot de passe</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="acct-tbody"></tbody>
-        </table>
+        <table><thead><tr><th>Membre</th><th>Identifiant</th><th>Mot de passe</th><th>Role</th><th>Statut</th><th>Cree le</th><th>Actions</th></tr></thead>
+        <tbody id="acct-tbody"></tbody></table>
       </div>
     </section>
   </main>
-
-  <!-- PANNEAU NOTIFICATIONS -->
-  <div class="notif-panel" id="notif-panel">
-    <div class="notif-head">
-      <span class="notif-title">Notifications</span>
-      <button class="notif-close" onclick="toggleNotif()">x</button>
-    </div>
-    <div class="notif-list" id="notif-list"></div>
-  </div>
 </div>
 
-<!-- MOBILE BOTTOM NAV -->
+<!-- MOBILE NAV -->
 <nav class="mob-bottom-nav">
   <div class="mob-nav-inner">
-    <button class="mob-nav-btn active" onclick="goPage('dashboard',this,true)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tableau
-    </button>
-    <button class="mob-nav-btn" onclick="goPage('planning',this,true)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>Planning
-    </button>
-    <button class="mob-nav-btn" onclick="goPage('recos',this,true)">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Recos
-    </button>
-    <button class="mob-nav-btn" onclick="goPage('members',this,true)">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Membres
-    </button>
-    <button class="mob-nav-btn" onclick="goPage('guests',this,true)">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Invites
-    </button>
-    <button class="mob-nav-btn" id="mob-admin" onclick="goPage('admin',this,true)">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin
-    </button>
+    <button class="mob-nav-btn active" onclick="goPage('dashboard',this,true)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tableau</button>
+    <button class="mob-nav-btn" onclick="goPage('planning',this,true)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>Planning</button>
+    <button class="mob-nav-btn" onclick="goPage('recos',this,true)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Recos</button>
+    <button class="mob-nav-btn" onclick="goPage('members',this,true)"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Membres</button>
+    <button class="mob-nav-btn" onclick="goPage('guests',this,true)"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Invites</button>
+    <button class="mob-nav-btn" id="mob-admin" onclick="goPage('admin',this,true)"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
   </div>
 </nav>
 
+<!-- MODALS -->
+<div class="modal-backdrop" id="m-reco">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Nouvelle recommandation</span><button class="modal-close" data-close="m-reco">x</button></div>
+    <div class="modal-body">
+      <div id="f-from-admin-row" class="form-row">
+        <div class="form-group"><label class="form-label">De (membre)</label><select class="form-control" id="f-from"></select></div>
+        <div class="form-group"><label class="form-label">Vers (membre)</label><select class="form-control" id="f-to-admin"></select></div>
+      </div>
+      <div id="f-from-member-row" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:9px;margin-bottom:14px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold-pale);color:var(--brown);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;" id="f-from-av"></div>
+          <span id="f-from-name" style="font-size:14px;font-weight:500;"></span>
+          <span style="margin-left:auto;font-size:11px;color:var(--brown);background:var(--gold-pale);padding:2px 8px;border-radius:20px;">Vous</span>
+        </div>
+        <div class="form-group"><label class="form-label">Vers (membre)</label><select class="form-control" id="f-to-member"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="f-desc" placeholder="Decrivez le besoin..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Montant estime</label><input type="text" class="form-control" id="f-amt" placeholder="5 000 euros"></div>
+        <div class="form-group"><label class="form-label">Statut</label>
+          <select class="form-control" id="f-st"><option value="new">Nouveau</option><option value="progress">En cours</option><option value="done">Realise</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" data-close="m-reco">Annuler</button><button class="btn-primary" id="btn-submit-reco">Enregistrer</button></div>
+  </div>
+</div>
 
-<!-- MODAL INVITE -->
+<div class="modal-backdrop" id="m-edit-reco">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Modifier la recommandation</span><button class="modal-close" data-close="m-edit-reco">x</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="er-idx">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">De</label><select class="form-control" id="er-from"></select></div>
+        <div class="form-group"><label class="form-label">Vers</label><select class="form-control" id="er-to"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="er-desc"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Montant</label><input type="text" class="form-control" id="er-amt"></div>
+        <div class="form-group"><label class="form-label">Statut</label>
+          <select class="form-control" id="er-status"><option value="new">Nouveau</option><option value="progress">En cours</option><option value="done">Realise</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" data-close="m-edit-reco">Annuler</button><button class="btn-primary" id="btn-save-reco">Enregistrer</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="m-mtg">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Planifier une reunion</span><button class="modal-close" data-close="m-mtg">x</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-control" id="mt-title" placeholder="Petit-dejeuner mensuel"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-control" id="mt-date"></div>
+        <div class="form-group"><label class="form-label">Heure</label><input type="time" class="form-control" id="mt-time" value="08:00"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Lieu</label><input type="text" class="form-control" id="mt-place" placeholder="Restaurant Le Vintage"></div>
+      <div class="form-group"><label class="form-label">Adresse</label><input type="text" class="form-control" id="mt-addr" placeholder="14 rue Lenepveu, 49000 Angers"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-control" id="mt-type"><option value="regular">Petit-dejeuner</option><option value="special">Reunion speciale</option><option value="agm">Assemblee Generale</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Capacite</label><input type="number" class="form-control" id="mt-cap" placeholder="20" min="1"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="mt-notes"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" data-close="m-mtg">Annuler</button><button class="btn-primary" id="btn-submit-mtg">Enregistrer</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="m-mtg-detail">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Detail de la reunion</span><button class="modal-close" data-close="m-mtg-detail">x</button></div>
+    <div class="modal-body" id="mtg-detail-body"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="m-member">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title" id="m-member-title">Fiche membre</span><button class="modal-close" data-close="m-member">x</button></div>
+    <div class="modal-body" id="member-modal-body"></div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="m-guest">
   <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Ajouter un invite</span><button class="modal-close" onclick="closeM('m-guest')">x</button></div>
+    <div class="modal-head"><span class="modal-head-title">Ajouter un invite</span><button class="modal-close" data-close="m-guest">x</button></div>
     <div class="modal-body">
       <div class="form-row">
         <div class="form-group"><label class="form-label">Nom complet</label><input type="text" class="form-control" id="g-name" placeholder="Jean Martin"></div>
@@ -678,447 +674,379 @@ textarea.form-control{resize:none;height:80px;}
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Date de visite</label><input type="date" class="form-control" id="g-date"></div>
-        <div class="form-group"><label class="form-label">Invite par</label><select class="form-control" id="g-by"><option value="">Selectionner...</option></select></div>
+        <div class="form-group"><label class="form-label">Invite par</label><select class="form-control" id="g-by"></select></div>
       </div>
       <div class="form-group"><label class="form-label">Notes</label><input type="text" class="form-control" id="g-notes" placeholder="Contexte, projet..."></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeM('m-guest')">Annuler</button>
-      <button class="btn-primary" onclick="submitGuest()">Enregistrer</button>
-    </div>
+    <div class="modal-footer"><button class="btn-secondary" data-close="m-guest">Annuler</button><button class="btn-primary" id="btn-submit-guest">Enregistrer</button></div>
   </div>
 </div>
 
-<!-- MODAL EDITION RECO -->
-<div class="modal-backdrop" id="m-edit-reco">
-  <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Modifier la recommandation</span><button class="modal-close" onclick="closeM('m-edit-reco')">x</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="er-idx">
-      <div id="er-from-row" class="form-row">
-        <div class="form-group"><label class="form-label">De</label><select class="form-control" id="er-from"><option value="">Selectionner...</option></select></div>
-        <div class="form-group"><label class="form-label">Vers</label><select class="form-control" id="er-to"><option value="">Selectionner...</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="er-desc"></textarea></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Montant</label><input type="text" class="form-control" id="er-amt"></div>
-        <div class="form-group"><label class="form-label">Statut</label>
-          <select class="form-control" id="er-status">
-            <option value="new">Nouveau</option>
-            <option value="progress">En cours</option>
-            <option value="done">Realise</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeM('m-edit-reco')">Annuler</button>
-      <button class="btn-primary" onclick="saveEditReco()">Enregistrer</button>
-    </div>
-  </div>
-</div>
-<!-- MODAL: RECO -->
-<div class="modal-backdrop" id="m-reco">
-  <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Nouvelle recommandation</span><button class="modal-close" onclick="closeM('m-reco')">×</button></div>
-    <div class="modal-body">
-      <!-- Admin : sélecteur libre "De" -->
-      <div class="form-group" id="f-from-row">
-        <label class="form-label">De (membre)</label>
-        <select class="form-control" id="f-from"><option value="">Sélectionner…</option></select>
-      </div>
-      <!-- Membre : champ fixe "De" verrouillé -->
-      <div id="f-from-fixed" style="display:none;margin-bottom:16px;">
-        <label class="form-label">De</label>
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:9px;">
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold-pale);color:var(--brown);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" id="f-from-av"></div>
-          <span class="from-name" style="font-size:14px;font-weight:500;color:var(--text-primary);">--</span>
-          <span style="margin-left:auto;font-size:11px;color:var(--brown);background:var(--gold-pale);padding:2px 8px;border-radius:20px;">Vous</span>
-        </div>
-      </div>
-      <!-- Vers : commun admin et membre -->
-      <div class="form-group" style="margin-bottom:0" id="f-to-row">
-        <label class="form-label">Vers (membre)</label>
-        <select class="form-control" id="f-to"><option value="">Sélectionner…</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="f-desc" placeholder="Décrivez le besoin…"></textarea></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Montant estimé</label><input type="text" class="form-control" id="f-amt" placeholder="5 000 €"></div>
-        <div class="form-group"><label class="form-label">Statut</label>
-          <select class="form-control" id="f-st"><option value="new">Nouveau</option><option value="progress">En cours</option><option value="done">Réalisé</option></select>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer"><button class="btn-secondary" onclick="closeM('m-reco')">Annuler</button><button class="btn-primary" onclick="submitReco()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button></div>
-  </div>
-</div>
-
-<!-- MODAL: MEETING -->
-<div class="modal-backdrop" id="m-mtg">
-  <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Planifier une réunion</span><button class="modal-close" onclick="closeM('m-mtg')">×</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-control" id="mt-title" placeholder="Petit-déjeuner mensuel"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-control" id="mt-date"></div>
-        <div class="form-group"><label class="form-label">Heure</label><input type="time" class="form-control" id="mt-time" value="08:00"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Lieu (nom)</label><input type="text" class="form-control" id="mt-place" placeholder="Restaurant Le Vintage"></div>
-      <div class="form-group"><label class="form-label">Adresse complète</label><input type="text" class="form-control" id="mt-addr" placeholder="14 rue Lenepveu, 49000 Angers"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Type</label>
-          <select class="form-control" id="mt-type">
-            <option value="regular">Petit-déjeuner</option>
-            <option value="special">Réunion spéciale</option>
-            <option value="agm">Assemblée générale</option>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label">Capacité max</label><input type="number" class="form-control" id="mt-cap" placeholder="20" min="1"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Notes / programme</label><textarea class="form-control" id="mt-notes" placeholder="Thème, intervenant…"></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn-secondary" onclick="closeM('m-mtg')">Annuler</button><button class="btn-primary" onclick="submitMtg()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button></div>
-  </div>
-</div>
-
-<!-- MODAL: MEETING DETAIL -->
-<div class="modal-backdrop" id="m-mtg-detail">
-  <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Détail de la réunion</span><button class="modal-close" onclick="closeM('m-mtg-detail')">×</button></div>
-    <div class="modal-body" id="mtg-detail-body"></div>
-  </div>
-</div>
-
-<!-- MODAL: MEMBER DETAIL -->
-<div class="modal-backdrop" id="m-member">
-  <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Fiche membre</span><button class="modal-close" onclick="closeM('m-member')">×</button></div>
-    <div class="modal-body" id="mbr-detail-body"></div>
-  </div>
-</div>
-
-<!-- MODAL: CREATE ACCOUNT -->
 <div class="modal-backdrop" id="m-create-acct">
   <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Créer un compte membre</span><button class="modal-close" onclick="closeM('m-create-acct')">×</button></div>
+    <div class="modal-head"><span class="modal-head-title">Creer un compte membre</span><button class="modal-close" data-close="m-create-acct">x</button></div>
     <div class="modal-body">
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-control" id="ac-fn" placeholder="Pierre"></div>
-        <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-control" id="ac-ln" placeholder="Dubois"></div>
+        <div class="form-group"><label class="form-label">Prenom</label><input type="text" class="form-control" id="ac-fn" placeholder="Pierre"></div>
+        <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-control" id="ac-ln" placeholder="Dupont"></div>
       </div>
-      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ac-email" placeholder="p.dubois@entreprise.fr"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ac-email" placeholder="p.dupont@entreprise.fr"></div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Entreprise</label><input type="text" class="form-control" id="ac-co" placeholder="Dubois & Co"></div>
+        <div class="form-group"><label class="form-label">Entreprise</label><input type="text" class="form-control" id="ac-co"></div>
         <div class="form-group"><label class="form-label">Secteur</label>
-          <select class="form-control" id="ac-sec">
-            <option>Finance</option><option>Conseil</option><option>Tech</option>
-            <option>Juridique</option><option>Immobilier</option><option>Marketing</option>
-            <option>BTP</option><option>Formation</option><option>Santé</option><option>Autre</option>
-          </select>
+          <select class="form-control" id="ac-sec"><option>Finance</option><option>Conseil</option><option>Tech</option><option>Juridique</option><option>Immobilier</option><option>Marketing</option><option>BTP</option><option>Formation</option><option>Sante</option><option>Autre</option></select>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Poste / rôle</label><input type="text" class="form-control" id="ac-role" placeholder="Directeur Général"></div>
-        <div class="form-group"><label class="form-label">Téléphone</label><input type="text" class="form-control" id="ac-tel" placeholder="06 00 00 00 00"></div>
+        <div class="form-group"><label class="form-label">Poste</label><input type="text" class="form-control" id="ac-role"></div>
+        <div class="form-group"><label class="form-label">Tel</label><input type="text" class="form-control" id="ac-tel"></div>
       </div>
-      <div class="form-group"><label class="form-label">Rôle dans l'application</label>
-        <select class="form-control" id="ac-approle">
-          <option value="member">Membre</option>
-          <option value="admin">Administrateur</option>
-        </select>
+      <div class="form-group"><label class="form-label">Role dans l app</label>
+        <select class="form-control" id="ac-approle"><option value="member">Membre</option><option value="admin">Administrateur</option></select>
       </div>
       <div id="ac-result"></div>
     </div>
     <div class="modal-footer" id="ac-footer">
-      <button class="btn-secondary" onclick="closeM('m-create-acct')">Annuler</button>
-      <button class="btn-primary" onclick="submitCreateAcct()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Créer le compte</button>
+      <button class="btn-secondary" data-close="m-create-acct">Annuler</button>
+      <button class="btn-primary" id="btn-submit-acct">Creer le compte</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ======================================================
-   CONFIGURATION GOOGLE SHEETS
-   Collez ici l'URL de votre d\u00e9ploiement Apps Script
-====================================================== */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9yVUjccpZi8ueAg-mb3H8TZRMAWyZoM2rtPzmm2tb_ykRpS_apADqfcdpZ1oHtKbCsA/exec';
+// ═══════════════════════════════════════════════════
+//  CONFIGURATION
+// ═══════════════════════════════════════════════════
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9yVUjccpZi8ueAg-mb3H8TZRMAWyZoM2rtPzmm2tb_ykRpS_apADqfcdpZ1oHtKbCsA/exec';
+var DEMO_MODE = !SCRIPT_URL || SCRIPT_URL === 'COLLER_VOTRE_URL_ICI';
 
-/* -- PALETTE AVATARS -- */
-const PAL=[
+// ═══════════════════════════════════════════════════
+//  DONNEES
+// ═══════════════════════════════════════════════════
+var PAL = [
   {bg:'#FFF0DC',tx:'#9B5E1E'},{bg:'#F5E6C8',tx:'#6B3F10'},{bg:'#FDE8D8',tx:'#8B3A1E'},
   {bg:'#E8F4E0',tx:'#2E6B20'},{bg:'#E0EEF8',tx:'#1A5280'},{bg:'#F0E8F8',tx:'#5E2E8B'},
   {bg:'#F8E8E8',tx:'#8B1A1A'},{bg:'#E8F8F0',tx:'#1A6B4A'},{bg:'#FFF4E0',tx:'#8B5E1A'},
   {bg:'#E8EEFF',tx:'#1A2E8B'},{bg:'#FFE8F4',tx:'#8B1A5E'},{bg:'#E8FFF4',tx:'#1A6B3A'}
 ];
+var MON = ['Jan','Fev','Mar','Avr','Mai','Jun','Jul','Aou','Sep','Oct','Nov','Dec'];
+var MONF = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
+var TL = {regular:'Petit-dejeuner',special:'Reunion speciale',agm:'Assemblee Generale'};
+var TC = {regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
+var SL = {new:'Nouveau',progress:'En cours',done:'Realise'};
+var SC = {new:'st-new',progress:'st-prog',done:'st-done'};
+var COLORS_DONUT = ['#C8901A','#9B5E1E','#E8B84B','#D4956A','#BFA090','#5E2E8B','#2E7D32','#1565C0','#C0392B','#888'];
 
-/* -- API GOOGLE SHEETS ----------------------------------
-   gsGet  : lecture  (GET  ?action=...)
-   gsPost : \u00e9criture (POST JSON)
-   Les donn\u00e9es sont toujours charg\u00e9es depuis le Sheet,
-   avec fallback sur les donn\u00e9es demo si SCRIPT_URL absent.
-------------------------------------------------------- */
-const DEMO_MODE = !SCRIPT_URL || SCRIPT_URL === 'COLLER_VOTRE_URL_ICI';
+var members  = [];
+var recos    = [];
+var meetings = [];
+var accounts = [
+  {name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',password:'admin1234',role:'admin',status:'active',created:'27/03/2026'}
+];
+var guests   = [];
+var curUser  = null;
+var calY = 2026, calM = 3;
+var selectedYear = new Date().getFullYear();
+var donutChart = null;
 
-async function gsGet(action) {
-  if (DEMO_MODE) return null;
-  try {
-    const r = await fetch(`${SCRIPT_URL}?action=${action}`);
-    const d = await r.json();
-    if (d.error) { console.warn('GS error:', d.error); return null; }
-    return d;
-  } catch(e) { console.warn('GS fetch error:', e); return null; }
+// ═══════════════════════════════════════════════════
+//  API GOOGLE SHEETS
+// ═══════════════════════════════════════════════════
+function gsGet(action) {
+  if (DEMO_MODE) return Promise.resolve(null);
+  return fetch(SCRIPT_URL + '?action=' + action)
+    .then(function(r){ return r.json(); })
+    .catch(function(){ return null; });
 }
 
-async function gsPost(action, payload) {
-  if (DEMO_MODE) return;
-  try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action, payload }),
-    });
-  } catch(e) { console.warn('GS post error:', e); }
+function gsPost(action, payload) {
+  if (DEMO_MODE) return Promise.resolve();
+  return fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({action: action, payload: payload})
+  }).catch(function(){});
 }
 
-function showSyncBanner(ok) {
-  const b = document.getElementById('sync-banner');
+function showBanner(ok) {
+  var b = document.getElementById('sync-banner');
   if (!b) return;
-  b.textContent = ok ? '\u2713 Donn\u00e9es sauvegard\u00e9es dans Google Sheets' : '\u26a0 Mode d\u00e9mo -- donn\u00e9es non sauvegard\u00e9es (configurez SCRIPT_URL)';
-  b.style.background = ok ? 'rgba(46,125,50,0.12)' : 'rgba(184,134,11,0.12)';
+  b.textContent = ok ? 'Sauvegarde dans Google Sheets' : 'Mode demo - non connecte';
+  b.style.background = ok ? 'rgba(46,125,50,0.15)' : 'rgba(184,134,11,0.15)';
   b.style.color = ok ? '#2E7D32' : '#B8860B';
   b.style.display = 'flex';
-  setTimeout(() => b.style.opacity = '0', 3000);
-  setTimeout(() => { b.style.display = 'none'; b.style.opacity = '1'; }, 3400);
+  setTimeout(function(){ b.style.opacity='0'; }, 3000);
+  setTimeout(function(){ b.style.display='none'; b.style.opacity='1'; }, 3500);
 }
 
-let members=[];
+// ═══════════════════════════════════════════════════
+//  UTILITAIRES
+// ═══════════════════════════════════════════════════
+function initials(n) { return (n||'').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase(); }
 
-let recos=[];
+function setEl(id, val) { var e = document.getElementById(id); if (e) e.textContent = val; }
 
-let meetings=[];
+function openM(id) { var e = document.getElementById(id); if (e) e.classList.add('open'); }
+function closeM(id) { var e = document.getElementById(id); if (e) e.classList.remove('open'); }
 
-let accounts=[
-  {name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',password:'admin1234',role:'admin',status:'active',created:'27/03/2026'},
-];
-
-const caData={2025:[18,22,31,27,24,19,21,28,25,32,0,0],2024:[14,17,22,20,19,16,18,23,21,25,27,29]};
-const MON=['Jan','F\u00e9v','Mar','Avr','Mai','Jun','Jul','Ao\u00fb','Sep','Oct','Nov','D\u00e9c'];
-const MONF=['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
-const TL={regular:'Petit-d\u00e9jeuner',special:'R\u00e9union sp\u00e9ciale',agm:'Assembl\u00e9e G\u00e9n\u00e9rale'};
-const TC={regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
-function getMtgType(t){ return TL[t]||t||'R\u00e9union'; }
-function getMtgClass(t){ return TC[t]||'tb-regular'; }
-const SL={new:'Nouveau',progress:'En cours',done:'R\u00e9alis\u00e9'};
-const SC={new:'st-new',progress:'st-prog',done:'st-done'};
-/* -- HELPER DATE ROBUSTE -- */
 function parseDate(val) {
   if (!val) return null;
-  // Deja un objet Date
   if (val instanceof Date) return isNaN(val.getTime()) ? null : val;
   var s = String(val).trim();
-  if (!s || s === 'null' || s === 'undefined') return null;
-  // Format ISO YYYY-MM-DD (le bon format)
+  if (!s || s === 'null') return null;
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
     var d = new Date(s + 'T12:00:00');
     return isNaN(d.getTime()) ? null : d;
   }
-  // Timestamp numerique (serialise par Sheets parfois)
-  if (/^\d{10,}$/.test(s)) {
-    var d = new Date(parseInt(s));
-    return isNaN(d.getTime()) ? null : d;
-  }
-  // Format DD/MM/YYYY
   var m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]), 12);
-  // Essai generique
-  var d = new Date(s);
-  return isNaN(d.getTime()) ? null : d;
+  var d2 = new Date(s);
+  return isNaN(d2.getTime()) ? null : d2;
 }
 
-function formatDateFR(val) {
-  var d = parseDate(val);
-  if (!d) return val || '--';
-  var mois = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
-  return d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
-}
-
-function toISODate(val) {
+function toISO(val) {
   var d = parseDate(val);
   if (!d) return '';
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
+function fmtDate(val) {
+  var d = parseDate(val);
+  if (!d) return val || '--';
+  return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear();
+}
 
+function getMtgLabel(t) { return TL[t] || t || 'Reunion'; }
+function getMtgClass(t) { return TC[t] || 'tb-regular'; }
+function getStatus(s) { var k=(s||'new').toLowerCase(); return {label:SL[k]||s,cls:SC[k]||'st-new'}; }
 
-let curUser=null;
-let calY=2026,calM=3;
+function slugify(s) {
+  return (s||'').toLowerCase()
+    .replace(/[eeee]/g,'e').replace(/[aaa]/g,'a').replace(/[uuu]/g,'u')
+    .replace(/[ii]/g,'i').replace(/[oo]/g,'o').replace(/c/g,'c')
+    .replace(/\s+/g,'');
+}
 
-/* -- AUTH -- */
+function genPass() {
+  var c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  var p='';
+  for(var i=0;i<8;i++) p+=c[Math.floor(Math.random()*c.length)];
+  return p;
+}
+
+function populateSel(selId, list, exclude) {
+  var s = document.getElementById(selId);
+  if (!s) return;
+  s.innerHTML = '<option value="">Selectionner...</option>';
+  list.forEach(function(m) {
+    if (exclude && m.name === exclude) return;
+    var o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name;
+    s.appendChild(o);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════════
 function doLogin() {
   var u = document.getElementById('li-user').value.trim();
   var p = document.getElementById('li-pass').value;
   var err = document.getElementById('li-err');
   err.textContent = '';
-  if (u === 'admin' && p === 'admin1234') {
-    curUser = {username:'admin', role:'admin', name:'Administrateur'};
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app-shell').style.display = 'flex';
-    document.getElementById('sb-name').textContent = 'Administrateur';
-    document.getElementById('sb-role').textContent = 'Administrateur';
-    document.getElementById('sb-av').textContent = 'AD';
-    document.getElementById('dash-greet').textContent = 'Bonjour, Administrateur';
-    document.getElementById('admin-sep').style.display = '';
-    document.getElementById('nav-admin').style.display = '';
-    document.getElementById('mob-admin').style.display = '';
-    document.getElementById('btn-add-mtg').style.display = 'flex';
-    loadAllData(); return;
-  }
+
+  // Chercher dans les comptes (y compris admin)
   var found = null;
-  for (var i = 0; i < accounts.length; i++) {
-    if (accounts[i].username === u) { found = accounts[i]; break; }
+  if (u === 'admin') {
+    found = {name:'Administrateur', role:'admin', password:'admin1234'};
+  } else {
+    for (var i = 0; i < accounts.length; i++) {
+      if (accounts[i].username === u) { found = accounts[i]; break; }
+    }
   }
+
   if (!found) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
   if (p !== (found.password || 'membre1234')) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
-  curUser = {username:u, role:found.role, name:found.name};
+
+  curUser = {username: u, role: found.role, name: found.name};
+  applyLogin();
+}
+
+function applyLogin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-shell').style.display = 'flex';
-  document.getElementById('sb-name').textContent = found.name;
-  document.getElementById('sb-role').textContent = found.role === 'admin' ? 'Administrateur' : 'Membre';
-  document.getElementById('sb-av').textContent = initials(found.name);
-  document.getElementById('dash-greet').textContent = 'Bonjour, ' + found.name.split(' ')[0];
-  var isAdmin = found.role === 'admin';
-  document.getElementById('admin-sep').style.display = isAdmin ? '' : 'none';
-  document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
-  document.getElementById('mob-admin').style.display = isAdmin ? '' : 'none';
-  document.getElementById('btn-add-mtg').style.display = isAdmin ? 'flex' : 'none';
+  setEl('sb-name', curUser.name);
+  setEl('sb-role', curUser.role === 'admin' ? 'Administrateur' : 'Membre');
+  setEl('sb-av', initials(curUser.name));
+  setEl('dash-greet', 'Bonjour, ' + curUser.name.split(' ')[0] + ' !');
+
+  var isAdmin = curUser.role === 'admin';
+  ['admin-sep','nav-admin','mob-admin'].forEach(function(id) {
+    var e = document.getElementById(id);
+    if (e) e.style.display = isAdmin ? '' : 'none';
+  });
+  var btnMtg = document.getElementById('btn-add-mtg');
+  if (btnMtg) btnMtg.style.display = isAdmin ? '' : 'none';
+
   loadAllData();
 }
-function doLogout(){curUser=null;document.getElementById('app-shell').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('li-user').value='';document.getElementById('li-pass').value='';}
 
-/* -- CHARGEMENT DONNEES -- */
-var guests = [];
-
-async function loadAllData() {
-  var loaded = await gsGet('getAll');
-  if (loaded && !loaded.error) {
-    if (loaded.recos    && loaded.recos.length)    recos    = loaded.recos;
-    if (loaded.members  && loaded.members.length)  members  = loaded.members.map(function(m){ return Object.assign({},m,{recos:parseInt(m.recos)||0,invites:parseInt(m.invites)||0}); });
-    if (loaded.meetings && loaded.meetings.length) meetings = loaded.meetings;
-    if (loaded.accounts && loaded.accounts.length) accounts = loaded.accounts;
-    if (loaded.guests   && loaded.guests.length)   guests   = loaded.guests;
-    showSyncBanner(true);
-  } else { showSyncBanner(false); }
-  document.getElementById('reco-badge').textContent = recos.length;
-  document.getElementById('mbr-badge').textContent  = members.length;
-  document.getElementById('guests-badge').textContent = guests.length;
-  updateDashboard();
-  renderNotifications();
-  renderRecos(); renderMembers(); renderCal(); renderMtgList(); renderAccounts(); renderGuests();
+function doLogout() {
+  curUser = null;
+  document.getElementById('app-shell').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('li-user').value = '';
+  document.getElementById('li-pass').value = '';
 }
 
-function set(id, val) { var e = document.getElementById(id); if (e) e.textContent = val; }
+// ═══════════════════════════════════════════════════
+//  CHARGEMENT DONNEES
+// ═══════════════════════════════════════════════════
+function loadAllData() {
+  gsGet('getAll').then(function(loaded) {
+    if (loaded && !loaded.error) {
+      if (loaded.members  && loaded.members.length)  members  = loaded.members;
+      if (loaded.recos    && loaded.recos.length)    recos    = loaded.recos;
+      if (loaded.meetings && loaded.meetings.length) meetings = loaded.meetings;
+      if (loaded.guests   && loaded.guests.length)   guests   = loaded.guests;
+      if (loaded.accounts && loaded.accounts.length) accounts = loaded.accounts;
+      showBanner(true);
+    } else {
+      showBanner(false);
+    }
+    setEl('reco-badge', recos.length);
+    setEl('mbr-badge', members.length);
+    setEl('guests-badge', guests.length);
+    updateDashboard();
+    renderRecos();
+    renderMembers();
+    renderCal();
+    renderMtgList();
+    renderGuests();
+    renderAccounts();
+    renderNotifications();
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+var PT = {dashboard:'Tableau de bord',planning:'Planning des reunions',recos:'Recommandations',members:'Membres',guests:'Invites',admin:'Gestion des comptes'};
+
+function goPage(id, btn, mob) {
+  if (id === 'admin' && !(curUser && curUser.role === 'admin')) return;
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var page = document.getElementById('page-' + id);
+  if (page) page.classList.add('active');
+  setEl('page-title', PT[id] || id);
+
+  if (mob) {
+    document.querySelectorAll('.mob-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    closeSidebar();
+  }
+  if (id === 'planning') { renderCal(); renderMtgList(); }
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════
+function buildBarChart(monthly) {
+  var el = document.getElementById('ca-chart');
+  if (!el) return;
+  var max = Math.max.apply(null, monthly.concat([1]));
+  el.innerHTML = '';
+  monthly.forEach(function(v, i) {
+    var pct = (v / max) * 100;
+    var g = document.createElement('div'); g.className = 'bar-group';
+    var b = document.createElement('div'); b.className = 'bar-fill' + (v === 0 ? ' muted' : '');
+    b.style.height = Math.max(pct, v > 0 ? 6 : 2) + '%';
+    if (v > 0) { var tt = document.createElement('div'); tt.className = 'bar-tooltip'; tt.textContent = v + 'k'; b.appendChild(tt); }
+    var l = document.createElement('div'); l.className = 'bar-lbl'; l.textContent = MON[i];
+    g.appendChild(b); g.appendChild(l); el.appendChild(g);
+  });
+}
+
+function switchYear(y, btn) {
+  selectedYear = y;
+  document.querySelectorAll('.year-tab').forEach(function(t){ t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  updateDashboard();
+}
 
 function updateDashboard() {
-  var nbRecos   = recos.length;
-  var nbDone    = recos.filter(function(r){ return r.status==='done'; }).length;
-  var nbMembers = members.length;
-  var nbInvites = guests.length;
-
   // CA mensuel depuis recos
   var monthly = [0,0,0,0,0,0,0,0,0,0,0,0];
-  var curYear = new Date().getFullYear();
   recos.forEach(function(r) {
     if (!r.amount) return;
     var d = parseDate(r.date);
-    if (isNaN(d.getTime())) {
-      var mmap = {jan:0,fev:1,'f\u00e9v':1,mar:2,avr:3,mai:4,juin:5,juil:6,'ao\u00fbt':7,aout:7,sep:8,oct:9,nov:10,'d\u00e9c':11,dec:11};
-      var parts = (r.date+'').toLowerCase().split(/[\s./]+/);
-      var mi = -1, yi = curYear;
-      parts.forEach(function(p){ if(mmap[p]!==undefined) mi=mmap[p]; if(p.length===4&&!isNaN(p)) yi=parseInt(p); });
-      if (mi>=0) d = new Date(yi, mi, 1);
-    }
-    if (!isNaN(d.getTime()) && d.getFullYear()===curYear) {
-      var clean = (r.amount+'').replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
-      var num = parseFloat(clean);
-      if (!isNaN(num)) monthly[d.getMonth()] += num >= 1000 ? Math.round(num/1000) : num;
-    }
+    if (!d || d.getFullYear() !== selectedYear) return;
+    var clean = String(r.amount).replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
+    var num = parseFloat(clean);
+    if (!isNaN(num)) monthly[d.getMonth()] += num >= 1000 ? Math.round(num/1000) : num;
   });
   buildBarChart(monthly);
 
-  // Donut secteurs depuis membres reels
-  renderDonut();
+  var caTotal = monthly.reduce(function(s,v){ return s+v; }, 0);
+  var caStr = caTotal > 0 ? caTotal + ' k' : '--';
+  setEl('dash-ca-hero', caStr);
+  setEl('dash-ca-val', caStr);
+  setEl('dash-recos-val', recos.length || '--');
+  setEl('dash-invites-val', guests.length || '--');
 
-  // Total CA
-  var caTotal = monthly.reduce(function(s,v){return s+v;},0);
-  var caStr = caTotal > 0 ? caTotal + ' k€' : '--';
-  set('dash-ca-total', caStr);
-  set('dash-ca-val', caStr);
-  set('dash-recos-val', nbRecos || '--');
-  set('dash-invites-val', nbInvites || '--');
-  set('dash-members-val', nbMembers || '--');
+  var nbDone = recos.filter(function(r){ return (r.status||'').toLowerCase() === 'done'; }).length;
   var rd = document.getElementById('dash-recos-delta');
-  if (rd) { rd.textContent = nbDone + ' r\u00e9alis\u00e9e' + (nbDone>1?'s':''); rd.className = 'metric-delta ' + (nbDone>0?'delta-up':'delta-neutral'); }
-  set('dash-invites-delta', '');
-  set('dash-members-delta', '');
+  if (rd) { rd.textContent = nbDone + ' realise' + (nbDone > 1 ? 's' : ''); rd.className = 'metric-delta ' + (nbDone > 0 ? 'delta-up' : 'delta-neutral'); }
 
   // Prochaine reunion
   var today = new Date(); today.setHours(0,0,0,0);
-  var upcoming = meetings.filter(function(m){ var d=parseDate(m.date); return d&&d>=today; })
-                         .sort(function(a,b){return (parseDate(a.date)||0)-(parseDate(b.date)||0);});
-  var mois = ['jan.','f\u00e9v.','mar.','avr.','mai','juin','juil.','ao\u00fbt','sep.','oct.','nov.','d\u00e9c.'];
+  var upcoming = meetings.filter(function(m){
+    var d = parseDate(m.date); return d && d >= today;
+  }).sort(function(a,b){ return parseDate(a.date) - parseDate(b.date); });
+
   if (upcoming.length) {
     var nm = upcoming[0];
     var d = parseDate(nm.date);
-    var moisNm=['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
-    set('next-meeting-val', d.getDate()+' '+moisNm[d.getMonth()]);
-    set('next-meeting-place', nm.place || nm.title || '');
+    setEl('next-meeting-val', d.getDate() + ' ' + MON[d.getMonth()]);
+    setEl('next-meeting-place', nm.place || nm.title || '');
   } else {
-    set('next-meeting-val','--');
-    set('next-meeting-place', '');
+    setEl('next-meeting-val', '--');
+    setEl('next-meeting-place', '');
   }
 
+  renderDonut();
   renderActivity();
 }
 
-
 function renderDonut() {
-  if (!members.length) return;
   var counts = {};
-  members.forEach(function(m) {
-    var s = m.sector || 'Autre';
-    counts[s] = (counts[s] || 0) + 1;
-  });
+  members.forEach(function(m) { var s = m.sector || 'Autre'; counts[s] = (counts[s]||0)+1; });
   var labels = Object.keys(counts);
-  var data   = labels.map(function(l){ return counts[l]; });
-  var colors = ['#C8901A','#9B5E1E','#E8B84B','#D4956A','#BFA090','#E8D8C8','#5E2E8B','#2E7D32','#1565C0'];
-
+  if (!labels.length) return;
   var canvas = document.getElementById('donut-chart');
   if (!canvas) return;
-
-  // Detruire chart existant si besoin
-  if (canvas._chart) { canvas._chart.destroy(); }
-
-  var ctx = canvas.getContext('2d');
-  canvas._chart = new Chart(ctx, {
+  if (donutChart) { donutChart.destroy(); donutChart = null; }
+  donutChart = new Chart(canvas.getContext('2d'), {
     type: 'doughnut',
-    data: {
-      labels: labels,
-      datasets: [{ data: data, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }]
-    },
-    options: {
-      cutout: '65%',
-      plugins: { legend: { display: false }, tooltip: { callbacks: {
-        label: function(c){ return c.label + ' : ' + c.raw + ' membre' + (c.raw>1?'s':''); }
-      }}},
-      animation: { duration: 600 }
-    }
+    data: { labels: labels, datasets: [{ data: labels.map(function(l){return counts[l];}), backgroundColor: COLORS_DONUT.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }] },
+    options: { cutout: '65%', plugins: { legend: { display: false } }, animation: { duration: 600 } }
   });
-
-  // Legende dynamique
   var legend = document.getElementById('donut-legend');
   if (legend) {
-    legend.innerHTML = labels.map(function(l, i) {
-      var pct = Math.round(counts[l] / members.length * 100);
-      return '<div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:'+colors[i%colors.length]+'"></span>'+l+'</span><span class="legend-val">'+pct+'%</span></div>';
+    legend.innerHTML = labels.map(function(l,i) {
+      var pct = Math.round(counts[l]/members.length*100);
+      return '<div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:'+COLORS_DONUT[i%COLORS_DONUT.length]+'"></span>'+l+'</span><span class="legend-val">'+pct+'%</span></div>';
     }).join('');
   }
 }
@@ -1127,298 +1055,323 @@ function renderActivity() {
   var el = document.getElementById('activity-list');
   if (!el) return;
   var items = [];
-  var mois = ['jan.','f\u00e9v.','mar.','avr.','mai','juin','juil.','ao\u00fbt','sep.','oct.','nov.','d\u00e9c.'];
-
-  // Derni\u00e8res recos (max 4)
-  recos.slice(0,4).forEach(function(r) {
-    var color = r.status==='done' ? '#2E7D32' : r.status==='progress' ? '#1565C0' : '#C8901A';
-    items.push({color:color, text:'<strong>'+r.from+'</strong> a recommande <strong>'+r.to+'</strong>' + (r.amount?' ('+r.amount+')':'') + (r.status==='done'?' -- Realise !':''), time:r.date||''});
-  });
-
-  // Prochaine reunion
   var today = new Date(); today.setHours(0,0,0,0);
-  var upcoming = meetings.filter(function(m){var d=parseDate(m.date);return d&&d>=today;})
-                         .sort(function(a,b){return (parseDate(a.date)||0)-(parseDate(b.date)||0);});
+  var upcoming = meetings.filter(function(m){ var d=parseDate(m.date); return d&&d>=today; }).sort(function(a,b){ return parseDate(a.date)-parseDate(b.date); });
   if (upcoming.length) {
-    var nm = upcoming[0];
-    var d = parseDate(nm.date);
-    items.unshift({color:'#9B5E1E', text:'Prochaine reunion : <strong>'+d.getDate()+' '+mois[d.getMonth()]+'</strong> -- <strong>'+nm.place+'</strong>', time:nm.time||''});
+    var nm = upcoming[0], d = parseDate(nm.date);
+    items.push({color:'#9B5E1E', text:'Prochaine reunion : <strong>'+d.getDate()+' '+MON[d.getMonth()]+'</strong> - <strong>'+nm.place+'</strong>', time:nm.time||''});
   }
-
-  // Derniers invites (max 3)
-  guests.slice(0,3).forEach(function(g) {
-    items.push({color:'#5E2E8B', text:'<strong>'+(g.invitedBy||'?')+'</strong> a invite <strong>'+g.name+'</strong>'+(g.company?' ('+g.company+')':''), time:g.date||''});
+  recos.slice(0,4).forEach(function(r) {
+    var color = (r.status||'').toLowerCase()==='done' ? '#2E7D32' : (r.status||'').toLowerCase()==='progress' ? '#1565C0' : '#C8901A';
+    items.push({color:color, text:'<strong>'+r.from+'</strong> a recommande <strong>'+r.to+'</strong>'+(r.amount?' ('+r.amount+')':'')+(( r.status||'').toLowerCase()==='done'?' - Realise !':''), time:r.date||''});
   });
-
+  guests.slice(0,2).forEach(function(g) {
+    items.push({color:'#5E2E8B', text:'<strong>'+(g.invitedBy||'?')+'</strong> a invite <strong>'+g.name+'</strong>'+(g.company?' ('+g.company+')':''), time:fmtDate(g.date)});
+  });
   if (!items.length) { el.innerHTML='<div style="padding:20px;color:var(--text-muted);font-size:13px">Aucune activite pour l instant.</div>'; return; }
-  el.innerHTML = items.slice(0,6).map(function(it){
+  el.innerHTML = items.slice(0,6).map(function(it) {
     return '<div class="activity-item"><div class="activity-dot" style="background:'+it.color+'"></div><div><div class="activity-text">'+it.text+'</div><div class="activity-time">'+it.time+'</div></div></div>';
   }).join('');
 }
 
-/* -- NAV -- */
-const PT={dashboard:'Tableau de bord',planning:'Planning des r\u00e9unions',recos:'Recommandations',members:'Membres',guests:'Invit\u00e9s',admin:'Gestion des comptes'};
-function goPage(id,btn,mob){
-  if(id==='admin'&&curUser && curUser.role!=='admin')return;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('page-title').textContent=PT[id]||id;
-  if(mob){document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-  else{document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.mob-nav-btn').forEach((b,i)=>b.classList.toggle('active',['dashboard','planning','recos','members','admin'][i]===id));closeSidebar();}
-  if(id==='planning'){renderCal();renderMtgList();}
-}
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('open');}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('open');}
-
-/* -- CHART -- */
-function buildBarChart(data){
-  const el=document.getElementById('ca-chart');const max=Math.max(...data,1);el.innerHTML='';
-  data.forEach((v,i)=>{
-    const g=document.createElement('div');g.className='bar-group';
-    const b=document.createElement('div');b.className='bar-fill'+(v===0?' muted':'');
-    b.style.height=Math.max((v/max)*100,v>0?6:2)+'%';
-    if(v>0)b.innerHTML=`<div class="bar-tooltip">${v}k€</div>`;
-    const l=document.createElement('div');l.className='bar-lbl';l.textContent=MON[i];
-    g.appendChild(b);g.appendChild(l);el.appendChild(g);
+// ═══════════════════════════════════════════════════
+//  RECOMMANDATIONS
+// ═══════════════════════════════════════════════════
+function renderRecos(list) {
+  var g = document.getElementById('reco-grid');
+  if (!g) return;
+  if (!list) list = recos;
+  g.innerHTML = '';
+  if (!list.length) { g.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Aucune recommandation.</p>'; return; }
+  list.forEach(function(r) {
+    var fi = members.findIndex(function(m){ return m.name===r.from; });
+    var ti = members.findIndex(function(m){ return m.name===r.to; });
+    var fc = PAL[fi>=0?fi%PAL.length:0], tc = PAL[ti>=0?ti%PAL.length:1];
+    var st = getStatus(r.status);
+    var rIdx = recos.indexOf(r);
+    var canEdit = curUser && (curUser.role==='admin' || curUser.name===r.from);
+    var card = document.createElement('div'); card.className = 'reco-card';
+    card.innerHTML =
+      '<div class="reco-card-top">'+
+        '<div class="reco-avs">'+
+          '<div class="reco-av" style="background:'+fc.bg+';color:'+fc.tx+'">'+initials(r.from)+'</div>'+
+          '<div class="reco-av" style="background:'+tc.bg+';color:'+tc.tx+'">'+initials(r.to)+'</div>'+
+        '</div>'+
+        '<span class="reco-status '+st.cls+'">'+st.label+'</span>'+
+      '</div>'+
+      '<div class="reco-names">'+r.from+' <span>-&gt;</span> '+r.to+'</div>'+
+      '<div class="reco-desc">'+(r.desc||'')+'</div>'+
+      '<div class="reco-footer">'+
+        '<span class="reco-date">'+(r.date||'')+'</span>'+
+        (r.amount?'<span class="reco-amt">'+r.amount+'</span>':'')+
+      '</div>'+
+      (canEdit?'<button class="reco-edit-btn" data-idx="'+rIdx+'">Modifier</button>':'');
+    g.appendChild(card);
   });
 }
-function switchYear(y,btn){document.querySelectorAll('.year-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');buildBarChart(caData[y]);}
 
-/* -- UTILS -- */
-function initials(n){return n.split(' ').map(x=>x[0]).join('').substring(0,2);}
-function closeM(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
-// modal close on backdrop click - gere dans closeM() et dans chaque modal directement
-
-/* -- RECOS -- */
-function renderRecos(list){
-  const g=document.getElementById('reco-grid');if(!list)list=recos;g.innerHTML='';
-  if(!list.length){g.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Aucune recommandation.</p>';return;}
-  list.forEach(r=>{
-    const fi=members.findIndex(m=>m.name===r.from),ti=members.findIndex(m=>m.name===r.to);
-    const fc=PAL[fi>=0?fi%PAL.length:0],tc=PAL[ti>=0?ti%PAL.length:1];
-    const c=document.createElement('div');c.className='reco-card';
-    var rIdx=recos.indexOf(r);
-    var canEdit=curUser&&(curUser.role==='admin'||curUser.name===r.from);
-    var rStatus=(r.status||'new').toLowerCase();
-    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[rStatus]||'st-new'}">${SL[rStatus]||r.status}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>${canEdit?`<button class="reco-edit-btn" onclick="openEditReco(${rIdx})">Modifier</button>`:''}`;
-    g.appendChild(c);
-  });
-}
-function filterRecos(v){const q=v.toLowerCase();renderRecos(recos.filter(r=>r.from.toLowerCase().includes(q)||r.to.toLowerCase().includes(q)||r.desc.toLowerCase().includes(q)));}
-function filterRecosSt(v){renderRecos(v?recos.filter(r=>r.status===v):recos);}
-
-function openRecoModal(){
+function openRecoModal() {
   var isAdmin = curUser && curUser.role === 'admin';
-  var fromRow   = document.getElementById('f-from-row');
-  var fromFixed = document.getElementById('f-from-fixed');
-  var fromSel   = document.getElementById('f-from');
-  var toSel     = document.getElementById('f-to');
-
-  // Remplir la liste "Vers" (tous les membres sauf soi-meme si membre)
-  toSel.innerHTML = '<option value="">Sélectionner…</option>';
-  members.forEach(function(m) {
-    if (!isAdmin && m.name === curUser.name) return;
-    var o = document.createElement('option');
-    o.value = m.name; o.textContent = m.name;
-    toSel.appendChild(o);
-  });
+  var adminRow = document.getElementById('f-from-admin-row');
+  var memberRow = document.getElementById('f-from-member-row');
 
   if (isAdmin) {
-    // Admin : champ De libre
-    fromRow.style.display = '';
-    fromFixed.style.display = 'none';
-    fromSel.innerHTML = '<option value="">Sélectionner…</option>';
-    members.forEach(function(m) {
-      var o = document.createElement('option');
-      o.value = m.name; o.textContent = m.name;
-      fromSel.appendChild(o);
-    });
+    adminRow.style.display = '';
+    memberRow.style.display = 'none';
+    populateSel('f-from', members);
+    populateSel('f-to-admin', members);
   } else {
-    // Membre : champ De verrouille sur son nom
-    fromRow.style.display = 'none';
-    fromFixed.style.display = '';
-    var av = document.getElementById('f-from-av');
-    if (av) av.textContent = initials(curUser.name);
-    var nameSpan = fromFixed.querySelector('.from-name');
-    if (nameSpan) nameSpan.textContent = curUser.name;
+    adminRow.style.display = 'none';
+    memberRow.style.display = '';
+    setEl('f-from-av', initials(curUser.name));
+    setEl('f-from-name', curUser.name);
+    populateSel('f-to-member', members, curUser.name);
   }
-
-  // Reset autres champs
-  ['f-desc','f-amt'].forEach(function(id){ document.getElementById(id).value=''; });
-  var stEl = document.getElementById('f-st');
-  if (stEl) stEl.value = 'new';
-
-  document.getElementById('m-reco').classList.add('open');
+  ['f-desc','f-amt'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  var st = document.getElementById('f-st'); if(st) st.value='new';
+  openM('m-reco');
 }
 
-function submitReco(){
-  const isAdmin=curUser && curUser.role==='admin';
-  const from=isAdmin?document.getElementById('f-from').value:curUser.name;
-  const to=document.getElementById('f-to').value;
-  const desc=document.getElementById('f-desc').value.trim();
-  const amt=document.getElementById('f-amt').value.trim();
-  const st=document.getElementById('f-st').value;
-  if(!from||!to||!desc){alert('Remplissez les champs obligatoires.');return;}
-  const newReco={from,to,desc,amount:amt,date:new Date().toISOString().split('T')[0],status:st};
-  recos.unshift(newReco);
-  gsPost('addReco', newReco).then(()=>showSyncBanner(!DEMO_MODE));
-  document.getElementById('reco-badge').textContent=recos.length;
-  renderRecos();closeM('m-reco');
-  document.getElementById('f-to').value='';
-  document.getElementById('f-desc').value='';
-  document.getElementById('f-amt').value='';
-  if(isAdmin) document.getElementById('f-from').value='';
+function submitReco() {
+  var isAdmin = curUser && curUser.role === 'admin';
+  var from = isAdmin ? (document.getElementById('f-from').value) : curUser.name;
+  var to   = isAdmin ? (document.getElementById('f-to-admin').value) : (document.getElementById('f-to-member').value);
+  var desc = document.getElementById('f-desc').value.trim();
+  var amt  = document.getElementById('f-amt').value.trim();
+  var st   = document.getElementById('f-st').value;
+  if (!from || !to || !desc) { alert('Remplissez les champs obligatoires.'); return; }
+  var d = new Date();
+  var dateISO = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  var obj = {from:from,to:to,desc:desc,amount:amt,date:dateISO,status:st};
+  recos.unshift(obj);
+  gsPost('addReco', obj).then(function(){ showBanner(!DEMO_MODE); });
+  setEl('reco-badge', recos.length);
+  renderRecos(); updateDashboard(); closeM('m-reco');
 }
 
-/* -- PLANNING -- */
-function changeMonth(d){calM+=d;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCal();renderMtgList();}
+function openEditReco(idx) {
+  var r = recos[idx];
+  if (!r) return;
+  document.getElementById('er-idx').value = idx;
+  var isAdmin = curUser && curUser.role === 'admin';
+  populateSel('er-from', members); document.getElementById('er-from').value = r.from; document.getElementById('er-from').disabled = !isAdmin;
+  populateSel('er-to', members);   document.getElementById('er-to').value   = r.to;
+  document.getElementById('er-desc').value   = r.desc   || '';
+  document.getElementById('er-amt').value    = r.amount || '';
+  document.getElementById('er-status').value = (r.status||'new').toLowerCase();
+  openM('m-edit-reco');
+}
 
-function renderCal(){
-  document.getElementById('month-title').textContent=MONF[calM]+' '+calY;
-  const grid=document.getElementById('cal-days');grid.innerHTML='';
-  const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate();
-  const dip=new Date(calY,calM,0).getDate(),off=(fd===0?6:fd-1);
-  const today=new Date();
-  for(let i=off-1;i>=0;i--){const d=document.createElement('div');d.className='cal-day other';const n=document.createElement('div');n.className='cal-dn';n.textContent=dip-i;d.appendChild(n);grid.appendChild(d);}
-  for(let day=1;day<=dim;day++){
-    const d=document.createElement('div');d.className='cal-day';
-    if(today.getFullYear()===calY&&today.getMonth()===calM&&today.getDate()===day)d.classList.add('today');
-    const n=document.createElement('div');n.className='cal-dn';n.textContent=day;d.appendChild(n);
-    const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-    meetings.filter(m=>toISODate(m.date)===ds).forEach(m=>{
-      const ev=document.createElement('div');ev.className='cal-evt';ev.textContent=m.time+' '+m.title;
-      ev.onclick=e=>{e.stopPropagation();openMtgDetail(m);};d.appendChild(ev);
-    });
-    guests.filter(function(g){return toISODate(g.date)===ds;}).forEach(function(g){
-      var ev=document.createElement('div');ev.className='cal-evt cal-evt-guest';
-      ev.textContent=g.name+(g.company?' ('+g.company+')':'');
-      ev.title='Invite par '+g.invitedBy;
-      ev.onclick=function(e){e.stopPropagation();alert(g.name+(g.company?' - '+g.company:'')+' | Invite par : '+g.invitedBy+(g.notes?' | '+g.notes:''));};
+function saveEditReco() {
+  var idx  = parseInt(document.getElementById('er-idx').value);
+  var isAdmin = curUser && curUser.role === 'admin';
+  var from = isAdmin ? document.getElementById('er-from').value : recos[idx].from;
+  var to   = document.getElementById('er-to').value;
+  var desc = document.getElementById('er-desc').value.trim();
+  var amt  = document.getElementById('er-amt').value.trim();
+  var st   = document.getElementById('er-status').value;
+  if (!from||!to||!desc) { alert('Champs obligatoires manquants.'); return; }
+  recos[idx] = Object.assign({}, recos[idx], {from:from,to:to,desc:desc,amount:amt,status:st});
+  gsPost('updateReco', Object.assign({index:idx}, recos[idx])).then(function(){ showBanner(!DEMO_MODE); });
+  renderRecos(); updateDashboard(); closeM('m-edit-reco');
+}
+
+// ═══════════════════════════════════════════════════
+//  PLANNING
+// ═══════════════════════════════════════════════════
+function changeMonth(dir) {
+  calM += dir;
+  if (calM > 11) { calM=0; calY++; }
+  if (calM < 0)  { calM=11; calY--; }
+  renderCal(); renderMtgList();
+}
+
+function renderCal() {
+  setEl('month-title', MONF[calM] + ' ' + calY);
+  var grid = document.getElementById('cal-days');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var fd = new Date(calY, calM, 1).getDay();
+  var dim = new Date(calY, calM+1, 0).getDate();
+  var dip = new Date(calY, calM, 0).getDate();
+  var off = (fd===0?6:fd-1);
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  for (var i=off-1; i>=0; i--) {
+    var d=document.createElement('div'); d.className='cal-day other';
+    var n=document.createElement('div'); n.className='cal-dn'; n.textContent=dip-i;
+    d.appendChild(n); grid.appendChild(d);
+  }
+  for (var day=1; day<=dim; day++) {
+    var d = document.createElement('div'); d.className='cal-day';
+    var dayDate = new Date(calY, calM, day); dayDate.setHours(0,0,0,0);
+    if (dayDate.getTime()===today.getTime()) d.classList.add('today');
+    var n = document.createElement('div'); n.className='cal-dn'; n.textContent=day;
+    d.appendChild(n);
+    var ds = calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    meetings.forEach(function(m) {
+      if (toISO(m.date) !== ds) return;
+      var ev = document.createElement('div'); ev.className='cal-evt';
+      ev.textContent = (m.time||'') + ' ' + m.title;
+      ev.setAttribute('data-mtg', JSON.stringify(m));
       d.appendChild(ev);
     });
-    if(curUser && curUser.role==='admin')d.onclick=()=>{document.getElementById('mt-date').value=ds;openMtgModal();};
+    guests.forEach(function(g) {
+      if (toISO(g.date) !== ds) return;
+      var ev = document.createElement('div'); ev.className='cal-evt cal-evt-guest';
+      ev.textContent = g.name + (g.company?' ('+g.company+')':'');
+      ev.title = 'Invite par ' + g.invitedBy;
+      d.appendChild(ev);
+    });
+    if (curUser && curUser.role==='admin') {
+      (function(dateStr){ d.addEventListener('click', function(){ document.getElementById('mt-date').value=dateStr; openM('m-mtg'); }); })(ds);
+    }
     grid.appendChild(d);
   }
-  const tot=off+dim,rem=(7-tot%7)%7;
-  for(let i=1;i<=rem;i++){const d=document.createElement('div');d.className='cal-day other';const n=document.createElement('div');n.className='cal-dn';n.textContent=i;d.appendChild(n);grid.appendChild(d);}
+  var tot = off+dim, rem = (7-tot%7)%7;
+  for (var i=1; i<=rem; i++) {
+    var d=document.createElement('div'); d.className='cal-day other';
+    var n=document.createElement('div'); n.className='cal-dn'; n.textContent=i;
+    d.appendChild(n); grid.appendChild(d);
+  }
 }
 
-function renderMtgList(){
-  const el=document.getElementById('mtg-list');
-  const list=meetings.filter(m=>{var md=parseDate(m.date);return md&&md.getFullYear()===calY&&md.getMonth()===calM;}).sort((a,b)=>toISODate(a.date).localeCompare(toISODate(b.date)));
-  if(!list.length){el.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Aucune r\u00e9union ce mois-ci.</p>';return;}
-  const w=document.createElement('div');w.className='meetings-list';
-  list.forEach(m=>{
-    var dt=parseDate(m.date); if(!dt){return;}
-    const c=document.createElement('div');c.className='mtg-card';c.onclick=()=>openMtgDetail(m);
-    c.innerHTML=`<div class="mtg-date-box"><div class="mtg-day">${String(dt.getDate()).padStart(2,'0')}</div><div class="mtg-mon">${MON[dt.getMonth()]}</div></div>
-    <div class="mtg-info">
-      <div class="mtg-title">${m.title}</div>
-      <div class="mtg-meta">
-        <span class="mtg-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${m.time}</span>
-        <span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${m.place}</span>
-        ${m.capacity?`<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>${m.capacity} places</span>`:''}
-      </div>
-      <span class="mtg-badge ${getMtgClass(m.type)}">${getMtgType(m.type)}</span>
-    </div>`;
-    w.appendChild(c);
+function renderMtgList() {
+  var el = document.getElementById('mtg-list');
+  if (!el) return;
+  var list = meetings.filter(function(m) {
+    var d = parseDate(m.date); return d && d.getFullYear()===calY && d.getMonth()===calM;
+  }).sort(function(a,b){ return (parseDate(a.date)||0)-(parseDate(b.date)||0); });
+
+  var gList = guests.filter(function(g) {
+    var d = parseDate(g.date); return d && d.getFullYear()===calY && d.getMonth()===calM;
   });
-  el.innerHTML='';el.appendChild(w);
-  // Invites du mois
-  var moisA=['jan.','fev.','mar.','avr.','mai','juin','juil.','aout','sep.','oct.','nov.','dec.'];
-  var monthGuests=guests.filter(function(g){var d=parseDate(g.date);return d&&d.getFullYear()===calY&&d.getMonth()===calM;});
-  if(monthGuests.length){
-    var gs=document.createElement('div');
-    gs.style.cssText='margin-top:16px;padding-top:16px;border-top:1px solid var(--border)';
-    gs.innerHTML='<div style="font-size:12px;font-weight:500;color:#5E2E8B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Invites ('+monthGuests.length+')</div>';
-    monthGuests.forEach(function(g){
-      var d=new Date(g.date+'T12:00:00');
-      var row=document.createElement('div');
-      row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:13px';
-      row.innerHTML='<div><strong>'+g.name+'</strong>'+(g.company?'<span style="color:var(--text-muted);margin-left:8px;font-size:12px">'+g.company+'</span>':'')+
+
+  if (!list.length && !gList.length) { el.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Aucune reunion ce mois-ci.</p>'; return; }
+  el.innerHTML = '';
+
+  if (list.length) {
+    var w = document.createElement('div'); w.className='meetings-list';
+    list.forEach(function(m) {
+      var dt = parseDate(m.date);
+      if (!dt) return;
+      var c = document.createElement('div'); c.className='mtg-card';
+      c.setAttribute('data-mtg', JSON.stringify(m));
+      c.innerHTML =
+        '<div class="mtg-date-box"><div class="mtg-day">'+String(dt.getDate()).padStart(2,'0')+'</div><div class="mtg-mon">'+MON[dt.getMonth()]+'</div></div>'+
+        '<div class="mtg-info">'+
+          '<div class="mtg-title">'+(m.title||'')+'</div>'+
+          '<div class="mtg-meta">'+
+            '<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+(m.time||'')+'</span>'+
+            '<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'+(m.place||'')+'</span>'+
+            (m.capacity?'<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'+m.capacity+' places</span>':'')+
+          '</div>'+
+          '<span class="mtg-badge '+getMtgClass(m.type)+'">'+getMtgLabel(m.type)+'</span>'+
+        '</div>';
+      w.appendChild(c);
+    });
+    el.appendChild(w);
+  }
+
+  if (gList.length) {
+    var gs = document.createElement('div');
+    gs.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid var(--border)';
+    gs.innerHTML = '<div style="font-size:12px;font-weight:500;color:#5E2E8B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Invites ('+gList.length+')</div>';
+    gList.forEach(function(g) {
+      var d = parseDate(g.date);
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:13px';
+      row.innerHTML = '<div><strong>'+g.name+'</strong>'+(g.company?'<span style="color:var(--text-muted);margin-left:8px;font-size:12px">'+g.company+'</span>':'')+
         '<div style="font-size:11px;color:#5E2E8B;margin-top:2px">Invite par '+g.invitedBy+'</div></div>'+
-        '<span style="font-size:12px;color:var(--text-muted)">'+d.getDate()+' '+moisA[d.getMonth()]+'</span>';
+        '<span style="font-size:12px;color:var(--text-muted)">'+(d?d.getDate()+' '+MON[d.getMonth()]:'--')+'</span>';
       gs.appendChild(row);
     });
     el.appendChild(gs);
   }
 }
 
-function openMtgModal(){document.getElementById('m-mtg').classList.add('open');}
-function submitMtg(){
-  const title=document.getElementById('mt-title').value.trim();
-  const date=document.getElementById('mt-date').value;
-  const place=document.getElementById('mt-place').value.trim();
-  if(!title||!date||!place){alert('Titre, date et lieu sont requis.');return;}
-  const newMtg={title,date,time:document.getElementById('mt-time').value,place,address:document.getElementById('mt-addr').value.trim(),type:document.getElementById('mt-type').value,capacity:document.getElementById('mt-cap').value||'',notes:document.getElementById('mt-notes').value.trim()};
-  meetings.push(newMtg);
-  gsPost('addMeeting', newMtg).then(()=>showSyncBanner(!DEMO_MODE));
-  closeM('m-mtg');['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(id=>document.getElementById(id).value='');
-  renderCal();renderMtgList();
+function openMtgDetail(m) {
+  var dt = parseDate(m.date) || new Date();
+  var isAdmin = curUser && curUser.role==='admin';
+  var body = document.getElementById('mtg-detail-body');
+  if (!body) return;
+  body.innerHTML =
+    '<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">'+
+      '<div style="background:var(--brown-deep);border-radius:12px;padding:12px 16px;text-align:center;min-width:64px;">'+
+        '<div style="font-family:Playfair Display,serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1">'+String(dt.getDate()).padStart(2,'0')+'</div>'+
+        '<div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:2px">'+MON[dt.getMonth()]+' '+dt.getFullYear()+'</div>'+
+      '</div>'+
+      '<div><div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;margin-bottom:6px">'+m.title+'</div><span class="mtg-badge '+getMtgClass(m.type)+'">'+getMtgLabel(m.type)+'</span></div>'+
+    '</div>'+
+    '<div class="info-row"><span class="info-key">Heure</span><span class="info-val">'+(m.time||'--')+'</span></div>'+
+    '<div class="info-row"><span class="info-key">Lieu</span><span class="info-val">'+(m.place||'--')+'</span></div>'+
+    (m.address?'<div class="info-row"><span class="info-key">Adresse</span><span class="info-val" style="font-size:12px">'+m.address+'</span></div>':'')+
+    (m.capacity?'<div class="info-row"><span class="info-key">Capacite</span><span class="info-val">'+m.capacity+' personnes</span></div>':'')+
+    (m.notes?'<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.6">'+m.notes+'</div>':'')+
+    (m.address?'<a href="https://maps.google.com/?q='+encodeURIComponent(m.address)+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>':'')+
+    (isAdmin?'<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>':'');
+  openM('m-mtg-detail');
 }
 
-function openMtgDetail(m){
-  var dt=parseDate(m.date)||new Date();
-  document.getElementById('mtg-detail-body').innerHTML=`
-    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
-      <div style="background:var(--brown-deep);border-radius:12px;padding:12px 16px;text-align:center;min-width:64px;">
-        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1">${String(dt.getDate()).padStart(2,'0')}</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:2px">${MON[dt.getMonth()]} ${dt.getFullYear()}</div>
-      </div>
-      <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px">${m.title}</div><span class="mtg-badge ${getMtgClass(m.type)}">${getMtgType(m.type)}</span></div>
-    </div>
-    <div class="info-row"><span class="info-key">Heure</span><span class="info-val">${m.time}</span></div>
-    <div class="info-row"><span class="info-key">Lieu</span><span class="info-val">${m.place}</span></div>
-    ${m.address?`<div class="info-row"><span class="info-key">Adresse</span><span class="info-val" style="font-size:12px">${m.address}</span></div>`:''}
-    ${m.capacity?`<div class="info-row"><span class="info-key">Capacit\u00e9</span><span class="info-val">${m.capacity} personnes</span></div>`:''}
-    ${m.notes?`<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text-secondary);line-height:1.6">${m.notes}</div>`:''}
-    ${m.address?`<a href="https://maps.google.com/?q=${encodeURIComponent(m.address)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>`:''}
-    ${curUser && curUser.role==='admin'?`<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" onclick="deleteMtg('${m.date}','${m.title.replace(/'/g,"\\'")}')">Supprimer</button></div>`:''}
-  `;
-  document.getElementById('m-mtg-detail').classList.add('open');
-}
-function deleteMtg(date,title){
-  if(!confirm('Supprimer cette r\u00e9union ?'))return;
-  const idx=meetings.findIndex(m=>m.date===date&&m.title===title);
-  if(idx>=0){
-    meetings.splice(idx,1);
-    gsPost('deleteMeeting',{index:idx}).then(()=>showSyncBanner(!DEMO_MODE));
-  }
-  closeM('m-mtg-detail');renderCal();renderMtgList();
+function submitMtg() {
+  var title = document.getElementById('mt-title').value.trim();
+  var date  = document.getElementById('mt-date').value;
+  var place = document.getElementById('mt-place').value.trim();
+  if (!title||!date||!place) { alert('Titre, date et lieu sont requis.'); return; }
+  var obj = {title:title,date:date,time:document.getElementById('mt-time').value,place:place,address:document.getElementById('mt-addr').value.trim(),type:document.getElementById('mt-type').value,capacity:document.getElementById('mt-cap').value||'',notes:document.getElementById('mt-notes').value.trim()};
+  meetings.push(obj);
+  gsPost('addMeeting', obj).then(function(){ showBanner(!DEMO_MODE); });
+  ['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  closeM('m-mtg'); renderCal(); renderMtgList(); updateDashboard();
 }
 
-/* -- MEMBRES -- */
-function renderMembers(list){
-  const g=document.getElementById('members-grid');if(!list)list=members;g.innerHTML='';
-  list.forEach((m,i)=>{
-    const c=PAL[i%PAL.length],card=document.createElement('div');card.className='member-card';
-    card.onclick=()=>openMbr(members.indexOf(m));
-    card.innerHTML=`<div class="mbr-av" style="background:${c.bg};color:${c.tx}">${initials(m.name)}</div><div class="mbr-name">${m.name}</div><div class="mbr-role">${m.role}</div><span class="mbr-sector">${m.sector}</span><div class="mbr-stats"><div class="mst-box"><div class="mst-val">${m.recos}</div><div class="mst-lbl">Recos</div></div><div class="mst-box"><div class="mst-val">${m.ca}</div><div class="mst-lbl">CA</div></div><div class="mst-box"><div class="mst-val">${m.invites}</div><div class="mst-lbl">Invit\u00e9s</div></div></div>`;
+// ═══════════════════════════════════════════════════
+//  MEMBRES
+// ═══════════════════════════════════════════════════
+function renderMembers(list) {
+  var g = document.getElementById('members-grid');
+  if (!g) return;
+  if (!list) list = members;
+  g.innerHTML = '';
+  list.forEach(function(m, i) {
+    var c = PAL[i%PAL.length];
+    var card = document.createElement('div'); card.className='member-card';
+    card.setAttribute('data-idx', members.indexOf(m));
+    card.innerHTML =
+      '<div class="mbr-av" style="background:'+c.bg+';color:'+c.tx+'">'+initials(m.name)+'</div>'+
+      '<div class="mbr-name">'+(m.name||'')+'</div>'+
+      '<div class="mbr-role">'+(m.role||'')+'</div>'+
+      '<span class="mbr-sector">'+(m.sector||'')+'</span>'+
+      '<div class="mbr-stats">'+
+        '<div class="mst-box"><div class="mst-val">'+recos.filter(function(r){return r.from===m.name||r.to===m.name;}).length+'</div><div class="mst-lbl">Recos</div></div>'+
+        '<div class="mst-box"><div class="mst-val">'+(m.ca||'--')+'</div><div class="mst-lbl">CA</div></div>'+
+        '<div class="mst-box"><div class="mst-val">'+guests.filter(function(g){return g.invitedBy===m.name;}).length+'</div><div class="mst-lbl">Invites</div></div>'+
+      '</div>';
     g.appendChild(card);
   });
 }
-function filterMbr(v){const q=v.toLowerCase();renderMembers(members.filter(m=>m.name.toLowerCase().includes(q)||m.role.toLowerCase().includes(q)||m.sector.toLowerCase().includes(q)));}
-function filterMbrSector(v){renderMembers(v?members.filter(m=>m.sector===v):members);}
 
-function openMbr(idx){
-  var m=members[idx];
-  var c=PAL[idx%PAL.length];
-  var mr=recos.filter(function(r){return r.from===m.name||r.to===m.name;});
-  var mg=guests.filter(function(g){return g.invitedBy===m.name;});
-  var recoHtml='';
-  if(mr.length){
-    recoHtml='<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Recommandations ('+mr.length+')</div>'+
-    mr.slice(0,5).map(function(r){return '<div class="mini-reco"><div class="mini-reco-top"><span style="color:var(--gold)">'+(r.from===m.name?'vers '+r.to:r.from+' vers moi')+'</span><span style="color:var(--text-muted);font-size:11px">'+r.date+'</span></div><div class="mini-reco-desc">'+r.desc+(r.amount?' <span style="background:var(--gold-pale);color:var(--brown);font-size:11px;padding:1px 6px;border-radius:20px">'+r.amount+'</span>':'')+'</div></div>';}).join('')+'</div>';
+function openMbr(idx) {
+  var m = members[idx];
+  if (!m) return;
+  var c = PAL[idx%PAL.length];
+  var mr = recos.filter(function(r){ return r.from===m.name||r.to===m.name; });
+  var mg = guests.filter(function(g){ return g.invitedBy===m.name; });
+  var recoHtml = '';
+  if (mr.length) {
+    recoHtml = '<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Recommandations ('+mr.length+')</div>'+
+    mr.slice(0,5).map(function(r){ return '<div class="mini-reco"><div class="mini-reco-top"><span style="color:var(--gold)">'+(r.from===m.name?'vers '+r.to:r.from+' vers moi')+'</span><span style="color:var(--text-muted);font-size:11px">'+fmtDate(r.date)+'</span></div><div class="mini-reco-desc">'+(r.desc||'')+(r.amount?' <span style="background:var(--gold-pale);color:var(--brown);font-size:11px;padding:1px 6px;border-radius:20px">'+r.amount+'</span>':'')+'</div></div>'; }).join('')+'</div>';
   }
-  var guestHtml='';
-  if(mg.length){
-    guestHtml='<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:#5E2E8B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Invites amenes ('+mg.length+')</div>'+
-    mg.map(function(g){return '<div class="mini-reco"><div class="mini-reco-top"><span style="font-weight:500">'+g.name+'</span><span style="color:var(--text-muted);font-size:11px">'+g.date+'</span></div><div class="mini-reco-desc">'+(g.company||'')+'</div></div>';}).join('')+'</div>';
+  var guestHtml = '';
+  if (mg.length) {
+    guestHtml = '<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:#5E2E8B;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Invites amenes ('+mg.length+')</div>'+
+    mg.map(function(g){ return '<div class="mini-reco"><div class="mini-reco-top"><span style="font-weight:500">'+g.name+'</span><span style="color:var(--text-muted);font-size:11px">'+fmtDate(g.date)+'</span></div><div class="mini-reco-desc">'+(g.company||'')+'</div></div>'; }).join('')+'</div>';
   }
-  document.getElementById('mbr-detail-body').innerHTML=
+  setEl('m-member-title', 'Fiche membre');
+  document.getElementById('member-modal-body').innerHTML =
     '<div style="width:72px;height:72px;border-radius:50%;background:'+c.bg+';color:'+c.tx+';display:flex;align-items:center;justify-content:center;font-family:Playfair Display,serif;font-size:24px;font-weight:600;margin:0 auto 14px">'+initials(m.name)+'</div>'+
     '<div style="font-family:Playfair Display,serif;font-size:22px;font-weight:700;text-align:center;margin-bottom:4px">'+m.name+'</div>'+
-    '<div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px">'+m.role+' -- '+m.company+'</div>'+
+    '<div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px">'+(m.role||'')+(m.company?' - '+m.company:'')+'</div>'+
     '<div class="info-stats-row">'+
       '<div class="info-stat-box"><div class="info-stat-val">'+mr.length+'</div><div class="info-stat-lbl">Recommandations</div></div>'+
       '<div class="info-stat-box"><div class="info-stat-val">'+(m.ca||'--')+'</div><div class="info-stat-lbl">CA genere</div></div>'+
@@ -1430,129 +1383,59 @@ function openMbr(idx){
     '<div class="info-row"><span class="info-key">Entreprise</span><span class="info-val">'+(m.company||'--')+'</span></div>'+
     '<div class="info-row"><span class="info-key">Membre depuis</span><span class="info-val">'+(m.join||'--')+'</span></div>'+
     recoHtml + guestHtml;
-  document.getElementById('m-member').classList.add('open');
+  openM('m-member');
 }
 
-/* -- ADMIN -- */
-function renderAccounts(){
-  const tb=document.getElementById('acct-tbody');tb.innerHTML='';
-  accounts.forEach((a,i)=>{
-    const tr=document.createElement('tr');
-    var pw=a.password||'membre1234';
-    tr.innerHTML=`<td><strong style="font-size:13px">${a.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${a.email}</span></td>
-    <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px">${a.username}</code></td>
-    <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px;cursor:pointer" onclick="navigator.clipboard.writeText('${pw}')" title="Cliquer pour copier">${pw}</code></td>
-    <td><span class="role-badge ${a.role==='admin'?'rb-admin':'rb-member'}">${a.role==='admin'?'Admin':'Membre'}</span></td>
-    <td><span class="${a.status==='active'?'sb-active':'sb-pending'}">${a.status==='active'?'Actif':'En attente'}</span></td>
-    <td><div class="td-acts">
-      ${a.username!=='admin'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
-      ${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''}
-      ${a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
-    </div></td>`;
-    tb.appendChild(tr);
-  });
-  document.getElementById('as-total').textContent=accounts.length;
-  document.getElementById('as-active').textContent=accounts.filter(a=>a.status==='active').length;
-  document.getElementById('as-pending').textContent=accounts.filter(a=>a.status==='pending').length;
-}
-function activateAcct(i){accounts[i].status='active';gsPost('updateAccountStatus',{index:i,status:'active'}).then(()=>showSyncBanner(!DEMO_MODE));renderAccounts();}
-function deleteAcct(i){if(!confirm('Supprimer ce compte ?'))return;gsPost('deleteAccount',{index:i}).then(()=>showSyncBanner(!DEMO_MODE));accounts.splice(i,1);renderAccounts();}
-
-function openCreateAcct(){
-  document.getElementById('ac-result').innerHTML='';
-  document.getElementById('ac-footer').innerHTML=`<button class="btn-secondary" onclick="closeM('m-create-acct')">Annuler</button><button class="btn-primary" onclick="submitCreateAcct()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Cr\u00e9er le compte</button>`;
-  ['ac-fn','ac-ln','ac-email','ac-co','ac-role','ac-tel'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('m-create-acct').classList.add('open');
-}
-
-function genPass(){const c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';let p='';for(let i=0;i<8;i++)p+=c[Math.floor(Math.random()*c.length)];return p;}
-
-function slugify(s){return s.toLowerCase().replace(/[\u00e9\u00e8\u00ea\u00eb]/g,'e').replace(/[\u00e0\u00e2ä]/g,'a').replace(/[\u00f9\u00fbü]/g,'u').replace(/[\u00ee\u00ef]/g,'i').replace(/[\u00f4\u00f6]/g,'o').replace(/\u00e7/g,'c').replace(/\s+/g,'');}
-
-function submitCreateAcct(){
-  const fn=document.getElementById('ac-fn').value.trim(),ln=document.getElementById('ac-ln').value.trim();
-  const email=document.getElementById('ac-email').value.trim();
-  if(!fn||!ln||!email){alert('Pr\u00e9nom, nom et email sont requis.');return;}
-  const name=fn+' '+ln;
-  const username=slugify(fn[0])+'.'+slugify(ln);
-  const tmpPass=genPass();
-  const newAcct={name:name,username:username,email:email,password:tmpPass,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
-  const newMbr={name,role:document.getElementById('ac-role').value||'Membre',company:document.getElementById('ac-co').value||'',phone:document.getElementById('ac-tel').value||'',email,sector:document.getElementById('ac-sec').value,join:new Date().toLocaleDateString('fr-FR',{month:'short',year:'numeric'}),recos:0,ca:'0 k€',invites:0};
-  accounts.push(newAcct);
-  members.push(newMbr);
-  Promise.all([gsPost('addAccount',newAcct), gsPost('addMember',newMbr)]).then(()=>showSyncBanner(!DEMO_MODE));
-  document.getElementById('mbr-badge').textContent=members.length;
-  renderMembers();renderAccounts();
-  document.getElementById('ac-result').innerHTML=`
-    <div class="success-banner"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Compte cr\u00e9\u00e9 avec succ\u00e8s !</div>
-    <div class="temp-box">
-      <div class="temp-box-label">Identifiant de connexion</div>
-      <div class="temp-box-val">${username}</div>
-      <div class="temp-box-label" style="margin-top:12px">Mot de passe temporaire</div>
-      <div class="temp-box-val">${tmpPass}</div>
-      <div class="temp-box-hint">Communiquez ces identifiants au nouveau membre.<br>Il devra changer son mot de passe \u00e0 la premi\u00e8re connexion.</div>
-    </div>`;
-  document.getElementById('ac-footer').innerHTML=`<button class="btn-primary" onclick="closeM('m-create-acct')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Fermer</button>`;
-}
-
-
-/* -- GUESTS -- */
+// ═══════════════════════════════════════════════════
+//  INVITES
+// ═══════════════════════════════════════════════════
 function renderGuests(list) {
-  if (!list) list = guests;
   var tb = document.getElementById('guests-tbody');
   if (!tb) return;
+  if (!list) list = guests;
+  setEl('guests-badge', guests.length);
   tb.innerHTML = '';
-  document.getElementById('guests-badge').textContent = guests.length;
-  if (!list.length) {
-    tb.innerHTML = '<tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:20px">Aucun invite enregistre.</td></tr>';
-    return;
-  }
+  if (!list.length) { tb.innerHTML='<tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:20px">Aucun invite enregistre.</td></tr>'; return; }
   list.forEach(function(g) {
     var idx = guests.indexOf(g);
     var canEdit = curUser && (curUser.role==='admin' || curUser.name===g.invitedBy);
     var tr = document.createElement('tr');
     tr.innerHTML =
-      '<td><strong>'+g.name+'</strong></td>'+
+      '<td><strong>'+(g.name||'')+'</strong></td>'+
       '<td>'+(g.company||'--')+'</td>'+
-      '<td>'+(g.date||'--')+'</td>'+
+      '<td>'+(fmtDate(g.date)||'--')+'</td>'+
       '<td><span class="guest-tag">'+(g.invitedBy||'--')+'</span></td>'+
       '<td style="color:var(--text-muted);font-size:12px">'+(g.notes||'')+'</td>'+
       '<td><div class="td-acts">'+
-        (canEdit?'<button class="btn-sm" onclick="openGuestModal('+idx+')">Modifier</button>':'')+
-        (canEdit?'<button class="btn-sm danger" onclick="deleteGuest('+idx+')">Supprimer</button>':'')+
+        (canEdit?'<button class="btn-sm" data-edit-guest="'+idx+'">Modifier</button>':'')+
+        (canEdit?'<button class="btn-sm danger" data-del-guest="'+idx+'">Supprimer</button>':'')+
       '</div></td>';
     tb.appendChild(tr);
   });
-}
-
-function filterGuests(v) {
-  var q = v.toLowerCase();
-  renderGuests(guests.filter(function(g){ return (g.name+''+g.company+''+g.invitedBy).toLowerCase().includes(q); }));
 }
 
 function openGuestModal(editIdx) {
   var sel = document.getElementById('g-by');
   sel.innerHTML = '<option value="">Selectionner...</option>';
   members.forEach(function(m) {
-    var o = document.createElement('option');
-    o.value = m.name; o.textContent = m.name;
-    if (curUser && curUser.name === m.name) o.selected = true;
+    var o=document.createElement('option'); o.value=m.name; o.textContent=m.name;
+    if (curUser && curUser.name===m.name) o.selected=true;
     sel.appendChild(o);
   });
   if (editIdx !== undefined) {
     var g = guests[editIdx];
     document.getElementById('g-name').value    = g.name||'';
     document.getElementById('g-company').value = g.company||'';
-    document.getElementById('g-date').value    = g.date||'';
+    document.getElementById('g-date').value    = toISO(g.date)||'';
     document.getElementById('g-by').value      = g.invitedBy||'';
     document.getElementById('g-notes').value   = g.notes||'';
-    document.getElementById('m-guest').dataset.editIdx = editIdx;
+    document.getElementById('m-guest').setAttribute('data-edit-idx', editIdx);
   } else {
-    ['g-name','g-company','g-notes'].forEach(function(id){document.getElementById(id).value='';});
+    ['g-name','g-company','g-notes'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
     document.getElementById('g-date').value = new Date().toISOString().split('T')[0];
-    delete document.getElementById('m-guest').dataset.editIdx;
+    document.getElementById('m-guest').removeAttribute('data-edit-idx');
   }
-  document.getElementById('m-guest').classList.add('open');
+  openM('m-guest');
 }
 
 function submitGuest() {
@@ -1563,187 +1446,251 @@ function submitGuest() {
   var notes   = document.getElementById('g-notes').value.trim();
   if (!name||!date||!by) { alert('Nom, date et membre invitant sont requis.'); return; }
   var modal = document.getElementById('m-guest');
-  var editIdx = modal.dataset.editIdx !== undefined ? parseInt(modal.dataset.editIdx) : -1;
-  var obj = {name:name, company:company, date:date, invitedBy:by, notes:notes};
-  if (editIdx >= 0) {
-    guests[editIdx] = obj;
-    gsPost('updateGuest', Object.assign({index:editIdx}, obj)).then(function(){showSyncBanner(!DEMO_MODE);});
+  var editIdx = modal.getAttribute('data-edit-idx');
+  var obj = {name:name,company:company,date:date,invitedBy:by,notes:notes};
+  if (editIdx !== null && editIdx !== undefined) {
+    var i = parseInt(editIdx);
+    guests[i] = obj;
+    gsPost('updateGuest', Object.assign({index:i}, obj)).then(function(){ showBanner(!DEMO_MODE); });
   } else {
     guests.push(obj);
-    gsPost('addGuest', obj).then(function(){showSyncBanner(!DEMO_MODE);});
+    gsPost('addGuest', obj).then(function(){ showBanner(!DEMO_MODE); });
   }
   renderGuests(); updateDashboard(); closeM('m-guest');
 }
 
-function deleteGuest(idx) {
-  if (!confirm('Supprimer cet invite ?')) return;
-  gsPost('deleteGuest', {index:idx}).then(function(){showSyncBanner(!DEMO_MODE);});
-  guests.splice(idx,1);
-  renderGuests(); updateDashboard();
-}
-
-/* -- MODIFIER RECO -- */
-function openEditReco(idx) {
-  var r = recos[idx];
-  document.getElementById('er-idx').value = idx;
-  var isAdmin = curUser && curUser.role==='admin';
-  var fromSel = document.getElementById('er-from');
-  var toSel   = document.getElementById('er-to');
-  [fromSel, toSel].forEach(function(s){
-    s.innerHTML = '<option value="">Selectionner...</option>';
-    members.forEach(function(m){ var o=document.createElement('option');o.value=m.name;o.textContent=m.name;s.appendChild(o); });
+// ═══════════════════════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════════════════════
+function renderAccounts() {
+  var tb = document.getElementById('acct-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  accounts.forEach(function(a, i) {
+    var pw = a.password || 'membre1234';
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><strong style="font-size:13px">'+(a.name||'')+'</strong><br><span style="font-size:11px;color:var(--text-muted)">'+(a.email||'')+'</span></td>'+
+      '<td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px">'+(a.username||'')+'</code></td>'+
+      '<td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px;cursor:pointer" data-copy="'+pw+'">'+pw+'</code></td>'+
+      '<td><span class="role-badge '+(a.role==='admin'?'rb-admin':'rb-member')+'">'+(a.role==='admin'?'Admin':'Membre')+'</span></td>'+
+      '<td><span class="'+(a.status==='active'?'sb-active':'sb-pending')+'">'+(a.status==='active'?'Actif':'En attente')+'</span></td>'+
+      '<td style="font-size:12px;color:var(--text-muted)">'+(a.created||'')+'</td>'+
+      '<td><div class="td-acts">'+
+        (a.username!=='admin'?'<button class="btn-sm" data-edit-acct="'+i+'">Modifier</button>':'')+
+        (a.status==='pending'?'<button class="btn-sm success" data-activate-acct="'+i+'">Activer</button>':'')+
+        (a.username!=='admin'?'<button class="btn-sm danger" data-del-acct="'+i+'">Supprimer</button>':'')+
+      '</div></td>';
+    tb.appendChild(tr);
   });
-  fromSel.value = r.from; fromSel.disabled = !isAdmin;
-  toSel.value   = r.to;
-  document.getElementById('er-desc').value   = r.desc||'';
-  document.getElementById('er-amt').value    = r.amount||'';
-  document.getElementById('er-status').value = r.status||'new';
-  document.getElementById('m-edit-reco').classList.add('open');
+  setEl('as-total', accounts.length);
+  setEl('as-active', accounts.filter(function(a){return a.status==='active';}).length);
+  setEl('as-pending', accounts.filter(function(a){return a.status==='pending';}).length);
 }
 
-function saveEditReco() {
-  var idx  = parseInt(document.getElementById('er-idx').value);
-  var from = document.getElementById('er-from').disabled ? recos[idx].from : document.getElementById('er-from').value;
-  var to   = document.getElementById('er-to').value;
-  var desc = document.getElementById('er-desc').value.trim();
-  var amt  = document.getElementById('er-amt').value.trim();
-  var st   = document.getElementById('er-status').value;
-  if (!from||!to||!desc) { alert('Champs obligatoires manquants.'); return; }
-  recos[idx] = Object.assign({}, recos[idx], {from:from,to:to,desc:desc,amount:amt,status:st});
-  gsPost('updateReco', Object.assign({index:idx}, recos[idx])).then(function(){showSyncBanner(!DEMO_MODE);});
-  renderRecos(); updateDashboard(); closeM('m-edit-reco');
-}
-
-/* -- MODIFIER MEMBRE (admin) -- */
-function editMember(i) {
+function openEditMember(i) {
   var a = accounts[i];
   var m = members.find(function(mb){return mb.name===a.name||mb.email===a.email;})||{};
-  var sectors=['Finance','Conseil','Tech','Juridique','Immobilier','Marketing','BTP','Formation','Sante','Autre'];
-  var sOpts=sectors.map(function(s){return '<option'+(m.sector===s?' selected':'')+'>'+s+'</option>';}).join('');
-  document.getElementById('mbr-detail-body').innerHTML=
-    '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;margin-bottom:16px">Modifier le membre</div>'+
-    '<div class="form-row"><div class="form-group"><label class="form-label">Nom complet</label><input class="form-control" id="em-name" value="'+a.name+'"></div>'+
-    '<div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="em-user" value="'+a.username+'"></div></div>'+
+  var sectors = ['Finance','Conseil','Tech','Juridique','Immobilier','Marketing','BTP','Formation','Sante','Autre'];
+  var sOpts = sectors.map(function(s){return '<option'+(m.sector===s?' selected':'')+'>'+s+'</option>';}).join('');
+  setEl('m-member-title','Modifier le membre');
+  document.getElementById('member-modal-body').innerHTML =
+    '<div class="form-row"><div class="form-group"><label class="form-label">Nom complet</label><input class="form-control" id="em-name" value="'+(a.name||'')+'"></div>'+
+    '<div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="em-user" value="'+(a.username||'')+'"></div></div>'+
     '<div class="form-row"><div class="form-group"><label class="form-label">Mot de passe</label><input class="form-control" id="em-pass" value="'+(a.password||'membre1234')+'"></div>'+
     '<div class="form-group"><label class="form-label">Role</label><select class="form-control" id="em-approle"><option value="member"'+(a.role==='member'?' selected':'')+'>Membre</option><option value="admin"'+(a.role==='admin'?' selected':'')+'>Admin</option></select></div></div>'+
-    '<div class="form-row"><div class="form-group"><label class="form-label">Email</label><input class="form-control" id="em-email" value="'+a.email+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label class="form-label">Email</label><input class="form-control" id="em-email" value="'+(a.email||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Tel</label><input class="form-control" id="em-phone" value="'+(m.phone||'')+'"></div></div>'+
     '<div class="form-row"><div class="form-group"><label class="form-label">Entreprise</label><input class="form-control" id="em-company" value="'+(m.company||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Secteur</label><select class="form-control" id="em-sector">'+sOpts+'</select></div></div>'+
     '<div class="form-group"><label class="form-label">Poste</label><input class="form-control" id="em-role" value="'+(m.role||'')+'"></div>'+
     '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">'+
-    '<button class="btn-secondary" onclick="closeM(&quot;m-member&quot;)">Annuler</button>'+
-    '<button class="btn-primary" onclick="saveMember('+i+')">Enregistrer</button></div>';
-  document.getElementById('m-member').classList.add('open');
+    '<button class="btn-secondary" data-close="m-member">Annuler</button>'+
+    '<button class="btn-primary" data-save-member="'+i+'">Enregistrer</button></div>';
+  openM('m-member');
 }
 
 function saveMember(i) {
-  var name=document.getElementById('em-name').value.trim();
-  var username=document.getElementById('em-user').value.trim();
-  var password=document.getElementById('em-pass').value.trim();
-  var role=document.getElementById('em-approle').value;
-  var email=document.getElementById('em-email').value.trim();
-  var phone=document.getElementById('em-phone').value.trim();
-  var company=document.getElementById('em-company').value.trim();
-  var sector=document.getElementById('em-sector').value;
-  var mbrRole=document.getElementById('em-role').value.trim();
-  accounts[i]=Object.assign({},accounts[i],{name:name,username:username,password:password,role:role,email:email});
-  // Sauvegarder le compte (avec mot de passe) dans Sheets
-  gsPost('updateAccount',Object.assign({index:i},accounts[i])).then(function(){showSyncBanner(!DEMO_MODE);});
-  var mi=members.findIndex(function(m){return m.name===name||m.email===email;});
-  if(mi>=0){
-    members[mi]=Object.assign({},members[mi],{name:name,email:email,phone:phone,company:company,sector:sector,role:mbrRole});
-    gsPost('updateMember',Object.assign({index:mi},members[mi]));
+  var name     = document.getElementById('em-name').value.trim();
+  var username = document.getElementById('em-user').value.trim();
+  var password = document.getElementById('em-pass').value.trim();
+  var role     = document.getElementById('em-approle').value;
+  var email    = document.getElementById('em-email').value.trim();
+  var phone    = document.getElementById('em-phone').value.trim();
+  var company  = document.getElementById('em-company').value.trim();
+  var sector   = document.getElementById('em-sector').value;
+  var mbrRole  = document.getElementById('em-role').value.trim();
+  accounts[i] = Object.assign({},accounts[i],{name:name,username:username,password:password,role:role,email:email});
+  gsPost('updateAccount', Object.assign({index:i},accounts[i])).then(function(){ showBanner(!DEMO_MODE); });
+  var mi = members.findIndex(function(m){return m.name===name||m.email===email;});
+  if (mi>=0) {
+    members[mi] = Object.assign({},members[mi],{name:name,email:email,phone:phone,company:company,sector:sector,role:mbrRole});
+    gsPost('updateMember', Object.assign({index:mi},members[mi]));
   }
-  renderAccounts();renderMembers();closeM('m-member');
+  renderAccounts(); renderMembers(); closeM('m-member');
 }
 
-
-/* -- NOTIFICATIONS -- */
-function buildNotifications() {
-  var items = [];
-  var today = new Date(); today.setHours(0,0,0,0);
-
-  // Recos nouvelles ou en cours
-  recos.forEach(function(r, i) {
-    if (r.status === 'new') {
-      items.push({color:'#C8901A', text:'Nouvelle reco de <strong>'+r.from+'</strong> vers <strong>'+r.to+'</strong>', sub: r.desc ? r.desc.substring(0,60)+(r.desc.length>60?'...':'') : ''});
-    }
-    if (r.status === 'progress') {
-      items.push({color:'#1565C0', text:'Reco en cours : <strong>'+r.from+'</strong> vers <strong>'+r.to+'</strong>', sub: r.desc ? r.desc.substring(0,60)+(r.desc.length>60?'...':'') : ''});
-    }
-  });
-
-  // Reunions a venir dans les 7 jours
-  meetings.forEach(function(m) {
-    var d = parseDate(m.date);
-    var diff = Math.round((d - today) / 86400000);
-    if (diff >= 0 && diff <= 7) {
-      var when = diff === 0 ? "Aujourd'hui" : diff === 1 ? 'Demain' : 'Dans ' + diff + ' jours';
-      items.push({color:'#9B5E1E', text:when+' : <strong>'+m.title+'</strong>', sub: m.place || ''});
-    }
-  });
-
-  // Comptes en attente (admin seulement)
-  if (curUser && curUser.role === 'admin') {
-    var pending = accounts.filter(function(a){ return a.status === 'pending'; });
-    pending.forEach(function(a) {
-      items.push({color:'#C0392B', text:'Compte en attente : <strong>'+a.name+'</strong>', sub: a.email || ''});
-    });
-  }
-
-  return items;
+function submitCreateAcct() {
+  var fn=document.getElementById('ac-fn').value.trim(), ln=document.getElementById('ac-ln').value.trim();
+  var email=document.getElementById('ac-email').value.trim();
+  if (!fn||!ln||!email) { alert('Prenom, nom et email sont requis.'); return; }
+  var name=fn+' '+ln;
+  var username=slugify(fn[0])+'.'+slugify(ln);
+  var tmpPass=genPass();
+  var newAcct={name:name,username:username,email:email,password:tmpPass,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
+  var newMbr={name:name,role:document.getElementById('ac-role').value||'Membre',company:document.getElementById('ac-co').value||'',phone:document.getElementById('ac-tel').value||'',email:email,sector:document.getElementById('ac-sec').value,join:new Date().toLocaleDateString('fr-FR',{month:'short',year:'numeric'}),recos:0,ca:'0 k',invites:0};
+  accounts.push(newAcct); members.push(newMbr);
+  Promise.all([gsPost('addAccount',newAcct),gsPost('addMember',newMbr)]).then(function(){showBanner(!DEMO_MODE);});
+  setEl('mbr-badge',members.length); renderMembers(); renderAccounts();
+  document.getElementById('ac-result').innerHTML=
+    '<div class="success-banner">Compte cree avec succes !</div>'+
+    '<div class="temp-box"><div class="temp-box-label">Identifiant</div><div class="temp-box-val">'+username+'</div>'+
+    '<div class="temp-box-label" style="margin-top:12px">Mot de passe temporaire</div><div class="temp-box-val">'+tmpPass+'</div>'+
+    '<div class="temp-box-hint">Communiquez ces identifiants au membre.</div></div>';
+  document.getElementById('ac-footer').innerHTML='<button class="btn-primary" data-close="m-create-acct">Fermer</button>';
 }
 
+// ═══════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════════════════════════
 function renderNotifications() {
-  var items = buildNotifications();
-  var list = document.getElementById('notif-list');
-  var badge = document.getElementById('notif-badge');
-  if (!list) return;
-
-  if (!items.length) {
-    list.innerHTML = '<div class="notif-empty">Aucune notification</div>';
-    if (badge) badge.style.display = 'none';
-    return;
-  }
-
-  if (badge) {
-    badge.textContent = items.length > 9 ? '9+' : items.length;
-    badge.style.display = 'flex';
-  }
-
-  list.innerHTML = items.map(function(it) {
-    return '<div class="notif-item">'+
-      '<div class="notif-dot" style="background:'+it.color+'"></div>'+
-      '<div><div>'+it.text+'</div>'+(it.sub?'<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+it.sub+'</div>':'')+'</div>'+
-      '</div>';
-  }).join('');
-}
-
-function toggleNotif() {
-  var panel = document.getElementById('notif-panel');
-  panel.classList.toggle('open');
-  if (panel.classList.contains('open')) renderNotifications();
-}
-
-// Fermer le panneau en cliquant ailleurs
-document.addEventListener('click', function(e) {
-  var panel = document.getElementById('notif-panel');
-  var btn = document.getElementById('notif-btn');
-  if (panel && btn && panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
-    panel.classList.remove('open');
-  }
-});
-
-
-// Fermeture modals au clic sur backdrop
-window.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.modal-backdrop').forEach(function(m) {
-    m.addEventListener('click', function(e) {
-      if (e.target === m) m.classList.remove('open');
-    });
+  var items=[];
+  var today=new Date(); today.setHours(0,0,0,0);
+  recos.forEach(function(r){ if((r.status||'').toLowerCase()==='new') items.push({color:'#C8901A',text:'Nouvelle reco : '+r.from+' vers '+r.to}); });
+  meetings.forEach(function(m){
+    var d=parseDate(m.date); if(!d) return;
+    var diff=Math.round((d-today)/86400000);
+    if(diff>=0&&diff<=7) items.push({color:'#9B5E1E',text:(diff===0?"Aujourd hui":diff===1?"Demain":"Dans "+diff+" jours")+' : '+m.title+' - '+m.place});
   });
+  if(curUser&&curUser.role==='admin') accounts.filter(function(a){return a.status==='pending';}).forEach(function(a){items.push({color:'#C0392B',text:'Compte en attente : '+a.name});});
+  var badge=document.getElementById('notif-badge');
+  if(badge){badge.textContent=items.length>9?'9+':items.length;badge.style.display=items.length?'flex':'none';}
+  var list=document.getElementById('notif-list');
+  if(!list)return;
+  list.innerHTML=items.length?items.map(function(it){return '<div class="notif-item"><div class="notif-dot" style="background:'+it.color+'"></div><div>'+it.text+'</div></div>';}).join(''):'<div class="notif-empty">Aucune notification</div>';
+}
+
+// ═══════════════════════════════════════════════════
+//  INITIALISATION & EVENEMENTS
+// ═══════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+
+  // Login
+  document.getElementById('btn-login').addEventListener('click', doLogin);
+  document.getElementById('li-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  document.getElementById('btn-logout').addEventListener('click', doLogout);
+
+  // Sidebar mobile
+  document.getElementById('mob-menu-btn').addEventListener('click', toggleSidebar);
+  document.getElementById('sb-overlay').addEventListener('click', closeSidebar);
+
+  // Modals : fermeture sur backdrop et boutons data-close
+  document.querySelectorAll('.modal-backdrop').forEach(function(m){
+    m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('open'); });
+  });
+
+  // Fermeture generique via data-close
+  document.body.addEventListener('click', function(e) {
+    var closeId = e.target.getAttribute('data-close') || (e.target.closest('[data-close]') && e.target.closest('[data-close]').getAttribute('data-close'));
+    if (closeId) { closeM(closeId); return; }
+
+    // Copier mot de passe
+    if (e.target.getAttribute('data-copy')) { navigator.clipboard.writeText(e.target.getAttribute('data-copy')); return; }
+
+    // Notif toggle
+    if (e.target.id==='notif-btn'||e.target.closest('#notif-btn')) { document.getElementById('notif-panel').classList.toggle('open'); return; }
+    if (e.target.id==='notif-close') { closeM('notif-panel'); return; }
+    var panel=document.getElementById('notif-panel');
+    if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&!document.getElementById('notif-btn').contains(e.target)) panel.classList.remove('open');
+
+    // Carte reco -> modifier
+    var editBtn = e.target.closest('.reco-edit-btn');
+    if (editBtn) { openEditReco(parseInt(editBtn.getAttribute('data-idx'))); return; }
+
+    // Carte membre -> ouvrir
+    var memberCard = e.target.closest('.member-card');
+    if (memberCard) { openMbr(parseInt(memberCard.getAttribute('data-idx'))); return; }
+
+    // Carte reunion -> detail
+    var mtgCard = e.target.closest('.mtg-card');
+    if (mtgCard) { try{ openMtgDetail(JSON.parse(mtgCard.getAttribute('data-mtg'))); }catch(ex){} return; }
+
+    // Cal evt reunion
+    var calEvt = e.target.closest('.cal-evt:not(.cal-evt-guest)');
+    if (calEvt && calEvt.getAttribute('data-mtg')) { try{ e.stopPropagation(); openMtgDetail(JSON.parse(calEvt.getAttribute('data-mtg'))); }catch(ex){} return; }
+
+    // Supprimer reunion
+    var delMtg = e.target.getAttribute('data-del-mtg');
+    if (delMtg) { if(!confirm('Supprimer cette reunion ?')) return; try{ var m=JSON.parse(decodeURIComponent(delMtg)); var idx=meetings.findIndex(function(x){return x.title===m.title&&x.date===m.date;}); if(idx>=0){gsPost('deleteMeeting',{index:idx});meetings.splice(idx,1);} }catch(ex){} closeM('m-mtg-detail'); renderCal(); renderMtgList(); updateDashboard(); return; }
+
+    // Modifier invité
+    var editGuest = e.target.getAttribute('data-edit-guest');
+    if (editGuest!==null&&editGuest!==undefined) { openGuestModal(parseInt(editGuest)); return; }
+
+    // Supprimer invité
+    var delGuest = e.target.getAttribute('data-del-guest');
+    if (delGuest!==null&&delGuest!==undefined) { if(!confirm('Supprimer cet invite ?'))return; var i=parseInt(delGuest); gsPost('deleteGuest',{index:i}); guests.splice(i,1); renderGuests(); updateDashboard(); return; }
+
+    // Modifier compte admin
+    var editAcct = e.target.getAttribute('data-edit-acct');
+    if (editAcct!==null&&editAcct!==undefined) { openEditMember(parseInt(editAcct)); return; }
+
+    // Sauvegarder membre
+    var saveMbr = e.target.getAttribute('data-save-member');
+    if (saveMbr!==null&&saveMbr!==undefined) { saveMember(parseInt(saveMbr)); return; }
+
+    // Activer compte
+    var activateAcct = e.target.getAttribute('data-activate-acct');
+    if (activateAcct!==null&&activateAcct!==undefined) { var i=parseInt(activateAcct); accounts[i].status='active'; gsPost('updateAccountStatus',{index:i,status:'active'}); renderAccounts(); return; }
+
+    // Supprimer compte
+    var delAcct = e.target.getAttribute('data-del-acct');
+    if (delAcct!==null&&delAcct!==undefined) { if(!confirm('Supprimer ce compte ?'))return; var i=parseInt(delAcct); gsPost('deleteAccount',{index:i}); accounts.splice(i,1); renderAccounts(); return; }
+  });
+
+  // Boutons topbar
+  document.getElementById('btn-new-reco').addEventListener('click', openRecoModal);
+  document.getElementById('btn-add-reco2').addEventListener('click', openRecoModal);
+  document.getElementById('btn-submit-reco').addEventListener('click', submitReco);
+  document.getElementById('btn-save-reco').addEventListener('click', saveEditReco);
+  document.getElementById('btn-add-mtg').addEventListener('click', function(){ openM('m-mtg'); });
+  document.getElementById('btn-submit-mtg').addEventListener('click', submitMtg);
+  document.getElementById('btn-prev-month').addEventListener('click', function(){ changeMonth(-1); });
+  document.getElementById('btn-next-month').addEventListener('click', function(){ changeMonth(1); });
+  document.getElementById('btn-add-guest').addEventListener('click', function(){ openGuestModal(); });
+  document.getElementById('btn-submit-guest').addEventListener('click', submitGuest);
+  document.getElementById('btn-create-acct').addEventListener('click', function(){
+    document.getElementById('ac-result').innerHTML='';
+    document.getElementById('ac-footer').innerHTML='<button class="btn-secondary" data-close="m-create-acct">Annuler</button><button class="btn-primary" id="btn-submit-acct">Creer le compte</button>';
+    ['ac-fn','ac-ln','ac-email','ac-co','ac-role','ac-tel'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    openM('m-create-acct');
+    document.getElementById('btn-submit-acct').addEventListener('click', submitCreateAcct);
+  });
+
+  // Recherches
+  document.getElementById('search-recos').addEventListener('input', function(){
+    var q=this.value.toLowerCase();
+    renderRecos(recos.filter(function(r){return(r.from+''+r.to+''+r.desc).toLowerCase().includes(q);}));
+  });
+  document.getElementById('filter-reco-status').addEventListener('change', function(){
+    renderRecos(this.value?recos.filter(function(r){return(r.status||'').toLowerCase()===this.value;},this):recos);
+  });
+  document.getElementById('search-members').addEventListener('input', function(){
+    var q=this.value.toLowerCase();
+    renderMembers(members.filter(function(m){return(m.name+''+m.role+''+m.sector).toLowerCase().includes(q);}));
+  });
+  document.getElementById('filter-sector').addEventListener('change', function(){
+    renderMembers(this.value?members.filter(function(m){return m.sector===this.value;},this):members);
+  });
+  document.getElementById('search-guests').addEventListener('input', function(){
+    var q=this.value.toLowerCase();
+    renderGuests(guests.filter(function(g){return(g.name+''+g.company+''+g.invitedBy).toLowerCase().includes(q);}));
+  });
+
+  // Init calendrier
+  renderCal();
 });
+
 </script>
 </body>
 </html>
