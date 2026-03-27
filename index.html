@@ -329,14 +329,13 @@ textarea.form-control{resize:none;height:80px;}
       </div>
     </div>
     <label class="lf-label">Identifiant</label>
-    <input class="lf-input" type="text" id="li-user" placeholder="votre.identifiant" autocomplete="username">
+    <input class="lf-input" type="text" id="li-user" placeholder="votre@email.fr" autocomplete="username">
     <label class="lf-label">Mot de passe</label>
     <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">Se connecter</button>
     <div class="login-error" id="li-err"></div>
     <div class="login-hint">
-      Admin : <code>admin</code> / <code>admin1234</code><br>
-      Membre : <code>p.moreau</code> / <code>membre1234</code>
+      Admin : <code>cafedesaffaires.cholet@gmail.com</code> / <code>admin1234</code>
     </div>
   </div>
 </div>
@@ -797,52 +796,14 @@ function showSyncBanner(ok) {
   setTimeout(() => { b.style.display = 'none'; b.style.opacity = '1'; }, 3400);
 }
 
-let members=[
-  {name:'Martin Dupont',role:'Consultant RH',company:'DupRH Conseil',phone:'06 12 34 56 78',email:'m.dupont@duprh.fr',sector:'Conseil',join:'Jan 2022',recos:8,ca:'42 k€',invites:4},
-  {name:'Sophie Laurent',role:'Avocate',company:'Cabinet Laurent',phone:'06 23 45 67 89',email:'s.laurent@cabinet.fr',sector:'Juridique',join:'Mar 2022',recos:6,ca:'31 k€',invites:3},
-  {name:'Pierre Moreau',role:'Expert-comptable',company:'Moreau & Associés',phone:'06 34 56 78 90',email:'p.moreau@moreau-assoc.fr',sector:'Finance',join:'Jan 2022',recos:11,ca:'58 k€',invites:5},
-  {name:'Claire Bernard',role:'Architecte',company:'Bernard Architecture',phone:'06 45 67 89 01',email:'c.bernard@barch.fr',sector:'BTP',join:'Jun 2022',recos:5,ca:'27 k€',invites:2},
-  {name:'Thomas Petit',role:'Directeur Commercial',company:'PetitTech',phone:'06 56 78 90 12',email:'t.petit@petittech.fr',sector:'Tech',join:'Sep 2022',recos:9,ca:'48 k€',invites:6},
-  {name:'Isabelle Roux',role:"Coach d'entreprise",company:'Roux Coaching',phone:'06 67 89 01 23',email:'i.roux@rouxcoach.fr',sector:'Formation',join:'Jan 2023',recos:4,ca:'19 k€',invites:3},
-  {name:'Nicolas Martin',role:'Gérant immobilier',company:'Martin Immo',phone:'06 78 90 12 34',email:'n.martin@martinimmo.fr',sector:'Immobilier',join:'Mar 2023',recos:7,ca:'35 k€',invites:4},
-  {name:'Anne Leroy',role:'Responsable Marketing',company:'LeroyMedia',phone:'06 89 01 23 45',email:'a.leroy@leroymedia.fr',sector:'Marketing',join:'Jun 2023',recos:3,ca:'14 k€',invites:2},
-  {name:'François Girard',role:'Notaire',company:'Étude Girard',phone:'06 90 12 34 56',email:'f.girard@etudegirard.fr',sector:'Juridique',join:'Sep 2023',recos:6,ca:'29 k€',invites:3},
-  {name:'Lucie Fontaine',role:'Directrice Financière',company:'Fontaine Finance',phone:'06 01 23 45 67',email:'l.fontaine@fontainefin.fr',sector:'Finance',join:'Jan 2024',recos:2,ca:'11 k€',invites:1},
-  {name:'Antoine Mercier',role:'Développeur Web',company:'Mercier Digital',phone:'06 12 34 56 79',email:'a.mercier@mercierdigital.fr',sector:'Tech',join:'Mar 2024',recos:3,ca:'16 k€',invites:2},
-  {name:'Julie Blanc',role:'Médecin du travail',company:'Cabinet Blanc',phone:'06 23 45 67 80',email:'j.blanc@cabinetblanc.fr',sector:'Santé',join:'Jun 2024',recos:1,ca:'7 k€',invites:1}
-];
+let members=[];
 
-let recos=[
-  {from:'Pierre Moreau',to:'Sophie Laurent',desc:'Client PME cherchant un avocat pour restructuration',amount:'8 000 €',date:'15 mars 2025',status:'progress'},
-  {from:'Thomas Petit',to:'Nicolas Martin',desc:'Directeur cherchant à investir dans des locaux commerciaux',amount:'120 000 €',date:'10 mars 2025',status:'done'},
-  {from:'Martin Dupont',to:'Pierre Moreau',desc:'Startup souhaitant externaliser sa comptabilité',amount:'6 000 €/an',date:'5 mars 2025',status:'new'},
-  {from:'Claire Bernard',to:'Thomas Petit',desc:"Maîtrise d'ouvrage cherche solution logicielle BTP",amount:'15 000 €',date:'28 fév. 2025',status:'progress'},
-  {from:'Nicolas Martin',to:'Isabelle Roux',desc:'Client investisseur souhaite un coaching dirigeant',amount:'3 500 €',date:'20 fév. 2025',status:'new'},
-  {from:'Sophie Laurent',to:'François Girard',desc:"Succession complexe nécessitant l'intervention d'un notaire",amount:'25 000 €',date:'12 fév. 2025',status:'done'}
-];
+let recos=[];
 
-let meetings=[
-  {title:'Petit-déjeuner mensuel',date:'2026-04-03',time:'08:00',place:'Restaurant Le Vintage',address:'14 rue Lenepveu, 49000 Angers',type:'regular',capacity:20,notes:'Thème : développement commercial 2026'},
-  {title:'Réunion thématique IA & PME',date:'2026-04-22',time:'12:00',place:'Espace Créatis',address:'5 rue des Sables, 49000 Angers',type:'special',capacity:30,notes:'Intervenant : Antoine Mercier — Mercier Digital'},
-  {title:'Petit-déjeuner mensuel',date:'2026-05-08',time:'08:00',place:'Hôtel Mercure Angers',address:'1 bd Maréchal Foch, 49000 Angers',type:'regular',capacity:20,notes:''},
-  {title:'Assemblée Générale 2026',date:'2026-06-15',time:'18:00',place:'CCI Maine-et-Loire',address:'8 bd du Roi René, 49100 Angers',type:'agm',capacity:50,notes:'Bilan annuel — élection du bureau'},
-  {title:'Petit-déjeuner mensuel',date:'2026-07-04',time:'08:00',place:'Le Café du Commerce',address:'9 place du Ralliement, 49000 Angers',type:'regular',capacity:20,notes:''},
-];
+let meetings=[];
 
 let accounts=[
-  {name:'Administrateur',username:'admin',email:'admin@cafe-affaires.fr',role:'admin',status:'active',created:'01/01/2022'},
-  {name:'Pierre Moreau',username:'p.moreau',email:'p.moreau@moreau-assoc.fr',role:'member',status:'active',created:'10/01/2022'},
-  {name:'Martin Dupont',username:'m.dupont',email:'m.dupont@duprh.fr',role:'member',status:'active',created:'10/01/2022'},
-  {name:'Sophie Laurent',username:'s.laurent',email:'s.laurent@cabinet.fr',role:'member',status:'active',created:'15/03/2022'},
-  {name:'Claire Bernard',username:'c.bernard',email:'c.bernard@barch.fr',role:'member',status:'active',created:'01/06/2022'},
-  {name:'Thomas Petit',username:'t.petit',email:'t.petit@petittech.fr',role:'member',status:'active',created:'01/09/2022'},
-  {name:'Isabelle Roux',username:'i.roux',email:'i.roux@rouxcoach.fr',role:'member',status:'active',created:'05/01/2023'},
-  {name:'Nicolas Martin',username:'n.martin',email:'n.martin@martinimmo.fr',role:'member',status:'active',created:'10/03/2023'},
-  {name:'Anne Leroy',username:'a.leroy',email:'a.leroy@leroymedia.fr',role:'member',status:'active',created:'02/06/2023'},
-  {name:'François Girard',username:'f.girard',email:'f.girard@etudegirard.fr',role:'member',status:'active',created:'08/09/2023'},
-  {name:'Lucie Fontaine',username:'l.fontaine',email:'l.fontaine@fontainefin.fr',role:'member',status:'active',created:'06/01/2024'},
-  {name:'Antoine Mercier',username:'a.mercier',email:'a.mercier@mercierdigital.fr',role:'member',status:'active',created:'01/03/2024'},
-  {name:'Julie Blanc',username:'j.blanc',email:'j.blanc@cabinetblanc.fr',role:'member',status:'pending',created:'01/06/2024'},
+  {name:'Administrateur',username:'cafedesaffaires.cholet@gmail.com',email:'cafedesaffaires.cholet@gmail.com',role:'admin',status:'active',created:'27/03/2026'},
 ];
 
 const caData={2025:[18,22,31,27,24,19,21,28,25,32,0,0],2024:[14,17,22,20,19,16,18,23,21,25,27,29]};
@@ -861,7 +822,7 @@ function doLogin(){
   const u=document.getElementById('li-user').value.trim();
   const p=document.getElementById('li-pass').value;
   const err=document.getElementById('li-err');
-  const fixed={admin:{pass:'admin1234',role:'admin',name:'Administrateur'},'p.moreau':{pass:'membre1234',role:'member',name:'Pierre Moreau'}};
+  const fixed={'cafedesaffaires.cholet@gmail.com':{pass:'admin1234',role:'admin',name:'Administrateur'}};
   let found=fixed[u];
   if(!found){const a=accounts.find(a=>a.username===u);if(a)found={pass:'membre1234',role:a.role,name:a.name};}
   if(!found||found.pass!==p){err.textContent='Identifiant ou mot de passe incorrect.';return;}
