@@ -329,12 +329,11 @@ textarea.form-control{resize:none;height:80px;}
       </div>
     </div>
     <label class="lf-label">Identifiant</label>
-    <input class="lf-input" type="text" id="li-user" placeholder="identifiant ou email" autocomplete="username">
+    <input class="lf-input" type="text" id="li-user" placeholder="identifiant" autocomplete="username">
     <label class="lf-label">Mot de passe</label>
     <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">Se connecter</button>
     <div class="login-error" id="li-err"></div>
-
   </div>
 </div>
 
@@ -740,7 +739,7 @@ textarea.form-control{resize:none;height:80px;}
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ══════════════════════════════════════════════════════
    CONFIGURATION GOOGLE SHEETS
    Collez ici l'URL de votre déploiement Apps Script
@@ -801,7 +800,7 @@ let recos=[];
 let meetings=[];
 
 let accounts=[
-  {name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',role:'admin',status:'active',created:'27/03/2026'},
+  {name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',password:'admin1234',role:'admin',status:'active',created:'27/03/2026'},
 ];
 
 const caData={2025:[18,22,31,27,24,19,21,28,25,32,0,0],2024:[14,17,22,20,19,16,18,23,21,25,27,29]};
@@ -816,40 +815,43 @@ let curUser=null;
 let calY=2026,calM=3;
 
 /* ── AUTH ── */
-function doLogin(){
-  const u=document.getElementById('li-user').value.trim();
-  const p=document.getElementById('li-pass').value;
-  const err=document.getElementById('li-err');
-  // Compte admin fixe
-  if((u==='admin'||u==='cafedesaffaires.cholet@gmail.com')&&p==='admin1234'){
-    curUser={username:u,role:'admin',name:'Administrateur'};
-    err.textContent='';
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app-shell').style.display='flex';
-    document.getElementById('sb-name').textContent='Administrateur';
-    document.getElementById('sb-role').textContent='Administrateur';
-    document.getElementById('sb-av').textContent='AD';
-    document.getElementById('dash-greet').textContent='Bonjour, Administrateur 👋';
-    ['admin-sep','nav-admin','mob-admin'].forEach(id=>document.getElementById(id).style.display='');
-    document.getElementById('btn-add-mtg').style.display='flex';
+function doLogin() {
+  var u = document.getElementById('li-user').value.trim();
+  var p = document.getElementById('li-pass').value;
+  var err = document.getElementById('li-err');
+  err.textContent = '';
+  if (u === 'admin' && p === 'admin1234') {
+    curUser = {username:'admin', role:'admin', name:'Administrateur'};
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-shell').style.display = 'flex';
+    document.getElementById('sb-name').textContent = 'Administrateur';
+    document.getElementById('sb-role').textContent = 'Administrateur';
+    document.getElementById('sb-av').textContent = 'AD';
+    document.getElementById('dash-greet').textContent = 'Bonjour, Administrateur';
+    document.getElementById('admin-sep').style.display = '';
+    document.getElementById('nav-admin').style.display = '';
+    document.getElementById('mob-admin').style.display = '';
+    document.getElementById('btn-add-mtg').style.display = 'flex';
     loadAllData(); return;
   }
-  // Membres : identifiant = username, mot de passe stocké dans accounts
-  const a=accounts.find(a=>a.username===u);
-  const pass=a?a.password||'membre1234':'';
-  let found=a?{pass,role:a.role,name:a.name}:null;
-  if(!found||found.pass!==p){err.textContent='Identifiant ou mot de passe incorrect.';return;}
-  curUser={username:u,role:found.role,name:found.name};
-  err.textContent='';
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('app-shell').style.display='flex';
-  document.getElementById('sb-name').textContent=found.name;
-  document.getElementById('sb-role').textContent=found.role==='admin'?'Administrateur':'Membre';
-  document.getElementById('sb-av').textContent=initials(found.name);
-  document.getElementById('dash-greet').textContent='Bonjour, '+found.name.split(' ')[0]+' 👋';
-  const isAdmin=found.role==='admin';
-  ['admin-sep','nav-admin','mob-admin'].forEach(id=>document.getElementById(id).style.display=isAdmin?'':'none');
-  document.getElementById('btn-add-mtg').style.display=isAdmin?'flex':'none';
+  var found = null;
+  for (var i = 0; i < accounts.length; i++) {
+    if (accounts[i].username === u) { found = accounts[i]; break; }
+  }
+  if (!found) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
+  if (p !== (found.password || 'membre1234')) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
+  curUser = {username:u, role:found.role, name:found.name};
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'flex';
+  document.getElementById('sb-name').textContent = found.name;
+  document.getElementById('sb-role').textContent = found.role === 'admin' ? 'Administrateur' : 'Membre';
+  document.getElementById('sb-av').textContent = initials(found.name);
+  document.getElementById('dash-greet').textContent = 'Bonjour, ' + found.name.split(' ')[0];
+  var isAdmin = found.role === 'admin';
+  document.getElementById('admin-sep').style.display = isAdmin ? '' : 'none';
+  document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
+  document.getElementById('mob-admin').style.display = isAdmin ? '' : 'none';
+  document.getElementById('btn-add-mtg').style.display = isAdmin ? 'flex' : 'none';
   loadAllData();
 }
 function doLogout(){curUser=null;document.getElementById('app-shell').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('li-user').value='';document.getElementById('li-pass').value='';}
@@ -1098,15 +1100,16 @@ function renderAccounts(){
   const tb=document.getElementById('acct-tbody');tb.innerHTML='';
   accounts.forEach((a,i)=>{
     const tr=document.createElement('tr');
+    var passVal=a.password||'membre1234';
     tr.innerHTML=`<td><strong style="font-size:13px">${a.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${a.email}</span></td>
     <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px">${a.username}</code></td>
-    <td><span style="font-size:12px;font-family:monospace;background:var(--cream-dark);padding:2px 6px;border-radius:4px;cursor:pointer;user-select:all" title="Cliquer pour copier" onclick="navigator.clipboard.writeText('${a.password||'membre1234'}')">${a.password||'membre1234'}</span></td>
+    <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px;cursor:pointer" title="Cliquer pour copier" onclick="navigator.clipboard.writeText('${passVal}')">${passVal}</code></td>
     <td><span class="role-badge ${a.role==='admin'?'rb-admin':'rb-member'}">${a.role==='admin'?'Admin':'Membre'}</span></td>
     <td><span class="${a.status==='active'?'sb-active':'sb-pending'}">${a.status==='active'?'Actif':'En attente'}</span></td>
     <td><div class="td-acts">
-      ${a.a.username!=='admin'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
+      ${a.username!=='admin'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
       ${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''}
-      ${a.a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
+      ${a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
     </div></td>`;
     tb.appendChild(tr);
   });
@@ -1116,6 +1119,54 @@ function renderAccounts(){
 }
 function activateAcct(i){accounts[i].status='active';gsPost('updateAccountStatus',{index:i,status:'active'}).then(()=>showSyncBanner(!DEMO_MODE));renderAccounts();}
 function deleteAcct(i){if(!confirm('Supprimer ce compte ?'))return;gsPost('deleteAccount',{index:i}).then(()=>showSyncBanner(!DEMO_MODE));accounts.splice(i,1);renderAccounts();}
+
+
+function editMember(i) {
+  var a = accounts[i];
+  var m = {};
+  for (var j=0; j<members.length; j++) {
+    if (members[j].name===a.name || members[j].email===a.email) { m=members[j]; break; }
+  }
+  var sectors = ['Finance','Conseil','Tech','Juridique','Immobilier','Marketing','BTP','Formation','Sante','Autre'];
+  var sOpts = sectors.map(function(s){ return '<option'+(m.sector===s?' selected':'')+'>'+s+'</option>'; }).join('');
+  document.getElementById('mbr-detail-body').innerHTML =
+    '<div style="font-family:Playfair Display,serif;font-size:18px;font-weight:700;margin-bottom:16px">Modifier</div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">Nom complet</label><input class="form-control" id="em-name" value="'+a.name+'"></div>' +
+    '<div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="em-user" value="'+a.username+'"></div></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">Mot de passe</label><input class="form-control" id="em-pass" value="'+(a.password||'membre1234')+'"></div>' +
+    '<div class="form-group"><label class="form-label">Role</label><select class="form-control" id="em-approle"><option value="member"'+(a.role==='member'?' selected':'')+'>Membre</option><option value="admin"'+(a.role==='admin'?' selected':'')+'>Admin</option></select></div></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">Email</label><input class="form-control" id="em-email" value="'+a.email+'"></div>' +
+    '<div class="form-group"><label class="form-label">Tel</label><input class="form-control" id="em-phone" value="'+(m.phone||'')+'"></div></div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">Entreprise</label><input class="form-control" id="em-company" value="'+(m.company||'')+'"></div>' +
+    '<div class="form-group"><label class="form-label">Secteur</label><select class="form-control" id="em-sector">'+sOpts+'</select></div></div>' +
+    '<div class="form-group"><label class="form-label">Poste</label><input class="form-control" id="em-role" value="'+(m.role||'')+'"></div>' +
+    '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">' +
+    '<button class="btn-secondary" onclick="closeM('m-member')">Annuler</button>' +
+    '<button class="btn-primary" onclick="saveMember('+i+')">Enregistrer</button></div>';
+  document.getElementById('m-member').classList.add('open');
+}
+
+function saveMember(i) {
+  var name     = document.getElementById('em-name').value.trim();
+  var username = document.getElementById('em-user').value.trim();
+  var password = document.getElementById('em-pass').value.trim();
+  var role     = document.getElementById('em-approle').value;
+  var email    = document.getElementById('em-email').value.trim();
+  var phone    = document.getElementById('em-phone').value.trim();
+  var company  = document.getElementById('em-company').value.trim();
+  var sector   = document.getElementById('em-sector').value;
+  var mbrRole  = document.getElementById('em-role').value.trim();
+  accounts[i] = {name:name, username:username, password:password, role:role, email:email, status:accounts[i].status, created:accounts[i].created};
+  var mi = -1;
+  for (var j=0; j<members.length; j++) {
+    if (members[j].name===a.name || members[j].email===a.email) { mi=j; break; }
+  }
+  if (mi >= 0) {
+    members[mi] = Object.assign({}, members[mi], {name:name, email:email, phone:phone, company:company, sector:sector, role:mbrRole});
+    gsPost('updateMember', Object.assign({index:mi}, members[mi]));
+  }
+  renderAccounts(); renderMembers(); closeM('m-member');
+}
 
 function openCreateAcct(){
   document.getElementById('ac-result').innerHTML='';
@@ -1128,66 +1179,6 @@ function genPass(){const c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz234567
 
 function slugify(s){return s.toLowerCase().replace(/[éèêë]/g,'e').replace(/[àâä]/g,'a').replace(/[ùûü]/g,'u').replace(/[îï]/g,'i').replace(/[ôö]/g,'o').replace(/ç/g,'c').replace(/\s+/g,'');}
 
-/* ── MODIFICATION MEMBRE (admin) ── */
-function editMember(i){
-  const a=accounts[i];
-  const m=members.find(mb=>mb.name===a.name)||{};
-  const body=document.getElementById('mbr-detail-body');
-  document.getElementById('m-member').classList.add('open');
-  body.innerHTML=`
-    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:16px">Modifier le membre</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Prénom Nom</label><input class="form-control" id="em-name" value="${a.name}"></div>
-      <div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="em-user" value="${a.username}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-control" id="em-pass" value="${a.password||'membre1234'}"></div>
-      <div class="form-group"><label class="form-label">Rôle appli</label>
-        <select class="form-control" id="em-approle">
-          <option value="member" ${a.role==='member'?'selected':''}>Membre</option>
-          <option value="admin" ${a.role==='admin'?'selected':''}>Admin</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="em-email" value="${a.email}"></div>
-      <div class="form-group"><label class="form-label">Téléphone</label><input class="form-control" id="em-phone" value="${m.phone||''}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Entreprise</label><input class="form-control" id="em-company" value="${m.company||''}"></div>
-      <div class="form-group"><label class="form-label">Secteur</label>
-        <select class="form-control" id="em-sector">
-          ${['Finance','Conseil','Tech','Juridique','Immobilier','Marketing','BTP','Formation','Santé','Autre'].map(s=>`<option ${m.sector===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-    </div>
-    <div class="form-group"><label class="form-label">Poste / rôle</label><input class="form-control" id="em-role" value="${m.role||''}"></div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
-      <button class="btn-secondary" onclick="closeM('m-member')">Annuler</button>
-      <button class="btn-primary" onclick="saveMember(${i})"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button>
-    </div>`;
-}
-
-function saveMember(i){
-  const name=document.getElementById('em-name').value.trim();
-  const username=document.getElementById('em-user').value.trim();
-  const password=document.getElementById('em-pass').value.trim();
-  const role=document.getElementById('em-approle').value;
-  const email=document.getElementById('em-email').value.trim();
-  const phone=document.getElementById('em-phone').value.trim();
-  const company=document.getElementById('em-company').value.trim();
-  const sector=document.getElementById('em-sector').value;
-  const mbrRole=document.getElementById('em-role').value.trim();
-  // Mettre à jour accounts
-  accounts[i]={...accounts[i],name,username,password,role,email};
-  // Mettre à jour members
-  const mi=members.findIndex(m=>m.name===accounts[i].name||m.email===accounts[i].email);
-  if(mi>=0) members[mi]={...members[mi],name,email,phone,company,sector,role:mbrRole};
-  gsPost('updateMember',{index:mi,...members[mi]}).then(()=>showSyncBanner(!DEMO_MODE));
-  gsPost('updateAccountStatus',{index:i,status:accounts[i].status}).then(()=>{});
-  renderAccounts();renderMembers();closeM('m-member');
-}
-
 function submitCreateAcct(){
   const fn=document.getElementById('ac-fn').value.trim(),ln=document.getElementById('ac-ln').value.trim();
   const email=document.getElementById('ac-email').value.trim();
@@ -1195,7 +1186,7 @@ function submitCreateAcct(){
   const name=fn+' '+ln;
   const username=slugify(fn[0])+'.'+slugify(ln);
   const tmpPass=genPass();
-  const newAcct={name,username,email,password:tmpPass,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
+  const newAcct={name:name,username:username,email:email,password:tmpPass,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
   const newMbr={name,role:document.getElementById('ac-role').value||'Membre',company:document.getElementById('ac-co').value||'',phone:document.getElementById('ac-tel').value||'',email,sector:document.getElementById('ac-sec').value,join:new Date().toLocaleDateString('fr-FR',{month:'short',year:'numeric'}),recos:0,ca:'0 k€',invites:0};
   accounts.push(newAcct);
   members.push(newMbr);
@@ -1211,4 +1202,8 @@ function submitCreateAcct(){
       <div class="temp-box-val">${tmpPass}</div>
       <div class="temp-box-hint">Communiquez ces identifiants au nouveau membre.<br>Il devra changer son mot de passe à la première connexion.</div>
     </div>`;
-  document.getElementById('ac-footer').innerHTML=`<butt
+  document.getElementById('ac-footer').innerHTML=`<button class="btn-primary" onclick="closeM('m-create-acct')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Fermer</button>`;
+}
+</script>
+</body>
+</html>
