@@ -1199,7 +1199,8 @@ function renderRecos(list){
     const c=document.createElement('div');c.className='reco-card';
     var rIdx=recos.indexOf(r);
     var canEdit=curUser&&(curUser.role==='admin'||curUser.name===r.from);
-    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[r.status]}">${SL[r.status]}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>${canEdit?`<button class="reco-edit-btn" onclick="openEditReco(${rIdx})">Modifier</button>`:''}`;
+    var rStatus=(r.status||'new').toLowerCase();
+    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[rStatus]||'st-new'}">${SL[rStatus]||r.status}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>${canEdit?`<button class="reco-edit-btn" onclick="openEditReco(${rIdx})">Modifier</button>`:''}`;
     g.appendChild(c);
   });
 }
@@ -1207,32 +1208,49 @@ function filterRecos(v){const q=v.toLowerCase();renderRecos(recos.filter(r=>r.fr
 function filterRecosSt(v){renderRecos(v?recos.filter(r=>r.status===v):recos);}
 
 function openRecoModal(){
-  const isAdmin=curUser?.role==='admin';
-  const fromRow=document.getElementById('f-from-row');
-  const fromFixed=document.getElementById('f-from-fixed');
-  const fromSel=document.getElementById('f-from');
-  const toSel=document.getElementById('f-to');
-  if(isAdmin){
-    fromRow.style.display='';
-    fromFixed.style.display='none';
-    fromSel.innerHTML='<option value="">S\u00e9lectionner…</option>';
-    members.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.textContent=m.name;fromSel.appendChild(o);});
-    toSel.innerHTML='<option value="">S\u00e9lectionner…</option>';
-    members.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.textContent=m.name;toSel.appendChild(o);});
-  } else {
-    fromRow.style.display='none';
-    fromFixed.style.display='';
-    fromFixed.querySelector('.from-name').textContent=curUser.name;
-    const av=document.getElementById('f-from-av');
-    if(av) av.textContent=initials(curUser.name);
-    toSel.innerHTML='<option value="">S\u00e9lectionner…</option>';
-    members.forEach(m=>{
-      if(m.name===curUser.name) return;
-      const o=document.createElement('option');o.value=m.name;o.textContent=m.name;toSel.appendChild(o);
+  var isAdmin = curUser && curUser.role === 'admin';
+  var fromRow   = document.getElementById('f-from-row');
+  var fromFixed = document.getElementById('f-from-fixed');
+  var fromSel   = document.getElementById('f-from');
+  var toSel     = document.getElementById('f-to');
+
+  // Remplir la liste "Vers" (tous les membres sauf soi-meme si membre)
+  toSel.innerHTML = '<option value="">Sélectionner…</option>';
+  members.forEach(function(m) {
+    if (!isAdmin && m.name === curUser.name) return;
+    var o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name;
+    toSel.appendChild(o);
+  });
+
+  if (isAdmin) {
+    // Admin : champ De libre
+    fromRow.style.display = '';
+    fromFixed.style.display = 'none';
+    fromSel.innerHTML = '<option value="">Sélectionner…</option>';
+    members.forEach(function(m) {
+      var o = document.createElement('option');
+      o.value = m.name; o.textContent = m.name;
+      fromSel.appendChild(o);
     });
+  } else {
+    // Membre : champ De verrouille sur son nom
+    fromRow.style.display = 'none';
+    fromFixed.style.display = '';
+    var av = document.getElementById('f-from-av');
+    if (av) av.textContent = initials(curUser.name);
+    var nameSpan = fromFixed.querySelector('.from-name');
+    if (nameSpan) nameSpan.textContent = curUser.name;
   }
+
+  // Reset autres champs
+  ['f-desc','f-amt'].forEach(function(id){ document.getElementById(id).value=''; });
+  var stEl = document.getElementById('f-st');
+  if (stEl) stEl.value = 'new';
+
   document.getElementById('m-reco').classList.add('open');
 }
+
 function submitReco(){
   const isAdmin=curUser?.role==='admin';
   const from=isAdmin?document.getElementById('f-from').value:curUser.name;
@@ -1241,7 +1259,7 @@ function submitReco(){
   const amt=document.getElementById('f-amt').value.trim();
   const st=document.getElementById('f-st').value;
   if(!from||!to||!desc){alert('Remplissez les champs obligatoires.');return;}
-  const newReco={from,to,desc,amount:amt,date:new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}),status:st};
+  const newReco={from,to,desc,amount:amt,date:new Date().toISOString().split('T')[0],status:st};
   recos.unshift(newReco);
   gsPost('addReco', newReco).then(()=>showSyncBanner(!DEMO_MODE));
   document.getElementById('reco-badge').textContent=recos.length;
