@@ -1531,10 +1531,12 @@ function saveMember(i) {
   var sector=document.getElementById('em-sector').value;
   var mbrRole=document.getElementById('em-role').value.trim();
   accounts[i]=Object.assign({},accounts[i],{name:name,username:username,password:password,role:role,email:email});
-  var mi=members.findIndex(function(m){return m.name===accounts[i].name||m.email===accounts[i].email;});
+  // Sauvegarder le compte (avec mot de passe) dans Sheets
+  gsPost('updateAccount',Object.assign({index:i},accounts[i])).then(function(){showSyncBanner(!DEMO_MODE);});
+  var mi=members.findIndex(function(m){return m.name===name||m.email===email;});
   if(mi>=0){
     members[mi]=Object.assign({},members[mi],{name:name,email:email,phone:phone,company:company,sector:sector,role:mbrRole});
-    gsPost('updateMember',Object.assign({index:mi},members[mi])).then(function(){showSyncBanner(!DEMO_MODE);});
+    gsPost('updateMember',Object.assign({index:mi},members[mi]));
   }
   renderAccounts();renderMembers();closeM('m-member');
 }
