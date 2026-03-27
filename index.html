@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Café des Affaires</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brown:#9B5E1E; --brown-dark:#6B3F10; --brown-deep:#3D2008;
+  --gold:#C8901A; --gold-light:#E8B84B; --gold-pale:#F5E6C8;
+  --cream:#FDF8F2; --cream-dark:#F5EDE0; --white:#FFFFFF;
+  --text-primary:#2C1A08; --text-secondary:#7A5230; --text-muted:#B08A6A;
+  --border:rgba(155,94,30,0.15); --border-strong:rgba(155,94,30,0.3);
+  --shadow:0 2px 16px rgba(61,32,8,0.08); --shadow-md:0 4px 24px rgba(61,32,8,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-primary);min-height:100vh;overflow-x:hidden;}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:1000;background:var(--brown-deep);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:var(--white);border-radius:20px;width:100%;max-width:380px;padding:40px 36px 32px;box-shadow:0 24px 64px rgba(0,0,0,0.3);}
+.login-logo{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:28px;}
+.login-logo-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--brown-deep);text-align:center;line-height:1.2;}
+.login-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-top:2px;}
+.lf-label{display:block;font-size:11px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
+.lf-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:9px;background:var(--cream);font-size:14px;color:var(--text-primary);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:14px;transition:border-color .15s;}
+.lf-input:focus{border-color:var(--gold);background:var(--white);}
+.btn-login{width:100%;padding:12px;background:var(--gold);color:white;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.btn-login:hover{background:var(--brown);}
+.login-hint{font-size:11px;color:var(--text-muted);text-align:center;margin-top:14px;line-height:1.8;}
+.login-hint code{background:var(--cream-dark);padding:1px 5px;border-radius:4px;font-family:monospace;}
+.login-error{font-size:12px;color:#C0392B;text-align:center;margin-top:8px;min-height:18px;}
+
+/* LAYOUT */
+.app-shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:240px;min-height:100vh;background:var(--brown-deep);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;transition:transform .3s ease;}
+.sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px;}
+.logo-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--gold-light);line-height:1.2;}
+.sidebar-nav{flex:1;padding:20px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;}
+.nav-sep{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.25);padding:12px 14px 4px;margin-top:4px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:400;color:rgba(255,255,255,.55);transition:all .18s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;}
+.nav-item svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0;opacity:.7;}
+.nav-item:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.06);}
+.nav-item.active{background:var(--gold);color:var(--white);font-weight:500;}
+.nav-item.active svg{opacity:1;}
+.nav-badge{margin-left:auto;background:var(--brown);color:var(--gold-light);font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.25);color:white;}
+.sidebar-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,.08);}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:white;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:13px;font-weight:500;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:10px;color:rgba(255,255,255,.4);}
+.btn-logout{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:none;background:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,.35);font-family:'DM Sans',sans-serif;width:100%;transition:color .15s,background .15s;margin-top:4px;}
+.btn-logout:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.06);}
+.btn-logout svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* MAIN */
+.main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:var(--text-primary);flex:1;}
+.topbar-actions{display:flex;align-items:center;gap:10px;}
+.btn-icon{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;}
+.btn-icon:hover{background:var(--cream-dark);}
+.btn-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.btn-primary{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--gold);color:white;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.btn-primary:hover{background:var(--brown);}
+.btn-primary svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.mob-menu-btn{display:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;align-items:center;justify-content:center;color:var(--text-secondary);}
+.mob-menu-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* PAGES */
+.page{display:none;padding:28px;animation:fadeIn .2s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* DASHBOARD */
+.dash-hero{background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown) 100%);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;}
+.dash-hero::before{content:'';position:absolute;right:-20px;top:-30px;width:200px;height:200px;border-radius:50%;border:40px solid rgba(200,144,26,.12);}
+.dash-hero::after{content:'';position:absolute;right:60px;bottom:-50px;width:140px;height:140px;border-radius:50%;border:30px solid rgba(200,144,26,.08);}
+.hero-text h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--gold-light);margin-bottom:6px;}
+.hero-text p{font-size:14px;color:rgba(255,255,255,.55);}
+.hero-stat{text-align:right;position:relative;z-index:1;}
+.hero-stat-val{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--gold-light);line-height:1;}
+.hero-stat-lbl{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;}
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.metric-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;transition:box-shadow .2s;}
+.metric-card:hover{box-shadow:var(--shadow-md);}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);border-radius:12px 12px 0 0;}
+.metric-icon{width:36px;height:36px;border-radius:8px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.metric-icon svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.metric-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--text-primary);line-height:1;margin-bottom:4px;}
+.metric-label{font-size:12px;color:var(--text-muted);}
+.metric-delta{position:absolute;top:18px;right:18px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px;}
+.delta-up{background:#EAF5E9;color:#2E7D32;}
+.delta-neutral{background:#F0F0F0;color:#666;}
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--text-primary);}
+.card-body{padding:20px 22px;}
+.year-tabs{display:flex;gap:4px;}
+.year-tab{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:none;font-size:12px;color:var(--text-muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.year-tab.active{background:var(--gold);border-color:var(--gold);color:white;font-weight:500;}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:24px;position:relative;}
+.bar-chart::after{content:'';position:absolute;bottom:24px;left:0;right:0;height:1px;background:var(--border);}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative;}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;background:var(--gold);cursor:pointer;transition:background .2s;min-height:3px;position:relative;}
+.bar-fill:hover{background:var(--brown);}
+.bar-fill .bar-tooltip{display:none;position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--brown-deep);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;z-index:10;}
+.bar-fill:hover .bar-tooltip{display:block;}
+.bar-lbl{position:absolute;bottom:-20px;font-size:10px;color:var(--text-muted);}
+.bar-fill.muted{background:var(--cream-dark);}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.donut-legend{width:100%;display:flex;flex-direction:column;gap:8px;}
+.legend-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+.legend-dot{width:8px;height:8px;border-radius:50%;margin-right:8px;flex-shrink:0;}
+.legend-name{color:var(--text-secondary);display:flex;align-items:center;}
+.legend-val{font-weight:500;}
+.activity-list{display:flex;flex-direction:column;}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border);transition:background .15s;}
+.activity-item:last-child{border-bottom:none;}
+.activity-item:hover{background:var(--cream);}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.activity-text{font-size:13px;color:var(--text-primary);line-height:1.5;}
+.activity-text strong{font-weight:500;}
+.activity-time{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.search-wrap{flex:1;min-width:200px;position:relative;}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--text-muted);fill:none;stroke-width:1.5;pointer-events:none;}
+.search-input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--border);border-radius:9px;background:var(--white);font-size:13px;color:var(--text-primary);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--gold);}
+.search-input::placeholder{color:var(--text-muted);}
+.filter-sel{padding:9px 14px;border:1px solid var(--border);border-radius:9px;background:var(--white);font-size:13px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;}
+
+/* RECOS */
+.reco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+.reco-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:box-shadow .2s,border-color .2s;cursor:pointer;}
+.reco-card:hover{box-shadow:var(--shadow-md);border-color:var(--gold);}
+.reco-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.reco-avs{display:flex;align-items:center;}
+.reco-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:2px solid var(--white);}
+.reco-av:last-child{margin-left:-10px;}
+.reco-status{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;}
+.st-new{background:#FFF8E7;color:#B8860B;}
+.st-prog{background:#E3F0FF;color:#1565C0;}
+.st-done{background:#EAF5E9;color:#2E7D32;}
+.reco-names{font-size:13px;font-weight:500;margin-bottom:5px;}
+.reco-names span{color:var(--gold);}
+.reco-desc{font-size:13px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px;}
+.reco-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
+.reco-date{font-size:11px;color:var(--text-muted);}
+.reco-amt{font-size:12px;font-weight:500;color:var(--brown);background:var(--gold-pale);padding:3px 10px;border-radius:20px;}
+
+/* PLANNING */
+.plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.month-nav{display:flex;align-items:center;gap:12px;}
+.mnav-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;}
+.mnav-btn:hover{background:var(--cream-dark);}
+.mnav-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.month-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;min-width:180px;text-align:center;}
+.cal-grid{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.cal-wdays{display:grid;grid-template-columns:repeat(7,1fr);background:var(--cream-dark);border-bottom:1px solid var(--border);}
+.cal-wd{padding:10px 0;text-align:center;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-day{min-height:76px;padding:8px 6px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;}
+.cal-day:nth-child(7n){border-right:none;}
+.cal-day:hover{background:var(--cream);}
+.cal-day.other .cal-dn{color:var(--border-strong);color:rgba(155,94,30,.3);}
+.cal-day.today{background:#FFF8EE;}
+.cal-day.today .cal-dn{background:var(--gold);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.cal-dn{font-size:13px;font-weight:500;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.cal-evt{font-size:10px;background:var(--gold-pale);color:var(--brown);border-radius:4px;padding:2px 5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid var(--gold);cursor:pointer;}
+.cal-evt:hover{background:var(--gold);color:white;}
+.meetings-list{display:flex;flex-direction:column;gap:12px;}
+.mtg-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:16px;align-items:flex-start;transition:box-shadow .2s;cursor:pointer;}
+.mtg-card:hover{box-shadow:var(--shadow-md);}
+.mtg-date-box{background:var(--brown-deep);border-radius:10px;padding:10px 14px;text-align:center;min-width:56px;flex-shrink:0;}
+.mtg-day{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--gold-light);line-height:1;}
+.mtg-mon{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.mtg-info{flex:1;}
+.mtg-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:6px;}
+.mtg-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;}
+.mtg-meta-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-secondary);}
+.mtg-meta-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.mtg-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;display:inline-block;}
+.tb-regular{background:#FFF8E7;color:#B8860B;}
+.tb-special{background:#E3F0FF;color:#1565C0;}
+.tb-agm{background:#EAF5E9;color:#2E7D32;}
+
+/* MEMBRES */
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.member-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 16px 18px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.member-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--brown));opacity:0;transition:opacity .2s;}
+.member-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.member-card:hover::before{opacity:1;}
+.mbr-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin:0 auto 12px;box-shadow:0 0 0 2px var(--border);}
+.mbr-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;margin-bottom:3px;}
+.mbr-role{font-size:11px;color:var(--text-muted);margin-bottom:4px;line-height:1.4;}
+.mbr-sector{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--gold-pale);color:var(--brown);margin-bottom:14px;}
+.mbr-stats{display:flex;justify-content:space-around;padding-top:12px;border-top:1px solid var(--border);}
+.mst-box{text-align:center;}
+.mst-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--gold);}
+.mst-lbl{font-size:9px;color:var(--text-muted);margin-top:1px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* ADMIN */
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.admin-section-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.admin-section-title svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.5;}
+.acct-table{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;}
+.acct-table table{width:100%;border-collapse:collapse;}
+.acct-table th{padding:12px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;background:var(--cream-dark);border-bottom:1px solid var(--border);}
+.acct-table td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.acct-table tr:last-child td{border-bottom:none;}
+.acct-table tr:hover td{background:var(--cream);}
+.role-badge{font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;}
+.rb-admin{background:#FFF0E0;color:#8B3A00;}
+.rb-member{background:#E8F4E0;color:#2A6000;}
+.sb-active{background:#EAF5E9;color:#2E7D32;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;}
+.sb-pending{background:#FFF8E7;color:#B8860B;font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;}
+.td-acts{display:flex;gap:6px;}
+.btn-sm{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;font-family:'DM Sans',sans-serif;transition:all .15s;color:var(--text-secondary);}
+.btn-sm:hover{background:var(--cream-dark);}
+.btn-sm.danger{color:#C0392B;border-color:rgba(192,57,43,.3);}
+.btn-sm.danger:hover{background:#FFF0EE;}
+.btn-sm.success{color:#2E7D32;border-color:rgba(46,125,50,.3);}
+.btn-sm.success:hover{background:#EAF5E9;}
+
+/* MODALS */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,10,0,.5);z-index:300;align-items:center;justify-content:center;padding:20px;}
+.modal-backdrop.open{display:flex;}
+.modal-box{background:var(--white);border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:mIn .25s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:22px 24px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+.modal-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:18px;transition:background .15s;}
+.modal-close:hover{background:var(--cream-dark);}
+.modal-body{padding:22px 24px;}
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.form-control{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:9px;background:var(--cream);font-size:14px;color:var(--text-primary);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s,background .15s;}
+.form-control:focus{border-color:var(--gold);background:var(--white);}
+.form-control::placeholder{color:var(--text-muted);}
+textarea.form-control{resize:none;height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-footer{padding:16px 24px 22px;display:flex;gap:10px;justify-content:flex-end;}
+.btn-secondary{padding:9px 18px;border:1px solid var(--border);background:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;transition:background .15s;}
+.btn-secondary:hover{background:var(--cream-dark);}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.info-row:last-of-type{border-bottom:none;}
+.info-key{color:var(--text-muted);}
+.info-val{font-weight:500;text-align:right;max-width:60%;}
+.info-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.info-stat-box{background:var(--cream);border-radius:10px;padding:12px;text-align:center;}
+.info-stat-val{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--gold);}
+.info-stat-lbl{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.mini-reco{background:var(--cream);border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px;}
+.mini-reco-top{display:flex;justify-content:space-between;font-weight:500;margin-bottom:3px;}
+.mini-reco-desc{color:var(--text-secondary);}
+
+/* TEMP PASS BOX */
+.temp-box{background:var(--cream-dark);border:1px dashed var(--gold);border-radius:10px;padding:16px;text-align:center;margin-top:14px;}
+.temp-box-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.temp-box-val{font-family:monospace;font-size:18px;font-weight:700;color:var(--brown);letter-spacing:.1em;}
+.temp-box-hint{font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6;}
+.success-banner{background:#EAF5E9;border-radius:10px;padding:12px 14px;font-size:13px;color:#2E7D32;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.success-banner svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+
+/* MOBILE NAV */
+.mob-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--brown-deep);padding:8px 0 16px;z-index:100;}
+.mob-nav-inner{display:flex;}
+.mob-nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:8px 2px;color:rgba(255,255,255,.45);font-size:9px;font-family:'DM Sans',sans-serif;transition:color .15s;}
+.mob-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;}
+.mob-nav-btn.active{color:var(--gold-light);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.metrics-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:900px){.charts-row{grid-template-columns:1fr;}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 30px rgba(0,0,0,.3);}
+  .sidebar-overlay.open{display:block;}
+  .main{margin-left:0;}
+  .mob-menu-btn{display:flex;}
+  .topbar{padding:0 16px;}
+  .page{padding:16px 12px 80px;}
+  .metrics-row{grid-template-columns:1fr 1fr;gap:10px;}
+  .dash-hero{padding:20px;}
+  .hero-text h2{font-size:18px;}
+  .hero-stat-val{font-size:28px;}
+  .mob-bottom-nav{display:block;}
+  .topbar-actions .btn-primary span{display:none;}
+  .topbar-actions .btn-primary{padding:8px 10px;}
+  .reco-grid{grid-template-columns:1fr;}
+  .members-grid{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .admin-stats{grid-template-columns:1fr 1fr;}
+  .cal-evt{display:none;}
+  .cal-day{min-height:48px;}
+  .acct-table{overflow-x:auto;}
+}
+@media(max-width:400px){.members-grid{grid-template-columns:1fr;}.metrics-row{grid-template-columns:1fr 1fr;}}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOGIN ═══════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="26" r="23" stroke="#C8901A" stroke-width="2.2"/>
+        <circle cx="26" cy="26" r="15.5" stroke="#C8901A" stroke-width="2.2"/>
+        <circle cx="26" cy="26" r="8.5" fill="#C8901A"/>
+        <path d="M41.5 25.5L46 25.5" stroke="#C8901A" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="login-logo-name">Le Café des Affaires</div>
+        <div class="login-sub">Espace membres — Connexion</div>
+      </div>
+    </div>
+    <label class="lf-label">Identifiant</label>
+    <input class="lf-input" type="text" id="li-user" placeholder="votre.identifiant" autocomplete="username">
+    <label class="lf-label">Mot de passe</label>
+    <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="li-err"></div>
+    <div class="login-hint">
+      Admin : <code>admin</code> / <code>admin1234</code><br>
+      Membre : <code>p.moreau</code> / <code>membre1234</code>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP ═══════════════════ -->
+<div class="app-shell" id="app-shell" style="display:none;">
+  <!-- Bannière sync Google Sheets -->
+  <div id="sync-banner" style="display:none;position:fixed;top:60px;right:16px;z-index:500;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:500;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.12);transition:opacity .4s;">
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#C8901A" stroke-width="1.8"/>
+        <circle cx="20" cy="20" r="12.5" stroke="#C8901A" stroke-width="1.8"/>
+        <circle cx="20" cy="20" r="7" fill="#C8901A"/>
+        <path d="M32.5 19.5L36 19.5" stroke="#C8901A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div><span class="logo-name">Le Café<br>des Affaires</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="goPage('dashboard',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Tableau de bord
+      </button>
+      <button class="nav-item" onclick="goPage('planning',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Planning
+      </button>
+      <button class="nav-item" onclick="goPage('recos',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Recommandations
+        <span class="nav-badge" id="reco-badge">6</span>
+      </button>
+      <button class="nav-item" onclick="goPage('members',this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Membres
+        <span class="nav-badge" id="mbr-badge">12</span>
+      </button>
+      <div class="nav-sep" id="admin-sep">Administration</div>
+      <button class="nav-item" id="nav-admin" onclick="goPage('admin',this)">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Gestion des comptes
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-av" id="sb-av">AD</div>
+        <div class="user-info">
+          <div class="user-name" id="sb-name">Admin</div>
+          <div class="user-role" id="sb-role">Administrateur</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Se déconnecter
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mob-menu-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="page-title">Tableau de bord</div>
+      <div class="topbar-actions">
+        <button class="btn-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+        <button class="btn-primary" onclick="openRecoModal()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nouvelle reco</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section class="page active" id="page-dashboard">
+      <div class="dash-hero">
+        <div class="hero-text">
+          <h2 id="dash-greet">Bonjour 👋</h2>
+          <p>Bienvenue sur votre espace club — mars 2026</p>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">247 k€</div>
+          <div class="hero-stat-lbl">CA généré en 2025</div>
+        </div>
+      </div>
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="metric-val">247 k€</div>
+          <div class="metric-label">Chiffre d'affaires 2025</div>
+          <span class="metric-delta delta-up">+18%</span>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="metric-val">34</div>
+          <div class="metric-label">Invités 2025</div>
+          <span class="metric-delta delta-up">+6</span>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="metric-val">28</div>
+          <div class="metric-label">Recommandations</div>
+          <span class="metric-delta delta-up">+4</span>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
+          <div class="metric-val">3 avr.</div>
+          <div class="metric-label">Prochaine réunion</div>
+          <span class="metric-delta delta-neutral">Le Vintage</span>
+        </div>
+      </div>
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Chiffre d'affaires mensuel</span>
+            <div class="year-tabs">
+              <button class="year-tab active" onclick="switchYear(2025,this)">2025</button>
+              <button class="year-tab" onclick="switchYear(2024,this)">2024</button>
+            </div>
+          </div>
+          <div class="card-body"><div class="bar-chart" id="ca-chart"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Répartition secteurs</span></div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#F5EDE0" stroke-width="16"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#C8901A" stroke-width="16" stroke-dasharray="63.5 225.7" stroke-dashoffset="56.5" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#9B5E1E" stroke-width="16" stroke-dasharray="51.8 237.4" stroke-dashoffset="-7" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#E8B84B" stroke-width="16" stroke-dasharray="51.8 237.4" stroke-dashoffset="-58.8" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#D4956A" stroke-width="16" stroke-dasharray="43.2 246" stroke-dashoffset="-110.6" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#BFA090" stroke-width="16" stroke-dasharray="28.9 260.3" stroke-dashoffset="-153.8" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#E8D8C8" stroke-width="16" stroke-dasharray="48.9 240.3" stroke-dashoffset="-182.7" transform="rotate(-90 60 60)"/>
+                <text x="60" y="56" text-anchor="middle" font-family="Playfair Display,serif" font-size="14" font-weight="700" fill="#3D2008">247k</text>
+                <text x="60" y="68" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#B08A6A">CA total</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#C8901A"></span>Finance</span><span class="legend-val">22%</span></div>
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#9B5E1E"></span>Conseil</span><span class="legend-val">18%</span></div>
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#E8B84B"></span>Tech</span><span class="legend-val">18%</span></div>
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#D4956A"></span>Juridique</span><span class="legend-val">15%</span></div>
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#BFA090"></span>Immobilier</span><span class="legend-val">10%</span></div>
+                <div class="legend-item"><span class="legend-name"><span class="legend-dot" style="background:#E8D8C8"></span>Autres</span><span class="legend-val">17%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Activité récente</span></div>
+        <div class="activity-list">
+          <div class="activity-item"><div class="activity-dot" style="background:#C8901A"></div><div><div class="activity-text"><strong>Pierre Moreau</strong> a recommandé <strong>Sophie Laurent</strong> à un client PME</div><div class="activity-time">Aujourd'hui, 10h14</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:#2E7D32"></div><div><div class="activity-text">Reco <strong>Thomas → Nicolas</strong> : deal immobilier signé (120 000 €)</div><div class="activity-time">Hier, 16h30</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:#1565C0"></div><div><div class="activity-text">Prochain petit-déjeuner le <strong>3 avril</strong> au <strong>Restaurant Le Vintage</strong>, 8h00</div><div class="activity-time">25 mars, 09h00</div></div></div>
+          <div class="activity-item"><div class="activity-dot" style="background:#C8901A"></div><div><div class="activity-text"><strong>Martin Dupont</strong> a amené 1 invité lors de la réunion du 24 mars</div><div class="activity-time">24 mars, 08h15</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANNING -->
+    <section class="page" id="page-planning">
+      <div class="plan-header">
+        <div class="month-nav">
+          <button class="mnav-btn" onclick="changeMonth(-1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="month-title" id="month-title">Avril 2026</div>
+          <button class="mnav-btn" onclick="changeMonth(1)"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+        <button class="btn-primary" id="btn-add-mtg" onclick="openMtgModal()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Ajouter une réunion</span>
+        </button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-wdays">
+          <div class="cal-wd">Lun</div><div class="cal-wd">Mar</div><div class="cal-wd">Mer</div>
+          <div class="cal-wd">Jeu</div><div class="cal-wd">Ven</div><div class="cal-wd">Sam</div><div class="cal-wd">Dim</div>
+        </div>
+        <div class="cal-days" id="cal-days"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Réunions du mois</span></div>
+        <div style="padding:16px 20px;" id="mtg-list"></div>
+      </div>
+    </section>
+
+    <!-- RECOMMANDATIONS -->
+    <section class="page" id="page-recos">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" placeholder="Rechercher…" oninput="filterRecos(this.value)">
+        </div>
+        <select class="filter-sel" onchange="filterRecosSt(this.value)">
+          <option value="">Tous les statuts</option>
+          <option value="new">Nouveau</option>
+          <option value="progress">En cours</option>
+          <option value="done">Réalisé</option>
+        </select>
+        <button class="btn-primary" onclick="openRecoModal()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Ajouter</span>
+        </button>
+      </div>
+      <div class="reco-grid" id="reco-grid"></div>
+    </section>
+
+    <!-- MEMBRES -->
+    <section class="page" id="page-members">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" placeholder="Rechercher un membre…" oninput="filterMbr(this.value)">
+        </div>
+        <select class="filter-sel" onchange="filterMbrSector(this.value)">
+          <option value="">Tous les secteurs</option>
+          <option>Finance</option><option>Conseil</option><option>Tech</option>
+          <option>Juridique</option><option>Immobilier</option><option>Marketing</option>
+          <option>BTP</option><option>Formation</option><option>Santé</option>
+        </select>
+      </div>
+      <div class="members-grid" id="members-grid"></div>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="page" id="page-admin">
+      <div class="admin-stats">
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="metric-val" id="as-total">13</div>
+          <div class="metric-label">Comptes au total</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div class="metric-val" id="as-active">12</div>
+          <div class="metric-label">Comptes actifs</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="metric-val" id="as-pending">1</div>
+          <div class="metric-label">En attente</div>
+        </div>
+      </div>
+      <div class="admin-section-title">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Comptes membres
+        <button class="btn-primary" style="margin-left:auto;" onclick="openCreateAcct()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Créer un compte
+        </button>
+      </div>
+      <div class="acct-table">
+        <table>
+          <thead><tr>
+            <th>Membre</th><th>Identifiant</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="acct-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-bottom-nav">
+  <div class="mob-nav-inner">
+    <button class="mob-nav-btn active" onclick="goPage('dashboard',this,true)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tableau
+    </button>
+    <button class="mob-nav-btn" onclick="goPage('planning',this,true)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>Planning
+    </button>
+    <button class="mob-nav-btn" onclick="goPage('recos',this,true)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Recos
+    </button>
+    <button class="mob-nav-btn" onclick="goPage('members',this,true)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Membres
+    </button>
+    <button class="mob-nav-btn" id="mob-admin" onclick="goPage('admin',this,true)">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin
+    </button>
+  </div>
+</nav>
+
+<!-- MODAL: RECO -->
+<div class="modal-backdrop" id="m-reco">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Nouvelle recommandation</span><button class="modal-close" onclick="closeM('m-reco')">×</button></div>
+    <div class="modal-body">
+      <!-- Admin : sélecteur libre "De" -->
+      <div class="form-group" id="f-from-row">
+        <label class="form-label">De (membre)</label>
+        <select class="form-control" id="f-from"><option value="">Sélectionner…</option></select>
+      </div>
+      <!-- Membre : champ fixe "De" verrouillé -->
+      <div id="f-from-fixed" style="display:none;margin-bottom:16px;">
+        <label class="form-label">De</label>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:9px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold-pale);color:var(--brown);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;" id="f-from-av"></div>
+          <span class="from-name" style="font-size:14px;font-weight:500;color:var(--text-primary);">—</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--brown);background:var(--gold-pale);padding:2px 8px;border-radius:20px;">Vous</span>
+        </div>
+      </div>
+      <!-- Vers : commun admin et membre -->
+      <div class="form-group" style="margin-bottom:0" id="f-to-row">
+        <label class="form-label">Vers (membre)</label>
+        <select class="form-control" id="f-to"><option value="">Sélectionner…</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="f-desc" placeholder="Décrivez le besoin…"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Montant estimé</label><input type="text" class="form-control" id="f-amt" placeholder="5 000 €"></div>
+        <div class="form-group"><label class="form-label">Statut</label>
+          <select class="form-control" id="f-st"><option value="new">Nouveau</option><option value="progress">En cours</option><option value="done">Réalisé</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeM('m-reco')">Annuler</button><button class="btn-primary" onclick="submitReco()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL: MEETING -->
+<div class="modal-backdrop" id="m-mtg">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Planifier une réunion</span><button class="modal-close" onclick="closeM('m-mtg')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-control" id="mt-title" placeholder="Petit-déjeuner mensuel"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-control" id="mt-date"></div>
+        <div class="form-group"><label class="form-label">Heure</label><input type="time" class="form-control" id="mt-time" value="08:00"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Lieu (nom)</label><input type="text" class="form-control" id="mt-place" placeholder="Restaurant Le Vintage"></div>
+      <div class="form-group"><label class="form-label">Adresse complète</label><input type="text" class="form-control" id="mt-addr" placeholder="14 rue Lenepveu, 49000 Angers"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label>
+          <select class="form-control" id="mt-type">
+            <option value="regular">Petit-déjeuner</option>
+            <option value="special">Réunion spéciale</option>
+            <option value="agm">Assemblée générale</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Capacité max</label><input type="number" class="form-control" id="mt-cap" placeholder="20" min="1"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes / programme</label><textarea class="form-control" id="mt-notes" placeholder="Thème, intervenant…"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeM('m-mtg')">Annuler</button><button class="btn-primary" onclick="submitMtg()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL: MEETING DETAIL -->
+<div class="modal-backdrop" id="m-mtg-detail">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Détail de la réunion</span><button class="modal-close" onclick="closeM('m-mtg-detail')">×</button></div>
+    <div class="modal-body" id="mtg-detail-body"></div>
+  </div>
+</div>
+
+<!-- MODAL: MEMBER DETAIL -->
+<div class="modal-backdrop" id="m-member">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Fiche membre</span><button class="modal-close" onclick="closeM('m-member')">×</button></div>
+    <div class="modal-body" id="mbr-detail-body"></div>
+  </div>
+</div>
+
+<!-- MODAL: CREATE ACCOUNT -->
+<div class="modal-backdrop" id="m-create-acct">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Créer un compte membre</span><button class="modal-close" onclick="closeM('m-create-acct')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-control" id="ac-fn" placeholder="Pierre"></div>
+        <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-control" id="ac-ln" placeholder="Dubois"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="ac-email" placeholder="p.dubois@entreprise.fr"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Entreprise</label><input type="text" class="form-control" id="ac-co" placeholder="Dubois & Co"></div>
+        <div class="form-group"><label class="form-label">Secteur</label>
+          <select class="form-control" id="ac-sec">
+            <option>Finance</option><option>Conseil</option><option>Tech</option>
+            <option>Juridique</option><option>Immobilier</option><option>Marketing</option>
+            <option>BTP</option><option>Formation</option><option>Santé</option><option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Poste / rôle</label><input type="text" class="form-control" id="ac-role" placeholder="Directeur Général"></div>
+        <div class="form-group"><label class="form-label">Téléphone</label><input type="text" class="form-control" id="ac-tel" placeholder="06 00 00 00 00"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Rôle dans l'application</label>
+        <select class="form-control" id="ac-approle">
+          <option value="member">Membre</option>
+          <option value="admin">Administrateur</option>
+        </select>
+      </div>
+      <div id="ac-result"></div>
+    </div>
+    <div class="modal-footer" id="ac-footer">
+      <button class="btn-secondary" onclick="closeM('m-create-acct')">Annuler</button>
+      <button class="btn-primary" onclick="submitCreateAcct()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Créer le compte</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIGURATION GOOGLE SHEETS
+   Collez ici l'URL de votre déploiement Apps Script
+══════════════════════════════════════════════════════ */
+const SCRIPT_URL = 'COLLER_VOTRE_URL_ICI';
+
+/* ── PALETTE AVATARS ── */
+const PAL=[
+  {bg:'#FFF0DC',tx:'#9B5E1E'},{bg:'#F5E6C8',tx:'#6B3F10'},{bg:'#FDE8D8',tx:'#8B3A1E'},
+  {bg:'#E8F4E0',tx:'#2E6B20'},{bg:'#E0EEF8',tx:'#1A5280'},{bg:'#F0E8F8',tx:'#5E2E8B'},
+  {bg:'#F8E8E8',tx:'#8B1A1A'},{bg:'#E8F8F0',tx:'#1A6B4A'},{bg:'#FFF4E0',tx:'#8B5E1A'},
+  {bg:'#E8EEFF',tx:'#1A2E8B'},{bg:'#FFE8F4',tx:'#8B1A5E'},{bg:'#E8FFF4',tx:'#1A6B3A'}
+];
+
+/* ── API GOOGLE SHEETS ──────────────────────────────────
+   gsGet  : lecture  (GET  ?action=...)
+   gsPost : écriture (POST JSON)
+   Les données sont toujours chargées depuis le Sheet,
+   avec fallback sur les données demo si SCRIPT_URL absent.
+─────────────────────────────────────────────────────── */
+const DEMO_MODE = !SCRIPT_URL || SCRIPT_URL === 'COLLER_VOTRE_URL_ICI';
+
+async function gsGet(action) {
+  if (DEMO_MODE) return null;
+  try {
+    const r = await fetch(`${SCRIPT_URL}?action=${action}`);
+    const d = await r.json();
+    if (d.error) { console.warn('GS error:', d.error); return null; }
+    return d;
+  } catch(e) { console.warn('GS fetch error:', e); return null; }
+}
+
+async function gsPost(action, payload) {
+  if (DEMO_MODE) return;
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action, payload }),
+    });
+  } catch(e) { console.warn('GS post error:', e); }
+}
+
+function showSyncBanner(ok) {
+  const b = document.getElementById('sync-banner');
+  if (!b) return;
+  b.textContent = ok ? '✓ Données sauvegardées dans Google Sheets' : '⚠ Mode démo — données non sauvegardées (configurez SCRIPT_URL)';
+  b.style.background = ok ? 'rgba(46,125,50,0.12)' : 'rgba(184,134,11,0.12)';
+  b.style.color = ok ? '#2E7D32' : '#B8860B';
+  b.style.display = 'flex';
+  setTimeout(() => b.style.opacity = '0', 3000);
+  setTimeout(() => { b.style.display = 'none'; b.style.opacity = '1'; }, 3400);
+}
+
+let members=[
+  {name:'Martin Dupont',role:'Consultant RH',company:'DupRH Conseil',phone:'06 12 34 56 78',email:'m.dupont@duprh.fr',sector:'Conseil',join:'Jan 2022',recos:8,ca:'42 k€',invites:4},
+  {name:'Sophie Laurent',role:'Avocate',company:'Cabinet Laurent',phone:'06 23 45 67 89',email:'s.laurent@cabinet.fr',sector:'Juridique',join:'Mar 2022',recos:6,ca:'31 k€',invites:3},
+  {name:'Pierre Moreau',role:'Expert-comptable',company:'Moreau & Associés',phone:'06 34 56 78 90',email:'p.moreau@moreau-assoc.fr',sector:'Finance',join:'Jan 2022',recos:11,ca:'58 k€',invites:5},
+  {name:'Claire Bernard',role:'Architecte',company:'Bernard Architecture',phone:'06 45 67 89 01',email:'c.bernard@barch.fr',sector:'BTP',join:'Jun 2022',recos:5,ca:'27 k€',invites:2},
+  {name:'Thomas Petit',role:'Directeur Commercial',company:'PetitTech',phone:'06 56 78 90 12',email:'t.petit@petittech.fr',sector:'Tech',join:'Sep 2022',recos:9,ca:'48 k€',invites:6},
+  {name:'Isabelle Roux',role:"Coach d'entreprise",company:'Roux Coaching',phone:'06 67 89 01 23',email:'i.roux@rouxcoach.fr',sector:'Formation',join:'Jan 2023',recos:4,ca:'19 k€',invites:3},
+  {name:'Nicolas Martin',role:'Gérant immobilier',company:'Martin Immo',phone:'06 78 90 12 34',email:'n.martin@martinimmo.fr',sector:'Immobilier',join:'Mar 2023',recos:7,ca:'35 k€',invites:4},
+  {name:'Anne Leroy',role:'Responsable Marketing',company:'LeroyMedia',phone:'06 89 01 23 45',email:'a.leroy@leroymedia.fr',sector:'Marketing',join:'Jun 2023',recos:3,ca:'14 k€',invites:2},
+  {name:'François Girard',role:'Notaire',company:'Étude Girard',phone:'06 90 12 34 56',email:'f.girard@etudegirard.fr',sector:'Juridique',join:'Sep 2023',recos:6,ca:'29 k€',invites:3},
+  {name:'Lucie Fontaine',role:'Directrice Financière',company:'Fontaine Finance',phone:'06 01 23 45 67',email:'l.fontaine@fontainefin.fr',sector:'Finance',join:'Jan 2024',recos:2,ca:'11 k€',invites:1},
+  {name:'Antoine Mercier',role:'Développeur Web',company:'Mercier Digital',phone:'06 12 34 56 79',email:'a.mercier@mercierdigital.fr',sector:'Tech',join:'Mar 2024',recos:3,ca:'16 k€',invites:2},
+  {name:'Julie Blanc',role:'Médecin du travail',company:'Cabinet Blanc',phone:'06 23 45 67 80',email:'j.blanc@cabinetblanc.fr',sector:'Santé',join:'Jun 2024',recos:1,ca:'7 k€',invites:1}
+];
+
+let recos=[
+  {from:'Pierre Moreau',to:'Sophie Laurent',desc:'Client PME cherchant un avocat pour restructuration',amount:'8 000 €',date:'15 mars 2025',status:'progress'},
+  {from:'Thomas Petit',to:'Nicolas Martin',desc:'Directeur cherchant à investir dans des locaux commerciaux',amount:'120 000 €',date:'10 mars 2025',status:'done'},
+  {from:'Martin Dupont',to:'Pierre Moreau',desc:'Startup souhaitant externaliser sa comptabilité',amount:'6 000 €/an',date:'5 mars 2025',status:'new'},
+  {from:'Claire Bernard',to:'Thomas Petit',desc:"Maîtrise d'ouvrage cherche solution logicielle BTP",amount:'15 000 €',date:'28 fév. 2025',status:'progress'},
+  {from:'Nicolas Martin',to:'Isabelle Roux',desc:'Client investisseur souhaite un coaching dirigeant',amount:'3 500 €',date:'20 fév. 2025',status:'new'},
+  {from:'Sophie Laurent',to:'François Girard',desc:"Succession complexe nécessitant l'intervention d'un notaire",amount:'25 000 €',date:'12 fév. 2025',status:'done'}
+];
+
+let meetings=[
+  {title:'Petit-déjeuner mensuel',date:'2026-04-03',time:'08:00',place:'Restaurant Le Vintage',address:'14 rue Lenepveu, 49000 Angers',type:'regular',capacity:20,notes:'Thème : développement commercial 2026'},
+  {title:'Réunion thématique IA & PME',date:'2026-04-22',time:'12:00',place:'Espace Créatis',address:'5 rue des Sables, 49000 Angers',type:'special',capacity:30,notes:'Intervenant : Antoine Mercier — Mercier Digital'},
+  {title:'Petit-déjeuner mensuel',date:'2026-05-08',time:'08:00',place:'Hôtel Mercure Angers',address:'1 bd Maréchal Foch, 49000 Angers',type:'regular',capacity:20,notes:''},
+  {title:'Assemblée Générale 2026',date:'2026-06-15',time:'18:00',place:'CCI Maine-et-Loire',address:'8 bd du Roi René, 49100 Angers',type:'agm',capacity:50,notes:'Bilan annuel — élection du bureau'},
+  {title:'Petit-déjeuner mensuel',date:'2026-07-04',time:'08:00',place:'Le Café du Commerce',address:'9 place du Ralliement, 49000 Angers',type:'regular',capacity:20,notes:''},
+];
+
+let accounts=[
+  {name:'Administrateur',username:'admin',email:'admin@cafe-affaires.fr',role:'admin',status:'active',created:'01/01/2022'},
+  {name:'Pierre Moreau',username:'p.moreau',email:'p.moreau@moreau-assoc.fr',role:'member',status:'active',created:'10/01/2022'},
+  {name:'Martin Dupont',username:'m.dupont',email:'m.dupont@duprh.fr',role:'member',status:'active',created:'10/01/2022'},
+  {name:'Sophie Laurent',username:'s.laurent',email:'s.laurent@cabinet.fr',role:'member',status:'active',created:'15/03/2022'},
+  {name:'Claire Bernard',username:'c.bernard',email:'c.bernard@barch.fr',role:'member',status:'active',created:'01/06/2022'},
+  {name:'Thomas Petit',username:'t.petit',email:'t.petit@petittech.fr',role:'member',status:'active',created:'01/09/2022'},
+  {name:'Isabelle Roux',username:'i.roux',email:'i.roux@rouxcoach.fr',role:'member',status:'active',created:'05/01/2023'},
+  {name:'Nicolas Martin',username:'n.martin',email:'n.martin@martinimmo.fr',role:'member',status:'active',created:'10/03/2023'},
+  {name:'Anne Leroy',username:'a.leroy',email:'a.leroy@leroymedia.fr',role:'member',status:'active',created:'02/06/2023'},
+  {name:'François Girard',username:'f.girard',email:'f.girard@etudegirard.fr',role:'member',status:'active',created:'08/09/2023'},
+  {name:'Lucie Fontaine',username:'l.fontaine',email:'l.fontaine@fontainefin.fr',role:'member',status:'active',created:'06/01/2024'},
+  {name:'Antoine Mercier',username:'a.mercier',email:'a.mercier@mercierdigital.fr',role:'member',status:'active',created:'01/03/2024'},
+  {name:'Julie Blanc',username:'j.blanc',email:'j.blanc@cabinetblanc.fr',role:'member',status:'pending',created:'01/06/2024'},
+];
+
+const caData={2025:[18,22,31,27,24,19,21,28,25,32,0,0],2024:[14,17,22,20,19,16,18,23,21,25,27,29]};
+const MON=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const MONF=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const TL={regular:'Petit-déjeuner',special:'Réunion spéciale',agm:'Assemblée Générale'};
+const TC={regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
+const SL={new:'Nouveau',progress:'En cours',done:'Réalisé'};
+const SC={new:'st-new',progress:'st-prog',done:'st-done'};
+
+let curUser=null;
+let calY=2026,calM=3;
+
+/* ── AUTH ── */
+function doLogin(){
+  const u=document.getElementById('li-user').value.trim();
+  const p=document.getElementById('li-pass').value;
+  const err=document.getElementById('li-err');
+  const fixed={admin:{pass:'admin1234',role:'admin',name:'Administrateur'},'p.moreau':{pass:'membre1234',role:'member',name:'Pierre Moreau'}};
+  let found=fixed[u];
+  if(!found){const a=accounts.find(a=>a.username===u);if(a)found={pass:'membre1234',role:a.role,name:a.name};}
+  if(!found||found.pass!==p){err.textContent='Identifiant ou mot de passe incorrect.';return;}
+  curUser={username:u,role:found.role,name:found.name};
+  err.textContent='';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-shell').style.display='flex';
+  document.getElementById('sb-name').textContent=found.name;
+  document.getElementById('sb-role').textContent=found.role==='admin'?'Administrateur':'Membre';
+  document.getElementById('sb-av').textContent=initials(found.name);
+  document.getElementById('dash-greet').textContent='Bonjour, '+found.name.split(' ')[0]+' 👋';
+  const isAdmin=found.role==='admin';
+  ['admin-sep','nav-admin','mob-admin'].forEach(id=>document.getElementById(id).style.display=isAdmin?'':'none');
+  document.getElementById('btn-add-mtg').style.display=isAdmin?'flex':'none';
+  loadAllData();
+}
+function doLogout(){curUser=null;document.getElementById('app-shell').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('li-user').value='';document.getElementById('li-pass').value='';}
+
+/* ── CHARGEMENT DONNÉES (Google Sheets ou démo) ── */
+async function loadAllData() {
+  buildBarChart(caData[2025]);
+  const loaded = await gsGet('getAll');
+  if (loaded && !loaded.error) {
+    if (loaded.recos    && loaded.recos.length)    recos    = loaded.recos;
+    if (loaded.members  && loaded.members.length)  members  = loaded.members.map(m=>({...m, recos:parseInt(m.recos)||0, invites:parseInt(m.invites)||0}));
+    if (loaded.meetings && loaded.meetings.length) meetings = loaded.meetings;
+    if (loaded.accounts && loaded.accounts.length) accounts = loaded.accounts;
+    showSyncBanner(true);
+  } else {
+    showSyncBanner(false);
+  }
+  document.getElementById('reco-badge').textContent = recos.length;
+  document.getElementById('mbr-badge').textContent  = members.length;
+  renderRecos(); renderMembers(); renderCal(); renderMtgList(); renderAccounts();
+}
+
+/* ── NAV ── */
+const PT={dashboard:'Tableau de bord',planning:'Planning des réunions',recos:'Recommandations',members:'Membres',admin:'Gestion des comptes'};
+function goPage(id,btn,mob){
+  if(id==='admin'&&curUser?.role!=='admin')return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('page-title').textContent=PT[id];
+  if(mob){document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  else{document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.mob-nav-btn').forEach((b,i)=>b.classList.toggle('active',['dashboard','planning','recos','members','admin'][i]===id));closeSidebar();}
+  if(id==='planning'){renderCal();renderMtgList();}
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sb-overlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-overlay').classList.remove('open');}
+
+/* ── CHART ── */
+function buildBarChart(data){
+  const el=document.getElementById('ca-chart');const max=Math.max(...data,1);el.innerHTML='';
+  data.forEach((v,i)=>{
+    const g=document.createElement('div');g.className='bar-group';
+    const b=document.createElement('div');b.className='bar-fill'+(v===0?' muted':'');
+    b.style.height=Math.max((v/max)*100,v>0?6:2)+'%';
+    if(v>0)b.innerHTML=`<div class="bar-tooltip">${v}k€</div>`;
+    const l=document.createElement('div');l.className='bar-lbl';l.textContent=MON[i];
+    g.appendChild(b);g.appendChild(l);el.appendChild(g);
+  });
+}
+function switchYear(y,btn){document.querySelectorAll('.year-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');buildBarChart(caData[y]);}
+
+/* ── UTILS ── */
+function initials(n){return n.split(' ').map(x=>x[0]).join('').substring(0,2);}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-backdrop').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+
+/* ── RECOS ── */
+function renderRecos(list){
+  const g=document.getElementById('reco-grid');if(!list)list=recos;g.innerHTML='';
+  if(!list.length){g.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Aucune recommandation.</p>';return;}
+  list.forEach(r=>{
+    const fi=members.findIndex(m=>m.name===r.from),ti=members.findIndex(m=>m.name===r.to);
+    const fc=PAL[fi>=0?fi%PAL.length:0],tc=PAL[ti>=0?ti%PAL.length:1];
+    const c=document.createElement('div');c.className='reco-card';
+    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[r.status]}">${SL[r.status]}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>`;
+    g.appendChild(c);
+  });
+}
+function filterRecos(v){const q=v.toLowerCase();renderRecos(recos.filter(r=>r.from.toLowerCase().includes(q)||r.to.toLowerCase().includes(q)||r.desc.toLowerCase().includes(q)));}
+function filterRecosSt(v){renderRecos(v?recos.filter(r=>r.status===v):recos);}
+
+function openRecoModal(){
+  const isAdmin=curUser?.role==='admin';
+  const fromRow=document.getElementById('f-from-row');
+  const fromFixed=document.getElementById('f-from-fixed');
+  const fromSel=document.getElementById('f-from');
+  const toSel=document.getElementById('f-to');
+  if(isAdmin){
+    fromRow.style.display='';
+    fromFixed.style.display='none';
+    fromSel.innerHTML='<option value="">Sélectionner…</option>';
+    members.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.textContent=m.name;fromSel.appendChild(o);});
+    toSel.innerHTML='<option value="">Sélectionner…</option>';
+    members.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.textContent=m.name;toSel.appendChild(o);});
+  } else {
+    fromRow.style.display='none';
+    fromFixed.style.display='';
+    fromFixed.querySelector('.from-name').textContent=curUser.name;
+    const av=document.getElementById('f-from-av');
+    if(av) av.textContent=initials(curUser.name);
+    toSel.innerHTML='<option value="">Sélectionner…</option>';
+    members.forEach(m=>{
+      if(m.name===curUser.name) return;
+      const o=document.createElement('option');o.value=m.name;o.textContent=m.name;toSel.appendChild(o);
+    });
+  }
+  document.getElementById('m-reco').classList.add('open');
+}
+function submitReco(){
+  const isAdmin=curUser?.role==='admin';
+  const from=isAdmin?document.getElementById('f-from').value:curUser.name;
+  const to=document.getElementById('f-to').value;
+  const desc=document.getElementById('f-desc').value.trim();
+  const amt=document.getElementById('f-amt').value.trim();
+  const st=document.getElementById('f-st').value;
+  if(!from||!to||!desc){alert('Remplissez les champs obligatoires.');return;}
+  const newReco={from,to,desc,amount:amt,date:new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}),status:st};
+  recos.unshift(newReco);
+  gsPost('addReco', newReco).then(()=>showSyncBanner(!DEMO_MODE));
+  document.getElementById('reco-badge').textContent=recos.length;
+  renderRecos();closeM('m-reco');
+  document.getElementById('f-to').value='';
+  document.getElementById('f-desc').value='';
+  document.getElementById('f-amt').value='';
+  if(isAdmin) document.getElementById('f-from').value='';
+}
+
+/* ── PLANNING ── */
+function changeMonth(d){calM+=d;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCal();renderMtgList();}
+
+function renderCal(){
+  document.getElementById('month-title').textContent=MONF[calM]+' '+calY;
+  const grid=document.getElementById('cal-days');grid.innerHTML='';
+  const fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate();
+  const dip=new Date(calY,calM,0).getDate(),off=(fd===0?6:fd-1);
+  const today=new Date();
+  for(let i=off-1;i>=0;i--){const d=document.createElement('div');d.className='cal-day other';const n=document.createElement('div');n.className='cal-dn';n.textContent=dip-i;d.appendChild(n);grid.appendChild(d);}
+  for(let day=1;day<=dim;day++){
+    const d=document.createElement('div');d.className='cal-day';
+    if(today.getFullYear()===calY&&today.getMonth()===calM&&today.getDate()===day)d.classList.add('today');
+    const n=document.createElement('div');n.className='cal-dn';n.textContent=day;d.appendChild(n);
+    const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    meetings.filter(m=>m.date===ds).forEach(m=>{
+      const ev=document.createElement('div');ev.className='cal-evt';ev.textContent=m.time+' '+m.title;
+      ev.onclick=e=>{e.stopPropagation();openMtgDetail(m);};d.appendChild(ev);
+    });
+    if(curUser?.role==='admin')d.onclick=()=>{document.getElementById('mt-date').value=ds;openMtgModal();};
+    grid.appendChild(d);
+  }
+  const tot=off+dim,rem=(7-tot%7)%7;
+  for(let i=1;i<=rem;i++){const d=document.createElement('div');d.className='cal-day other';const n=document.createElement('div');n.className='cal-dn';n.textContent=i;d.appendChild(n);grid.appendChild(d);}
+}
+
+function renderMtgList(){
+  const el=document.getElementById('mtg-list');
+  const list=meetings.filter(m=>{const md=new Date(m.date);return md.getFullYear()===calY&&md.getMonth()===calM;}).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!list.length){el.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Aucune réunion ce mois-ci.</p>';return;}
+  const w=document.createElement('div');w.className='meetings-list';
+  list.forEach(m=>{
+    const dt=new Date(m.date+'T12:00:00');
+    const c=document.createElement('div');c.className='mtg-card';c.onclick=()=>openMtgDetail(m);
+    c.innerHTML=`<div class="mtg-date-box"><div class="mtg-day">${String(dt.getDate()).padStart(2,'0')}</div><div class="mtg-mon">${MON[dt.getMonth()]}</div></div>
+    <div class="mtg-info">
+      <div class="mtg-title">${m.title}</div>
+      <div class="mtg-meta">
+        <span class="mtg-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${m.time}</span>
+        <span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${m.place}</span>
+        ${m.capacity?`<span class="mtg-meta-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>${m.capacity} places</span>`:''}
+      </div>
+      <span class="mtg-badge ${TC[m.type]}">${TL[m.type]}</span>
+    </div>`;
+    w.appendChild(c);
+  });
+  el.innerHTML='';el.appendChild(w);
+}
+
+function openMtgModal(){document.getElementById('m-mtg').classList.add('open');}
+function submitMtg(){
+  const title=document.getElementById('mt-title').value.trim();
+  const date=document.getElementById('mt-date').value;
+  const place=document.getElementById('mt-place').value.trim();
+  if(!title||!date||!place){alert('Titre, date et lieu sont requis.');return;}
+  const newMtg={title,date,time:document.getElementById('mt-time').value,place,address:document.getElementById('mt-addr').value.trim(),type:document.getElementById('mt-type').value,capacity:document.getElementById('mt-cap').value||'',notes:document.getElementById('mt-notes').value.trim()};
+  meetings.push(newMtg);
+  gsPost('addMeeting', newMtg).then(()=>showSyncBanner(!DEMO_MODE));
+  closeM('m-mtg');['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(id=>document.getElementById(id).value='');
+  renderCal();renderMtgList();
+}
+
+function openMtgDetail(m){
+  const dt=new Date(m.date+'T12:00:00');
+  document.getElementById('mtg-detail-body').innerHTML=`
+    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
+      <div style="background:var(--brown-deep);border-radius:12px;padding:12px 16px;text-align:center;min-width:64px;">
+        <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--gold-light);line-height:1">${String(dt.getDate()).padStart(2,'0')}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-top:2px">${MON[dt.getMonth()]} ${dt.getFullYear()}</div>
+      </div>
+      <div><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px">${m.title}</div><span class="mtg-badge ${TC[m.type]}">${TL[m.type]}</span></div>
+    </div>
+    <div class="info-row"><span class="info-key">Heure</span><span class="info-val">${m.time}</span></div>
+    <div class="info-row"><span class="info-key">Lieu</span><span class="info-val">${m.place}</span></div>
+    ${m.address?`<div class="info-row"><span class="info-key">Adresse</span><span class="info-val" style="font-size:12px">${m.address}</span></div>`:''}
+    ${m.capacity?`<div class="info-row"><span class="info-key">Capacité</span><span class="info-val">${m.capacity} personnes</span></div>`:''}
+    ${m.notes?`<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text-secondary);line-height:1.6">${m.notes}</div>`:''}
+    ${m.address?`<a href="https://maps.google.com/?q=${encodeURIComponent(m.address)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>`:''}
+    ${curUser?.role==='admin'?`<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" onclick="deleteMtg('${m.date}','${m.title.replace(/'/g,"\\'")}')">Supprimer</button></div>`:''}
+  `;
+  document.getElementById('m-mtg-detail').classList.add('open');
+}
+function deleteMtg(date,title){
+  if(!confirm('Supprimer cette réunion ?'))return;
+  const idx=meetings.findIndex(m=>m.date===date&&m.title===title);
+  if(idx>=0){
+    meetings.splice(idx,1);
+    gsPost('deleteMeeting',{index:idx}).then(()=>showSyncBanner(!DEMO_MODE));
+  }
+  closeM('m-mtg-detail');renderCal();renderMtgList();
+}
+
+/* ── MEMBRES ── */
+function renderMembers(list){
+  const g=document.getElementById('members-grid');if(!list)list=members;g.innerHTML='';
+  list.forEach((m,i)=>{
+    const c=PAL[i%PAL.length],card=document.createElement('div');card.className='member-card';
+    card.onclick=()=>openMbr(members.indexOf(m));
+    card.innerHTML=`<div class="mbr-av" style="background:${c.bg};color:${c.tx}">${initials(m.name)}</div><div class="mbr-name">${m.name}</div><div class="mbr-role">${m.role}</div><span class="mbr-sector">${m.sector}</span><div class="mbr-stats"><div class="mst-box"><div class="mst-val">${m.recos}</div><div class="mst-lbl">Recos</div></div><div class="mst-box"><div class="mst-val">${m.ca}</div><div class="mst-lbl">CA</div></div><div class="mst-box"><div class="mst-val">${m.invites}</div><div class="mst-lbl">Invités</div></div></div>`;
+    g.appendChild(card);
+  });
+}
+function filterMbr(v){const q=v.toLowerCase();renderMembers(members.filter(m=>m.name.toLowerCase().includes(q)||m.role.toLowerCase().includes(q)||m.sector.toLowerCase().includes(q)));}
+function filterMbrSector(v){renderMembers(v?members.filter(m=>m.sector===v):members);}
+
+function openMbr(idx){
+  const m=members[idx],c=PAL[idx%PAL.length];
+  const mr=recos.filter(r=>r.from===m.name||r.to===m.name);
+  document.getElementById('mbr-detail-body').innerHTML=`
+    <div style="width:72px;height:72px;border-radius:50%;background:${c.bg};color:${c.tx};display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:24px;font-weight:600;margin:0 auto 14px">${initials(m.name)}</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;text-align:center;margin-bottom:4px">${m.name}</div>
+    <div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px">${m.role} — ${m.company}</div>
+    <div class="info-stats-row">
+      <div class="info-stat-box"><div class="info-stat-val">${m.recos}</div><div class="info-stat-lbl">Recommandations</div></div>
+      <div class="info-stat-box"><div class="info-stat-val">${m.ca}</div><div class="info-stat-lbl">CA généré</div></div>
+      <div class="info-stat-box"><div class="info-stat-val">${m.invites}</div><div class="info-stat-lbl">Invités</div></div>
+    </div>
+    <div class="info-row"><span class="info-key">Téléphone</span><span class="info-val">${m.phone}</span></div>
+    <div class="info-row"><span class="info-key">Email</span><span class="info-val" style="font-size:12px">${m.email}</span></div>
+    <div class="info-row"><span class="info-key">Secteur</span><span class="info-val">${m.sector}</span></div>
+    <div class="info-row"><span class="info-key">Entreprise</span><span class="info-val">${m.company}</span></div>
+    <div class="info-row"><span class="info-key">Membre depuis</span><span class="info-val">${m.join}</span></div>
+    ${mr.length>0?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Recommandations récentes</div>${mr.slice(0,3).map(r=>`<div class="mini-reco"><div class="mini-reco-top"><span>${r.from===m.name?'→ '+r.to:r.from+' →'}</span><span style="color:var(--text-muted);font-size:11px;font-weight:400">${r.date}</span></div><div class="mini-reco-desc">${r.desc}</div></div>`).join('')}</div>`:''}
+  `;
+  document.getElementById('m-member').classList.add('open');
+}
+
+/* ── ADMIN ── */
+function renderAccounts(){
+  const tb=document.getElementById('acct-tbody');tb.innerHTML='';
+  accounts.forEach((a,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><strong style="font-size:13px">${a.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${a.email}</span></td>
+    <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px">${a.username}</code></td>
+    <td><span class="role-badge ${a.role==='admin'?'rb-admin':'rb-member'}">${a.role==='admin'?'Admin':'Membre'}</span></td>
+    <td><span class="${a.status==='active'?'sb-active':'sb-pending'}">${a.status==='active'?'Actif':'En attente'}</span></td>
+    <td style="font-size:12px;color:var(--text-muted)">${a.created}</td>
+    <td><div class="td-acts">${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''} ${a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}</div></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('as-total').textContent=accounts.length;
+  document.getElementById('as-active').textContent=accounts.filter(a=>a.status==='active').length;
+  document.getElementById('as-pending').textContent=accounts.filter(a=>a.status==='pending').length;
+}
+function activateAcct(i){accounts[i].status='active';gsPost('updateAccountStatus',{index:i,status:'active'}).then(()=>showSyncBanner(!DEMO_MODE));renderAccounts();}
+function deleteAcct(i){if(!confirm('Supprimer ce compte ?'))return;gsPost('deleteAccount',{index:i}).then(()=>showSyncBanner(!DEMO_MODE));accounts.splice(i,1);renderAccounts();}
+
+function openCreateAcct(){
+  document.getElementById('ac-result').innerHTML='';
+  document.getElementById('ac-footer').innerHTML=`<button class="btn-secondary" onclick="closeM('m-create-acct')">Annuler</button><button class="btn-primary" onclick="submitCreateAcct()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Créer le compte</button>`;
+  ['ac-fn','ac-ln','ac-email','ac-co','ac-role','ac-tel'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-create-acct').classList.add('open');
+}
+
+function genPass(){const c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';let p='';for(let i=0;i<8;i++)p+=c[Math.floor(Math.random()*c.length)];return p;}
+
+function slugify(s){return s.toLowerCase().replace(/[éèêë]/g,'e').replace(/[àâä]/g,'a').replace(/[ùûü]/g,'u').replace(/[îï]/g,'i').replace(/[ôö]/g,'o').replace(/ç/g,'c').replace(/\s+/g,'');}
+
+function submitCreateAcct(){
+  const fn=document.getElementById('ac-fn').value.trim(),ln=document.getElementById('ac-ln').value.trim();
+  const email=document.getElementById('ac-email').value.trim();
+  if(!fn||!ln||!email){alert('Prénom, nom et email sont requis.');return;}
+  const name=fn+' '+ln;
+  const username=slugify(fn[0])+'.'+slugify(ln);
+  const tmpPass=genPass();
+  const newAcct={name,username,email,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
+  const newMbr={name,role:document.getElementById('ac-role').value||'Membre',company:document.getElementById('ac-co').value||'',phone:document.getElementById('ac-tel').value||'',email,sector:document.getElementById('ac-sec').value,join:new Date().toLocaleDateString('fr-FR',{month:'short',year:'numeric'}),recos:0,ca:'0 k€',invites:0};
+  accounts.push(newAcct);
+  members.push(newMbr);
+  Promise.all([gsPost('addAccount',newAcct), gsPost('addMember',newMbr)]).then(()=>showSyncBanner(!DEMO_MODE));
+  document.getElementById('mbr-badge').textContent=members.length;
+  renderMembers();renderAccounts();
+  document.getElementById('ac-result').innerHTML=`
+    <div class="success-banner"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Compte créé avec succès !</div>
+    <div class="temp-box">
+      <div class="temp-box-label">Identifiant de connexion</div>
+      <div class="temp-box-val">${username}</div>
+      <div class="temp-box-label" style="margin-top:12px">Mot de passe temporaire</div>
+      <div class="temp-box-val">${tmpPass}</div>
+      <div class="temp-box-hint">Communiquez ces identifiants au nouveau membre.<br>Il devra changer son mot de passe à la première connexion.</div>
+    </div>`;
+  document.getElementById('ac-footer').innerHTML=`<button class="btn-primary" onclick="closeM('m-create-acct')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Fermer</button>`;
+}
+</script>
+</body>
+</html>
