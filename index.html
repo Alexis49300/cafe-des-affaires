@@ -334,9 +334,7 @@ textarea.form-control{resize:none;height:80px;}
     <input class="lf-input" type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">Se connecter</button>
     <div class="login-error" id="li-err"></div>
-    <div class="login-hint">
-      Admin : <code>cafedesaffaires.cholet@gmail.com</code> / <code>admin1234</code>
-    </div>
+
   </div>
 </div>
 
@@ -742,7 +740,7 @@ textarea.form-control{resize:none;height:80px;}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ══════════════════════════════════════════════════════
    CONFIGURATION GOOGLE SHEETS
    Collez ici l'URL de votre déploiement Apps Script
@@ -1134,8 +1132,4 @@ function submitCreateAcct(){
       <div class="temp-box-val">${tmpPass}</div>
       <div class="temp-box-hint">Communiquez ces identifiants au nouveau membre.<br>Il devra changer son mot de passe à la première connexion.</div>
     </div>`;
-  document.getElementById('ac-footer').innerHTML=`<button class="btn-primary" onclick="closeM('m-create-acct')"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Fermer</button>`;
-}
-</script>
-</body>
-</html>
+  document.getElementById('ac-footer').innerHTML=`<butt
