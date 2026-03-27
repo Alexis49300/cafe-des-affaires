@@ -591,7 +591,7 @@ textarea.form-control{resize:none;height:80px;}
       <div class="acct-table">
         <table>
           <thead><tr>
-            <th>Membre</th><th>Identifiant</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th>
+            <th>Membre</th><th>Identifiant</th><th>Mot de passe</th><th>Rôle</th><th>Statut</th><th>Créé le</th><th>Actions</th>
           </tr></thead>
           <tbody id="acct-tbody"></tbody>
         </table>
@@ -820,9 +820,24 @@ function doLogin(){
   const u=document.getElementById('li-user').value.trim();
   const p=document.getElementById('li-pass').value;
   const err=document.getElementById('li-err');
-  const fixed={'cafedesaffaires.cholet@gmail.com':{pass:'admin1234',role:'admin',name:'Administrateur'}};
-  let found=fixed[u];
-  if(!found){const a=accounts.find(a=>a.username===u);if(a)found={pass:'membre1234',role:a.role,name:a.name};}
+  // Compte admin fixe
+  if(u==='cafedesaffaires.cholet@gmail.com'&&p==='admin1234'){
+    curUser={username:u,role:'admin',name:'Administrateur'};
+    err.textContent='';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-shell').style.display='flex';
+    document.getElementById('sb-name').textContent='Administrateur';
+    document.getElementById('sb-role').textContent='Administrateur';
+    document.getElementById('sb-av').textContent='AD';
+    document.getElementById('dash-greet').textContent='Bonjour, Administrateur 👋';
+    ['admin-sep','nav-admin','mob-admin'].forEach(id=>document.getElementById(id).style.display='');
+    document.getElementById('btn-add-mtg').style.display='flex';
+    loadAllData(); return;
+  }
+  // Membres : identifiant = username, mot de passe stocké dans accounts
+  const a=accounts.find(a=>a.username===u);
+  const pass=a?a.password||'membre1234':'';
+  let found=a?{pass,role:a.role,name:a.name}:null;
   if(!found||found.pass!==p){err.textContent='Identifiant ou mot de passe incorrect.';return;}
   curUser={username:u,role:found.role,name:found.name};
   err.textContent='';
@@ -1085,10 +1100,14 @@ function renderAccounts(){
     const tr=document.createElement('tr');
     tr.innerHTML=`<td><strong style="font-size:13px">${a.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${a.email}</span></td>
     <td><code style="font-size:12px;background:var(--cream-dark);padding:2px 6px;border-radius:4px">${a.username}</code></td>
+    <td><span style="font-size:12px;font-family:monospace;background:var(--cream-dark);padding:2px 6px;border-radius:4px;cursor:pointer;user-select:all" title="Cliquer pour copier" onclick="navigator.clipboard.writeText('${a.password||'membre1234'}')">${a.password||'membre1234'}</span></td>
     <td><span class="role-badge ${a.role==='admin'?'rb-admin':'rb-member'}">${a.role==='admin'?'Admin':'Membre'}</span></td>
     <td><span class="${a.status==='active'?'sb-active':'sb-pending'}">${a.status==='active'?'Actif':'En attente'}</span></td>
-    <td style="font-size:12px;color:var(--text-muted)">${a.created}</td>
-    <td><div class="td-acts">${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''} ${a.username!=='admin'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}</div></td>`;
+    <td><div class="td-acts">
+      ${a.username!=='cafedesaffaires.cholet@gmail.com'?`<button class="btn-sm" onclick="editMember(${i})">Modifier</button>`:''}
+      ${a.status==='pending'?`<button class="btn-sm success" onclick="activateAcct(${i})">Activer</button>`:''}
+      ${a.username!=='cafedesaffaires.cholet@gmail.com'?`<button class="btn-sm danger" onclick="deleteAcct(${i})">Supprimer</button>`:''}
+    </div></td>`;
     tb.appendChild(tr);
   });
   document.getElementById('as-total').textContent=accounts.length;
@@ -1109,6 +1128,66 @@ function genPass(){const c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz234567
 
 function slugify(s){return s.toLowerCase().replace(/[éèêë]/g,'e').replace(/[àâä]/g,'a').replace(/[ùûü]/g,'u').replace(/[îï]/g,'i').replace(/[ôö]/g,'o').replace(/ç/g,'c').replace(/\s+/g,'');}
 
+/* ── MODIFICATION MEMBRE (admin) ── */
+function editMember(i){
+  const a=accounts[i];
+  const m=members.find(mb=>mb.name===a.name)||{};
+  const body=document.getElementById('mbr-detail-body');
+  document.getElementById('m-member').classList.add('open');
+  body.innerHTML=`
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:16px">Modifier le membre</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Prénom Nom</label><input class="form-control" id="em-name" value="${a.name}"></div>
+      <div class="form-group"><label class="form-label">Identifiant</label><input class="form-control" id="em-user" value="${a.username}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-control" id="em-pass" value="${a.password||'membre1234'}"></div>
+      <div class="form-group"><label class="form-label">Rôle appli</label>
+        <select class="form-control" id="em-approle">
+          <option value="member" ${a.role==='member'?'selected':''}>Membre</option>
+          <option value="admin" ${a.role==='admin'?'selected':''}>Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="em-email" value="${a.email}"></div>
+      <div class="form-group"><label class="form-label">Téléphone</label><input class="form-control" id="em-phone" value="${m.phone||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Entreprise</label><input class="form-control" id="em-company" value="${m.company||''}"></div>
+      <div class="form-group"><label class="form-label">Secteur</label>
+        <select class="form-control" id="em-sector">
+          ${['Finance','Conseil','Tech','Juridique','Immobilier','Marketing','BTP','Formation','Santé','Autre'].map(s=>`<option ${m.sector===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Poste / rôle</label><input class="form-control" id="em-role" value="${m.role||''}"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+      <button class="btn-secondary" onclick="closeM('m-member')">Annuler</button>
+      <button class="btn-primary" onclick="saveMember(${i})"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button>
+    </div>`;
+}
+
+function saveMember(i){
+  const name=document.getElementById('em-name').value.trim();
+  const username=document.getElementById('em-user').value.trim();
+  const password=document.getElementById('em-pass').value.trim();
+  const role=document.getElementById('em-approle').value;
+  const email=document.getElementById('em-email').value.trim();
+  const phone=document.getElementById('em-phone').value.trim();
+  const company=document.getElementById('em-company').value.trim();
+  const sector=document.getElementById('em-sector').value;
+  const mbrRole=document.getElementById('em-role').value.trim();
+  // Mettre à jour accounts
+  accounts[i]={...accounts[i],name,username,password,role,email};
+  // Mettre à jour members
+  const mi=members.findIndex(m=>m.name===accounts[i].name||m.email===accounts[i].email);
+  if(mi>=0) members[mi]={...members[mi],name,email,phone,company,sector,role:mbrRole};
+  gsPost('updateMember',{index:mi,...members[mi]}).then(()=>showSyncBanner(!DEMO_MODE));
+  gsPost('updateAccountStatus',{index:i,status:accounts[i].status}).then(()=>{});
+  renderAccounts();renderMembers();closeM('m-member');
+}
+
 function submitCreateAcct(){
   const fn=document.getElementById('ac-fn').value.trim(),ln=document.getElementById('ac-ln').value.trim();
   const email=document.getElementById('ac-email').value.trim();
@@ -1116,7 +1195,7 @@ function submitCreateAcct(){
   const name=fn+' '+ln;
   const username=slugify(fn[0])+'.'+slugify(ln);
   const tmpPass=genPass();
-  const newAcct={name,username,email,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
+  const newAcct={name,username,email,password:tmpPass,role:document.getElementById('ac-approle').value,status:'pending',created:new Date().toLocaleDateString('fr-FR')};
   const newMbr={name,role:document.getElementById('ac-role').value||'Membre',company:document.getElementById('ac-co').value||'',phone:document.getElementById('ac-tel').value||'',email,sector:document.getElementById('ac-sec').value,join:new Date().toLocaleDateString('fr-FR',{month:'short',year:'numeric'}),recos:0,ca:'0 k€',invites:0};
   accounts.push(newAcct);
   members.push(newMbr);
