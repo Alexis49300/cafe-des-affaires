@@ -1159,10 +1159,10 @@ function renderActivity() {
 /* -- NAV -- */
 const PT={dashboard:'Tableau de bord',planning:'Planning des r\u00e9unions',recos:'Recommandations',members:'Membres',guests:'Invit\u00e9s',admin:'Gestion des comptes'};
 function goPage(id,btn,mob){
-  if(id==='admin'&&curUser?.role!=='admin')return;
+  if(id==='admin'&&curUser && curUser.role!=='admin')return;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  document.getElementById('page-title').textContent=PT[id];
+  document.getElementById('page-title').textContent=PT[id]||id;
   if(mob){document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
   else{document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.mob-nav-btn').forEach((b,i)=>b.classList.toggle('active',['dashboard','planning','recos','members','admin'][i]===id));closeSidebar();}
   if(id==='planning'){renderCal();renderMtgList();}
@@ -1186,8 +1186,8 @@ function switchYear(y,btn){document.querySelectorAll('.year-tab').forEach(t=>t.c
 
 /* -- UTILS -- */
 function initials(n){return n.split(' ').map(x=>x[0]).join('').substring(0,2);}
-function closeM(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-backdrop').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+function closeM(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
+// modal close on backdrop click - gere dans closeM() et dans chaque modal directement
 
 /* -- RECOS -- */
 function renderRecos(list){
@@ -1252,7 +1252,7 @@ function openRecoModal(){
 }
 
 function submitReco(){
-  const isAdmin=curUser?.role==='admin';
+  const isAdmin=curUser && curUser.role==='admin';
   const from=isAdmin?document.getElementById('f-from').value:curUser.name;
   const to=document.getElementById('f-to').value;
   const desc=document.getElementById('f-desc').value.trim();
@@ -1296,7 +1296,7 @@ function renderCal(){
       ev.onclick=function(e){e.stopPropagation();alert(g.name+(g.company?' - '+g.company:'')+' | Invite par : '+g.invitedBy+(g.notes?' | '+g.notes:''));};
       d.appendChild(ev);
     });
-    if(curUser?.role==='admin')d.onclick=()=>{document.getElementById('mt-date').value=ds;openMtgModal();};
+    if(curUser && curUser.role==='admin')d.onclick=()=>{document.getElementById('mt-date').value=ds;openMtgModal();};
     grid.appendChild(d);
   }
   const tot=off+dim,rem=(7-tot%7)%7;
@@ -1373,7 +1373,7 @@ function openMtgDetail(m){
     ${m.capacity?`<div class="info-row"><span class="info-key">Capacit\u00e9</span><span class="info-val">${m.capacity} personnes</span></div>`:''}
     ${m.notes?`<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text-secondary);line-height:1.6">${m.notes}</div>`:''}
     ${m.address?`<a href="https://maps.google.com/?q=${encodeURIComponent(m.address)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>`:''}
-    ${curUser?.role==='admin'?`<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" onclick="deleteMtg('${m.date}','${m.title.replace(/'/g,"\\'")}')">Supprimer</button></div>`:''}
+    ${curUser && curUser.role==='admin'?`<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" onclick="deleteMtg('${m.date}','${m.title.replace(/'/g,"\\'")}')">Supprimer</button></div>`:''}
   `;
   document.getElementById('m-mtg-detail').classList.add('open');
 }
@@ -1730,11 +1730,20 @@ function toggleNotif() {
 document.addEventListener('click', function(e) {
   var panel = document.getElementById('notif-panel');
   var btn = document.getElementById('notif-btn');
-  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+  if (panel && btn && panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
     panel.classList.remove('open');
   }
 });
 
+
+// Fermeture modals au clic sur backdrop
+window.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.modal-backdrop').forEach(function(m) {
+    m.addEventListener('click', function(e) {
+      if (e.target === m) m.classList.remove('open');
+    });
+  });
+});
 </script>
 </body>
 </html>
