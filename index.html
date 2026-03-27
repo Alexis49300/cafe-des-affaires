@@ -1328,6 +1328,21 @@ function submitMtg() {
 // ═══════════════════════════════════════════════════
 //  MEMBRES
 // ═══════════════════════════════════════════════════
+
+function calcMbrCA(name) {
+  var total = 0;
+  recos.forEach(function(r) {
+    if (r.from !== name && r.to !== name) return;
+    if (!r.amount) return;
+    var clean = String(r.amount).replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
+    var num = parseFloat(clean);
+    if (!isNaN(num)) total += num;
+  });
+  if (total === 0) return '--';
+  if (total >= 1000) return Math.round(total/1000) + ' k';
+  return Math.round(total) + ' EUR';
+}
+
 function renderMembers(list) {
   var g = document.getElementById('members-grid');
   if (!g) return;
@@ -1344,7 +1359,7 @@ function renderMembers(list) {
       '<span class="mbr-sector">'+(m.sector||'')+'</span>'+
       '<div class="mbr-stats">'+
         '<div class="mst-box"><div class="mst-val">'+recos.filter(function(r){return r.from===m.name||r.to===m.name;}).length+'</div><div class="mst-lbl">Recos</div></div>'+
-        '<div class="mst-box"><div class="mst-val">'+(m.ca||'--')+'</div><div class="mst-lbl">CA</div></div>'+
+        '<div class="mst-box"><div class="mst-val">'+calcMbrCA(m.name)+'</div><div class="mst-lbl">Montant</div></div>'+
         '<div class="mst-box"><div class="mst-val">'+guests.filter(function(g){return g.invitedBy===m.name;}).length+'</div><div class="mst-lbl">Invites</div></div>'+
       '</div>';
     g.appendChild(card);
@@ -1374,7 +1389,7 @@ function openMbr(idx) {
     '<div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px">'+(m.role||'')+(m.company?' - '+m.company:'')+'</div>'+
     '<div class="info-stats-row">'+
       '<div class="info-stat-box"><div class="info-stat-val">'+mr.length+'</div><div class="info-stat-lbl">Recommandations</div></div>'+
-      '<div class="info-stat-box"><div class="info-stat-val">'+(m.ca||'--')+'</div><div class="info-stat-lbl">CA genere</div></div>'+
+      '<div class="info-stat-box"><div class="info-stat-val">'+calcMbrCA(m.name)+'</div><div class="info-stat-lbl">Montant recos</div></div>'+
       '<div class="info-stat-box"><div class="info-stat-val">'+mg.length+'</div><div class="info-stat-lbl">Invites</div></div>'+
     '</div>'+
     '<div class="info-row"><span class="info-key">Tel</span><span class="info-val">'+(m.phone||'--')+'</span></div>'+
