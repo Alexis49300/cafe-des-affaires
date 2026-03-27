@@ -417,28 +417,28 @@ textarea.form-control{resize:none;height:80px;}
           <p>Bienvenue sur votre espace club — mars 2026</p>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-val">247 k€</div>
+          <div class="hero-stat-val" id="dash-ca-total">—</div>
           <div class="hero-stat-lbl">CA généré en 2025</div>
         </div>
       </div>
       <div class="metrics-row">
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <div class="metric-val">247 k€</div>
-          <div class="metric-label">Chiffre d'affaires 2025</div>
+          <div class="metric-val" id="dash-ca-val">—</div>
+          <div class="metric-label" id="dash-ca-lbl">Chiffre d'affaires</div>
           <span class="metric-delta delta-up">+18%</span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="metric-val">34</div>
-          <div class="metric-label">Invités 2025</div>
-          <span class="metric-delta delta-up">+6</span>
+          <div class="metric-val" id="dash-invites-val">—</div>
+          <div class="metric-label">Invités</div>
+          <span class="metric-delta delta-up" id="dash-invites-delta"></span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <div class="metric-val">28</div>
+          <div class="metric-val" id="dash-recos-val">—</div>
           <div class="metric-label">Recommandations</div>
-          <span class="metric-delta delta-up">+4</span>
+          <span class="metric-delta" id="dash-recos-delta"></span>
         </div>
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
@@ -871,7 +871,59 @@ async function loadAllData() {
   }
   document.getElementById('reco-badge').textContent = recos.length;
   document.getElementById('mbr-badge').textContent  = members.length;
+  updateDashboard();
   renderRecos(); renderMembers(); renderCal(); renderMtgList(); renderAccounts();
+}
+
+function updateDashboard() {
+  var nbRecos   = recos.length;
+  var nbDone    = recos.filter(function(r){ return r.status==='done'; }).length;
+  var nbMembers = members.length;
+  var nbInvites = members.reduce(function(s,m){ return s+(parseInt(m.invites)||0); }, 0);
+
+  // CA : somme des montants de toutes les recos (extraction du nombre)
+  var caTotal = 0;
+  recos.forEach(function(r) {
+    if (r.amount) {
+      var clean = (r.amount+'').replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
+      var num = parseFloat(clean);
+      if (!isNaN(num)) caTotal += num;
+    }
+  });
+  var caStr = caTotal >= 1000 ? Math.round(caTotal/1000)+' k€' : caTotal > 0 ? Math.round(caTotal)+'€' : '—';
+
+  // Prochaine reunion
+  var today = new Date(); today.setHours(0,0,0,0);
+  var upcoming = meetings.filter(function(m){ return new Date(m.date+'T12:00:00') >= today; })
+                         .sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+  var nextMtg = upcoming.length > 0 ? upcoming[0] : null;
+
+  function set(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
+
+  set('dash-ca-total',   caStr);
+  set('dash-ca-val',     caStr);
+  set('dash-recos-val',  nbRecos || '—');
+  set('dash-invites-val', nbInvites || '—');
+  set('dash-members-val', nbMembers || '—');
+
+  var recosDelta = document.getElementById('dash-recos-delta');
+  if (recosDelta) {
+    recosDelta.textContent = nbDone+' réalisée'+(nbDone>1?'s':'');
+    recosDelta.className = nbDone > 0 ? 'metric-delta delta-up' : 'metric-delta delta-neutral';
+  }
+
+  if (nextMtg) {
+    var d = new Date(nextMtg.date+'T12:00:00');
+    var mois = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+    set('next-meeting-val', d.getDate()+' '+mois[d.getMonth()]);
+    var card = document.getElementById('next-meeting-val');
+    if (card) {
+      var delta = card.closest('.metric-card') && card.closest('.metric-card').querySelector('.metric-delta');
+      if (delta) delta.textContent = nextMtg.place || nextMtg.title;
+    }
+  } else {
+    set('next-meeting-val', '—');
+  }
 }
 
 /* ── NAV ── */
