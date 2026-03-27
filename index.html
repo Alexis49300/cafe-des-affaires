@@ -309,6 +309,20 @@ textarea.form-control{resize:none;height:80px;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px;}
+
+/* INVITÉS */
+.guests-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.guests-table{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.guests-table table{width:100%;border-collapse:collapse;}
+.guests-table th{padding:11px 16px;text-align:left;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;background:var(--cream-dark);border-bottom:1px solid var(--border);}
+.guests-table td{padding:11px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.guests-table tr:last-child td{border-bottom:none;}
+.guests-table tr:hover td{background:var(--cream);}
+.guest-invited-by{font-size:11px;background:var(--gold-pale);color:var(--brown);padding:2px 8px;border-radius:20px;font-weight:500;}
+/* EDIT RECO */
+.reco-card .reco-edit-btn{display:none;position:absolute;top:14px;right:14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;}
+.reco-card:hover .reco-edit-btn{display:block;}
+.reco-card{position:relative;}
 </style>
 </head>
 <body>
@@ -371,6 +385,11 @@ textarea.form-control{resize:none;height:80px;}
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Membres
         <span class="nav-badge" id="mbr-badge">12</span>
+      </button>
+      <button class="nav-item" onclick="goPage('guests',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Invités
+        <span class="nav-badge" id="guests-badge">0</span>
       </button>
       <div class="nav-sep" id="admin-sep">Administration</div>
       <button class="nav-item" id="nav-admin" onclick="goPage('admin',this)">
@@ -560,6 +579,29 @@ textarea.form-control{resize:none;height:80px;}
       <div class="members-grid" id="members-grid"></div>
     </section>
 
+
+    <!-- INVITÉS -->
+    <section class="page" id="page-guests">
+      <div class="guests-toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" placeholder="Rechercher un invité…" oninput="filterGuests(this.value)">
+        </div>
+        <button class="btn-primary" onclick="openGuestModal()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Ajouter un invité</span>
+        </button>
+      </div>
+      <div class="guests-table">
+        <table>
+          <thead><tr>
+            <th>Nom</th><th>Société</th><th>Date de visite</th><th>Invité par</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="guests-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
     <!-- ADMIN -->
     <section class="page" id="page-admin">
       <div class="admin-stats">
@@ -614,12 +656,66 @@ textarea.form-control{resize:none;height:80px;}
     <button class="mob-nav-btn" onclick="goPage('members',this,true)">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Membres
     </button>
+    <button class="mob-nav-btn" onclick="goPage('guests',this,true)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Invités
+    </button>
     <button class="mob-nav-btn" id="mob-admin" onclick="goPage('admin',this,true)">
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin
     </button>
   </div>
 </nav>
 
+
+<!-- MODAL: INVITÉ -->
+<div class="modal-backdrop" id="m-guest">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Ajouter un invité</span><button class="modal-close" onclick="closeM('m-guest')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prénom Nom</label><input type="text" class="form-control" id="g-name" placeholder="Jean Martin"></div>
+        <div class="form-group"><label class="form-label">Société</label><input type="text" class="form-control" id="g-company" placeholder="Entreprise SA"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date de visite</label><input type="date" class="form-control" id="g-date"></div>
+        <div class="form-group"><label class="form-label">Invité par</label><select class="form-control" id="g-by"><option value="">Sélectionner…</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes (optionnel)</label><input type="text" class="form-control" id="g-notes" placeholder="Contexte, projet…"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeM('m-guest')">Annuler</button>
+      <button class="btn-primary" onclick="submitGuest()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MODIFIER RECO -->
+<div class="modal-backdrop" id="m-edit-reco">
+  <div class="modal-box">
+    <div class="modal-head"><span class="modal-head-title">Modifier la recommandation</span><button class="modal-close" onclick="closeM('m-edit-reco')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="er-idx">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">De (membre)</label><select class="form-control" id="er-from"><option value="">Sélectionner…</option></select></div>
+        <div class="form-group"><label class="form-label">Vers (membre)</label><select class="form-control" id="er-to"><option value="">Sélectionner…</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="er-desc"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Montant estimé</label><input type="text" class="form-control" id="er-amt" placeholder="5 000 €"></div>
+        <div class="form-group"><label class="form-label">Statut</label>
+          <select class="form-control" id="er-status">
+            <option value="new">Nouveau</option>
+            <option value="progress">En cours</option>
+            <option value="done">Réalisé</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeM('m-edit-reco')">Annuler</button>
+      <button class="btn-primary" onclick="saveEditReco()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button>
+    </div>
+  </div>
+</div>
 <!-- MODAL: RECO -->
 <div class="modal-backdrop" id="m-reco">
   <div class="modal-box">
@@ -865,6 +961,7 @@ async function loadAllData() {
     if (loaded.members  && loaded.members.length)  members  = loaded.members.map(m=>({...m, recos:parseInt(m.recos)||0, invites:parseInt(m.invites)||0}));
     if (loaded.meetings && loaded.meetings.length) meetings = loaded.meetings;
     if (loaded.accounts && loaded.accounts.length) accounts = loaded.accounts;
+    if (loaded.guests   && loaded.guests.length)   guests   = loaded.guests;
     showSyncBanner(true);
   } else {
     showSyncBanner(false);
@@ -872,7 +969,7 @@ async function loadAllData() {
   document.getElementById('reco-badge').textContent = recos.length;
   document.getElementById('mbr-badge').textContent  = members.length;
   updateDashboard();
-  renderRecos(); renderMembers(); renderCal(); renderMtgList(); renderAccounts();
+  renderRecos(); renderMembers(); renderCal(); renderMtgList(); renderAccounts(); renderGuests();
 }
 
 function updateDashboard() {
@@ -927,7 +1024,7 @@ function updateDashboard() {
 }
 
 /* ── NAV ── */
-const PT={dashboard:'Tableau de bord',planning:'Planning des réunions',recos:'Recommandations',members:'Membres',admin:'Gestion des comptes'};
+const PT={dashboard:'Tableau de bord',planning:'Planning des réunions',recos:'Recommandations',members:'Membres',guests:'Invités',admin:'Gestion des comptes'};
 function goPage(id,btn,mob){
   if(id==='admin'&&curUser?.role!=='admin')return;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -967,7 +1064,9 @@ function renderRecos(list){
     const fi=members.findIndex(m=>m.name===r.from),ti=members.findIndex(m=>m.name===r.to);
     const fc=PAL[fi>=0?fi%PAL.length:0],tc=PAL[ti>=0?ti%PAL.length:1];
     const c=document.createElement('div');c.className='reco-card';
-    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[r.status]}">${SL[r.status]}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>`;
+    var canEditReco = curUser && (curUser.role==='admin' || curUser.name===r.from);
+    var recoIdx = recos.indexOf(r);
+    c.innerHTML=`<div class="reco-card-top"><div class="reco-avs"><div class="reco-av" style="background:${fc.bg};color:${fc.tx}">${initials(r.from)}</div><div class="reco-av" style="background:${tc.bg};color:${tc.tx}">${initials(r.to)}</div></div><span class="reco-status ${SC[r.status]}">${SL[r.status]}</span></div><div class="reco-names">${r.from} <span>→</span> ${r.to}</div><div class="reco-desc">${r.desc}</div><div class="reco-footer"><span class="reco-date">${r.date}</span>${r.amount?`<span class="reco-amt">${r.amount}</span>`:''}</div>${canEditReco?`<button class="reco-edit-btn" onclick="openEditReco(${recoIdx})">Modifier</button>`:''}`;
     g.appendChild(c);
   });
 }
@@ -1145,6 +1244,150 @@ function openMbr(idx){
     ${mr.length>0?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Recommandations récentes</div>${mr.slice(0,3).map(r=>`<div class="mini-reco"><div class="mini-reco-top"><span>${r.from===m.name?'→ '+r.to:r.from+' →'}</span><span style="color:var(--text-muted);font-size:11px;font-weight:400">${r.date}</span></div><div class="mini-reco-desc">${r.desc}</div></div>`).join('')}</div>`:''}
   `;
   document.getElementById('m-member').classList.add('open');
+}
+
+
+/* ── INVITÉS ── */
+let guests=[];
+
+function renderGuests(list) {
+  if (!list) list = guests;
+  var tb = document.getElementById('guests-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  if (!list.length) {
+    tb.innerHTML = '<tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:20px">Aucun invité enregistré.</td></tr>';
+    document.getElementById('guests-badge').textContent = 0;
+    return;
+  }
+  document.getElementById('guests-badge').textContent = guests.length;
+  list.forEach(function(g, i) {
+    var idx = guests.indexOf(g);
+    var canEdit = curUser && (curUser.role === 'admin' || curUser.name === g.invitedBy);
+    var d = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('fr-FR', {day:'numeric',month:'short',year:'numeric'}) : g.date;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><strong>' + g.name + '</strong></td>' +
+      '<td>' + (g.company||'—') + '</td>' +
+      '<td>' + (d||'—') + '</td>' +
+      '<td><span class="guest-invited-by">' + (g.invitedBy||'—') + '</span></td>' +
+      '<td><div class="td-acts">' +
+        (canEdit ? '<button class="btn-sm" onclick="openEditGuest('+idx+')">Modifier</button>' : '') +
+        (canEdit ? '<button class="btn-sm danger" onclick="deleteGuest('+idx+')">Supprimer</button>' : '') +
+      '</div></td>';
+    tb.appendChild(tr);
+  });
+}
+
+function filterGuests(v) {
+  var q = v.toLowerCase();
+  renderGuests(guests.filter(function(g) {
+    return (g.name||'').toLowerCase().includes(q) || (g.company||'').toLowerCase().includes(q) || (g.invitedBy||'').toLowerCase().includes(q);
+  }));
+}
+
+function openGuestModal(editIdx) {
+  // Remplir la liste "Invité par"
+  var sel = document.getElementById('g-by');
+  sel.innerHTML = '<option value="">Sélectionner…</option>';
+  members.forEach(function(m) {
+    var o = document.createElement('option');
+    o.value = m.name; o.textContent = m.name;
+    if (curUser && curUser.name === m.name) o.selected = true;
+    sel.appendChild(o);
+  });
+  // Mode édition
+  if (editIdx !== undefined) {
+    var g = guests[editIdx];
+    document.getElementById('g-name').value    = g.name || '';
+    document.getElementById('g-company').value = g.company || '';
+    document.getElementById('g-date').value    = g.date || '';
+    document.getElementById('g-by').value      = g.invitedBy || '';
+    document.getElementById('g-notes').value   = g.notes || '';
+    document.getElementById('m-guest').dataset.editIdx = editIdx;
+  } else {
+    ['g-name','g-company','g-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('g-date').value = new Date().toISOString().split('T')[0];
+    delete document.getElementById('m-guest').dataset.editIdx;
+  }
+  document.getElementById('m-guest').classList.add('open');
+}
+
+function openEditGuest(idx) { openGuestModal(idx); }
+
+function submitGuest() {
+  var name    = document.getElementById('g-name').value.trim();
+  var company = document.getElementById('g-company').value.trim();
+  var date    = document.getElementById('g-date').value;
+  var by      = document.getElementById('g-by').value;
+  var notes   = document.getElementById('g-notes').value.trim();
+  if (!name || !date || !by) { alert('Nom, date et membre invitant sont requis.'); return; }
+  var modal = document.getElementById('m-guest');
+  var editIdx = modal.dataset.editIdx !== undefined ? parseInt(modal.dataset.editIdx) : -1;
+  var obj = {name:name, company:company, date:date, invitedBy:by, notes:notes};
+  if (editIdx >= 0) {
+    guests[editIdx] = obj;
+    gsPost('updateGuest', Object.assign({index:editIdx}, obj)).then(function(){ showSyncBanner(!DEMO_MODE); });
+  } else {
+    guests.push(obj);
+    gsPost('addGuest', obj).then(function(){ showSyncBanner(!DEMO_MODE); });
+    // Incrémenter invités du membre
+    var mi = members.findIndex(function(m){ return m.name === by; });
+    if (mi >= 0) { members[mi].invites = (parseInt(members[mi].invites)||0) + 1; }
+    document.getElementById('dash-invites-val').textContent = guests.length;
+  }
+  renderGuests(); updateDashboard(); closeM('m-guest');
+}
+
+function deleteGuest(idx) {
+  if (!confirm('Supprimer cet invité ?')) return;
+  gsPost('deleteGuest', {index:idx}).then(function(){ showSyncBanner(!DEMO_MODE); });
+  guests.splice(idx, 1);
+  renderGuests(); updateDashboard();
+}
+
+
+/* ── MODIFIER RECO ── */
+function openEditReco(idx) {
+  var r = recos[idx];
+  document.getElementById('er-idx').value = idx;
+  // Remplir les selects from/to
+  ['er-from','er-to'].forEach(function(id) {
+    var s = document.getElementById(id);
+    s.innerHTML = '<option value="">Sélectionner…</option>';
+    members.forEach(function(m) {
+      var o = document.createElement('option');
+      o.value = m.name; o.textContent = m.name;
+      s.appendChild(o);
+    });
+  });
+  // Si membre non-admin : verrouiller le champ "from"
+  if (curUser && curUser.role !== 'admin') {
+    var fromSel = document.getElementById('er-from');
+    fromSel.value = r.from;
+    fromSel.disabled = true;
+  } else {
+    document.getElementById('er-from').value = r.from;
+    document.getElementById('er-from').disabled = false;
+  }
+  document.getElementById('er-to').value     = r.to;
+  document.getElementById('er-desc').value   = r.desc || '';
+  document.getElementById('er-amt').value    = r.amount || '';
+  document.getElementById('er-status').value = r.status || 'new';
+  document.getElementById('m-edit-reco').classList.add('open');
+}
+
+function saveEditReco() {
+  var idx  = parseInt(document.getElementById('er-idx').value);
+  var from = document.getElementById('er-from').disabled ? recos[idx].from : document.getElementById('er-from').value;
+  var to   = document.getElementById('er-to').value;
+  var desc = document.getElementById('er-desc').value.trim();
+  var amt  = document.getElementById('er-amt').value.trim();
+  var st   = document.getElementById('er-status').value;
+  if (!from||!to||!desc) { alert('Champs obligatoires manquants.'); return; }
+  recos[idx] = Object.assign({}, recos[idx], {from:from, to:to, desc:desc, amount:amt, status:st});
+  gsPost('updateReco', Object.assign({index:idx}, recos[idx])).then(function(){ showSyncBanner(!DEMO_MODE); });
+  renderRecos(); updateDashboard(); closeM('m-edit-reco');
 }
 
 /* ── ADMIN ── */
