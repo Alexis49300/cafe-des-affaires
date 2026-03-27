@@ -909,6 +909,45 @@ function getMtgType(t){ return TL[t]||t||'R\u00e9union'; }
 function getMtgClass(t){ return TC[t]||'tb-regular'; }
 const SL={new:'Nouveau',progress:'En cours',done:'R\u00e9alis\u00e9'};
 const SC={new:'st-new',progress:'st-prog',done:'st-done'};
+/* -- HELPER DATE ROBUSTE -- */
+function parseDate(val) {
+  if (!val) return null;
+  // Deja un objet Date
+  if (val instanceof Date) return isNaN(val.getTime()) ? null : val;
+  var s = String(val).trim();
+  if (!s || s === 'null' || s === 'undefined') return null;
+  // Format ISO YYYY-MM-DD (le bon format)
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+    var d = new Date(s + 'T12:00:00');
+    return isNaN(d.getTime()) ? null : d;
+  }
+  // Timestamp numerique (serialise par Sheets parfois)
+  if (/^\d{10,}$/.test(s)) {
+    var d = new Date(parseInt(s));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  // Format DD/MM/YYYY
+  var m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]), 12);
+  // Essai generique
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function formatDateFR(val) {
+  var d = parseDate(val);
+  if (!d) return val || '--';
+  var mois = ['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+  return d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function toISODate(val) {
+  var d = parseDate(val);
+  if (!d) return '';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+
 
 let curUser=null;
 let calY=2026,calM=3;
@@ -989,7 +1028,7 @@ function updateDashboard() {
   var curYear = new Date().getFullYear();
   recos.forEach(function(r) {
     if (!r.amount) return;
-    var d = new Date(r.date);
+    var d = parseDate(r.date);
     if (isNaN(d.getTime())) {
       var mmap = {jan:0,fev:1,'f\u00e9v':1,mar:2,avr:3,mai:4,juin:5,juil:6,'ao\u00fbt':7,aout:7,sep:8,oct:9,nov:10,'d\u00e9c':11,dec:11};
       var parts = (r.date+'').toLowerCase().split(/[\s./]+/);
@@ -1023,12 +1062,12 @@ function updateDashboard() {
 
   // Prochaine reunion
   var today = new Date(); today.setHours(0,0,0,0);
-  var upcoming = meetings.filter(function(m){ var d=new Date(m.date+'T12:00:00'); return d>=today; })
-                         .sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  var upcoming = meetings.filter(function(m){ var d=parseDate(m.date); return d&&d>=today; })
+                         .sort(function(a,b){return (parseDate(a.date)||0)-(parseDate(b.date)||0);});
   var mois = ['jan.','f\u00e9v.','mar.','avr.','mai','juin','juil.','ao\u00fbt','sep.','oct.','nov.','d\u00e9c.'];
   if (upcoming.length) {
     var nm = upcoming[0];
-    var d = new Date(nm.date+'T12:00:00');
+    var d = parseDate(nm.date);
     var moisNm=['jan.','fév.','mar.','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
     set('next-meeting-val', d.getDate()+' '+moisNm[d.getMonth()]);
     set('next-meeting-place', nm.place || nm.title || '');
@@ -1098,11 +1137,11 @@ function renderActivity() {
 
   // Prochaine reunion
   var today = new Date(); today.setHours(0,0,0,0);
-  var upcoming = meetings.filter(function(m){return new Date(m.date+'T12:00:00')>=today;})
-                         .sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+  var upcoming = meetings.filter(function(m){var d=parseDate(m.date);return d&&d>=today;})
+                         .sort(function(a,b){return (parseDate(a.date)||0)-(parseDate(b.date)||0);});
   if (upcoming.length) {
     var nm = upcoming[0];
-    var d = new Date(nm.date+'T12:00:00');
+    var d = parseDate(nm.date);
     items.unshift({color:'#9B5E1E', text:'Prochaine reunion : <strong>'+d.getDate()+' '+mois[d.getMonth()]+'</strong> -- <strong>'+nm.place+'</strong>', time:nm.time||''});
   }
 
@@ -1228,11 +1267,11 @@ function renderCal(){
     if(today.getFullYear()===calY&&today.getMonth()===calM&&today.getDate()===day)d.classList.add('today');
     const n=document.createElement('div');n.className='cal-dn';n.textContent=day;d.appendChild(n);
     const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-    meetings.filter(m=>m.date===ds).forEach(m=>{
+    meetings.filter(m=>toISODate(m.date)===ds).forEach(m=>{
       const ev=document.createElement('div');ev.className='cal-evt';ev.textContent=m.time+' '+m.title;
       ev.onclick=e=>{e.stopPropagation();openMtgDetail(m);};d.appendChild(ev);
     });
-    guests.filter(function(g){return g.date===ds;}).forEach(function(g){
+    guests.filter(function(g){return toISODate(g.date)===ds;}).forEach(function(g){
       var ev=document.createElement('div');ev.className='cal-evt cal-evt-guest';
       ev.textContent=g.name+(g.company?' ('+g.company+')':'');
       ev.title='Invite par '+g.invitedBy;
@@ -1248,11 +1287,11 @@ function renderCal(){
 
 function renderMtgList(){
   const el=document.getElementById('mtg-list');
-  const list=meetings.filter(m=>{const md=new Date(m.date);return md.getFullYear()===calY&&md.getMonth()===calM;}).sort((a,b)=>a.date.localeCompare(b.date));
+  const list=meetings.filter(m=>{var md=parseDate(m.date);return md&&md.getFullYear()===calY&&md.getMonth()===calM;}).sort((a,b)=>toISODate(a.date).localeCompare(toISODate(b.date)));
   if(!list.length){el.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Aucune r\u00e9union ce mois-ci.</p>';return;}
   const w=document.createElement('div');w.className='meetings-list';
   list.forEach(m=>{
-    const dt=new Date(m.date+'T12:00:00');
+    var dt=parseDate(m.date); if(!dt){return;}
     const c=document.createElement('div');c.className='mtg-card';c.onclick=()=>openMtgDetail(m);
     c.innerHTML=`<div class="mtg-date-box"><div class="mtg-day">${String(dt.getDate()).padStart(2,'0')}</div><div class="mtg-mon">${MON[dt.getMonth()]}</div></div>
     <div class="mtg-info">
@@ -1269,7 +1308,7 @@ function renderMtgList(){
   el.innerHTML='';el.appendChild(w);
   // Invites du mois
   var moisA=['jan.','fev.','mar.','avr.','mai','juin','juil.','aout','sep.','oct.','nov.','dec.'];
-  var monthGuests=guests.filter(function(g){if(!g.date)return false;var d=new Date(g.date+'T12:00:00');return d.getFullYear()===calY&&d.getMonth()===calM;});
+  var monthGuests=guests.filter(function(g){var d=parseDate(g.date);return d&&d.getFullYear()===calY&&d.getMonth()===calM;});
   if(monthGuests.length){
     var gs=document.createElement('div');
     gs.style.cssText='margin-top:16px;padding-top:16px;border-top:1px solid var(--border)';
@@ -1301,7 +1340,7 @@ function submitMtg(){
 }
 
 function openMtgDetail(m){
-  const dt=new Date(m.date+'T12:00:00');
+  var dt=parseDate(m.date)||new Date();
   document.getElementById('mtg-detail-body').innerHTML=`
     <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;">
       <div style="background:var(--brown-deep);border-radius:12px;padding:12px 16px;text-align:center;min-width:64px;">
@@ -1619,7 +1658,7 @@ function buildNotifications() {
 
   // Reunions a venir dans les 7 jours
   meetings.forEach(function(m) {
-    var d = new Date(m.date+'T12:00:00');
+    var d = parseDate(m.date);
     var diff = Math.round((d - today) / 86400000);
     if (diff >= 0 && diff <= 7) {
       var when = diff === 0 ? "Aujourd'hui" : diff === 1 ? 'Demain' : 'Dans ' + diff + ' jours';
