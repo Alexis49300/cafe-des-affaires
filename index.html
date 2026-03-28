@@ -821,8 +821,12 @@ function getStatus(s) { var k=(s||'new').toLowerCase(); return {label:SL[k]||s,c
 
 function slugify(s) {
   return (s||'').toLowerCase()
-    .replace(/[eeee]/g,'e').replace(/[aaa]/g,'a').replace(/[uuu]/g,'u')
-    .replace(/[ii]/g,'i').replace(/[oo]/g,'o').replace(/c/g,'c')
+    .replace(/[\u00e9\u00e8\u00ea\u00eb]/g,'e')
+    .replace(/[\u00e0\u00e2\u00e4]/g,'a')
+    .replace(/[\u00f9\u00fb\u00fc]/g,'u')
+    .replace(/[\u00ee\u00ef]/g,'i')
+    .replace(/[\u00f4\u00f6]/g,'o')
+    .replace(/\u00e7/g,'c')
     .replace(/\s+/g,'');
 }
 
@@ -1383,8 +1387,11 @@ function renderMembers(list) {
     var c = PAL[i%PAL.length];
     var card = document.createElement('div'); card.className='member-card';
     card.setAttribute('data-idx', members.indexOf(m));
-    card.innerHTML =
-      '<div class="mbr-av" style="background:'+c.bg+';color:'+c.tx+'">'+initials(m.name)+'</div>'+
+    var avContent = (m.photo && m.photo.trim())
+    var avContent = (m.photo && m.photo.trim())
+      ? '<img src="'+m.photo+'" alt="'+m.name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+      : initials(m.name);
+      '<div class="mbr-av" style="background:'+c.bg+';color:'+c.tx+'">'+avContent+'</div>'+
       '<div class="mbr-name">'+(m.name||'')+'</div>'+
       '<div class="mbr-role">'+(m.role||'')+'</div>'+
       '<span class="mbr-sector">'+(m.sector||'')+'</span>'+
@@ -1414,6 +1421,27 @@ function openMbr(idx) {
     mg.map(function(g){ return '<div class="mini-reco"><div class="mini-reco-top"><span style="font-weight:500">'+g.name+'</span><span style="color:var(--text-muted);font-size:11px">'+fmtDate(g.date)+'</span></div><div class="mini-reco-desc">'+(g.company||'')+'</div></div>'; }).join('')+'</div>';
   }
   setEl('m-member-title', 'Fiche membre');
+  // Construire le contenu de la fiche
+  var avHtml2 = (m.photo && m.photo.trim())
+    ? '<img src="'+m.photo+'" alt="'+m.name+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 14px;box-shadow:0 0 0 3px var(--gold-pale);">'
+    : '<div style="width:80px;height:80px;border-radius:50%;background:'+c.bg+';color:'+c.tx+';display:flex;align-items:center;justify-content:center;font-family:Playfair Display,serif;font-size:28px;font-weight:600;margin:0 auto 14px">'+initials(m.name)+'</div>';
+  var detailHtml =
+    avHtml2+
+    '<div style="font-family:Playfair Display,serif;font-size:22px;font-weight:700;text-align:center;margin-bottom:2px">'+m.name+'</div>'+
+    (m.company?'<div style="font-size:13px;font-weight:500;color:var(--brown);text-align:center;margin-bottom:2px">'+m.company+'</div>':'')+
+    '<div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:'+(m.description?'10':'20')+'px">'+(m.role||'')+'</div>'+
+    (m.description?'<div style="font-size:13px;color:var(--text-secondary);text-align:center;line-height:1.6;background:var(--cream);border-radius:10px;padding:10px 14px;margin-bottom:16px">'+m.description+'</div>':'')+
+    '<div class="info-stats-row">'+
+      '<div class="info-stat-box"><div class="info-stat-val">'+mr.length+'</div><div class="info-stat-lbl">Recommandations</div></div>'+
+      '<div class="info-stat-box"><div class="info-stat-val">'+calcMbrCA(m.name)+'</div><div class="info-stat-lbl">Montant recos</div></div>'+
+      '<div class="info-stat-box"><div class="info-stat-val">'+mg.length+'</div><div class="info-stat-lbl">Invites</div></div>'+
+    '</div>'+
+    '<div class="info-row"><span class="info-key">Tel</span><span class="info-val">'+(m.phone||'--')+'</span></div>'+
+    '<div class="info-row"><span class="info-key">Email</span><span class="info-val" style="font-size:12px">'+(m.email||'--')+'</span></div>'+
+    '<div class="info-row"><span class="info-key">Secteur</span><span class="info-val">'+(m.sector||'--')+'</span></div>'+
+    '<div class="info-row"><span class="info-key">Entreprise</span><span class="info-val">'+(m.company||'--')+'</span></div>'+
+    '<div class="info-row"><span class="info-key">Membre depuis</span><span class="info-val">'+(m.join||'--')+'</span></div>'+
+    recoHtml + guestHtml;
   document.getElementById('member-modal-body').innerHTML = detailHtml;
   openM('m-member');
 }
@@ -1537,7 +1565,7 @@ function openEditMember(i) {
     '<div class="form-group"><label class="form-label">Secteur</label><select class="form-control" id="em-sector">'+sOpts+'</select></div></div>'+
     '<div class="form-group"><label class="form-label">Poste</label><input class="form-control" id="em-role" value="'+(m.role||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Description / Presentation</label><textarea class="form-control" id="em-desc" placeholder="Decrivez votre activite, expertise..." style="height:70px">'+(m.description||'')+'</textarea></div>'+
-    '<div class="form-group"><label class="form-label">URL Photo (lien image)</label><input class="form-control" id="em-photo" value="'+(m.photo||'')+'" placeholder="https://... (lien vers votre photo)"></div>'+
+    '<div class="form-group"><label class="form-label">URL Photo (lien image)</label><input class="form-control" id="em-photo" value="'+(m.photo||'')+'" placeholder="https://i.imgur.com/... ou autre lien image direct"></div>'+
     '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">'+
     '<button class="btn-secondary" data-close="m-member">Annuler</button>'+
     '<button class="btn-primary" data-save-member="'+i+'">Enregistrer</button></div>';
