@@ -422,12 +422,12 @@ textarea.form-control{resize:none;height:80px;}
     <section class="page active" id="page-dashboard">
       <div class="dash-hero">
         <div class="hero-text"><h2 id="dash-greet">Bonjour !</h2><p>Bienvenue sur votre espace club</p></div>
-        <div class="hero-stat"><div class="hero-stat-val" id="dash-ca-hero">--</div><div class="hero-stat-lbl">CA total (recos)</div></div>
+        <div class="hero-stat"><div class="hero-stat-val" id="dash-ca-hero">--</div><div class="hero-stat-lbl">CA realise</div></div>
       </div>
       <div class="metrics-row">
         <div class="metric-card">
           <div class="metric-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <div class="metric-val" id="dash-ca-val">--</div><div class="metric-label">CA total (recos)</div>
+          <div class="metric-val" id="dash-ca-val">--</div><div class="metric-label">CA realise</div>
           <span class="metric-delta delta-up" id="dash-ca-delta"></span>
         </div>
         <div class="metric-card">
@@ -1009,22 +1009,30 @@ function switchYear(y, btn) {
 }
 
 function updateDashboard() {
-  // CA mensuel depuis recos
+  // CA mensuel depuis recos REALISEES uniquement
   var monthly = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var caExact = 0;
   recos.forEach(function(r) {
+    if ((r.status||'').toLowerCase() !== 'done') return;
     if (!r.amount) return;
-    var d = parseDate(r.date);
-    if (!d || d.getFullYear() !== selectedYear) return;
     var clean = String(r.amount).replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
     var num = parseFloat(clean);
-    if (!isNaN(num)) monthly[d.getMonth()] += num >= 1000 ? Math.round(num/1000) : num;
+    if (isNaN(num)) return;
+    caExact += num;
+    var d = parseDate(r.date);
+    if (d && d.getFullYear() === selectedYear) {
+      monthly[d.getMonth()] += num;
+    }
   });
   buildBarChart(monthly);
 
-  var caTotal = monthly.reduce(function(s,v){ return s+v; }, 0);
-  var caStr = caTotal > 0 ? caTotal + ' k' : '--';
-  setEl('dash-ca-hero', caStr);
-  setEl('dash-ca-val', caStr);
+  // Affichage montant exact avec separateur de milliers
+  function formatEur(n) {
+    if (!n || n === 0) return '--';
+    return n.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0}) + ' EUR';
+  }
+  setEl('dash-ca-hero', formatEur(caExact));
+  setEl('dash-ca-val',  formatEur(caExact));
   setEl('dash-recos-val', recos.length || '--');
   setEl('dash-invites-val', guests.length || '--');
 
@@ -1356,14 +1364,14 @@ function calcMbrCA(name) {
   var total = 0;
   recos.forEach(function(r) {
     if (r.from !== name && r.to !== name) return;
+    if ((r.status||'').toLowerCase() !== 'done') return;
     if (!r.amount) return;
     var clean = String(r.amount).replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
     var num = parseFloat(clean);
     if (!isNaN(num)) total += num;
   });
   if (total === 0) return '--';
-  if (total >= 1000) return Math.round(total/1000) + ' k';
-  return Math.round(total) + ' EUR';
+  return total.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0}) + ' EUR';
 }
 
 function renderMembers(list) {
