@@ -130,24 +130,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .filter-sel{padding:9px 14px;border:1px solid var(--border);border-radius:9px;background:var(--white);font-size:13px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;}
 
 /* RECOS */
-.reco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
-.reco-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:box-shadow .2s,border-color .2s;position:relative;}
-.reco-card:hover{box-shadow:var(--shadow-md);border-color:var(--gold);}
-.reco-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.reco-avs{display:flex;align-items:center;}
-.reco-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:2px solid var(--white);}
-.reco-av:last-child{margin-left:-10px;}
-.reco-status{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;}
+.reco-grid{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.reco-card{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);position:relative;transition:background .15s;flex-wrap:nowrap;}
+.reco-card:last-child{border-bottom:none;}
+.reco-card:hover{background:var(--cream);}
+.reco-avs{display:flex;align-items:center;flex-shrink:0;}
+.reco-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;border:2px solid var(--white);}
+.reco-av:last-child{margin-left:-7px;}
+.reco-names{font-size:13px;font-weight:500;white-space:nowrap;flex-shrink:0;min-width:160px;}
+.reco-names span{color:var(--gold);}
+.reco-desc{font-size:12px;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.reco-amt{font-size:11px;font-weight:500;color:var(--brown);background:var(--gold-pale);padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.reco-date{font-size:11px;color:var(--text-muted);white-space:nowrap;flex-shrink:0;}
+.reco-status{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
 .st-new{background:#FFF8E7;color:#B8860B;}
 .st-prog{background:#E3F0FF;color:#1565C0;}
 .st-done{background:#EAF5E9;color:#2E7D32;}
-.reco-names{font-size:13px;font-weight:500;margin-bottom:5px;}
-.reco-names span{color:var(--gold);}
-.reco-desc{font-size:13px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px;}
-.reco-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
-.reco-date{font-size:11px;color:var(--text-muted);}
-.reco-amt{font-size:12px;font-weight:500;color:var(--brown);background:var(--gold-pale);padding:3px 10px;border-radius:20px;}
-.reco-edit-btn{display:none;position:absolute;top:14px;right:14px;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;}
+.reco-edit-btn{display:none;flex-shrink:0;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;}
 .reco-card:hover .reco-edit-btn{display:block;}
 
 /* PLANNING */
@@ -1127,20 +1126,16 @@ function renderRecos(list) {
     var canEdit = curUser && (curUser.role==='admin' || curUser.name===r.from);
     var card = document.createElement('div'); card.className = 'reco-card';
     card.innerHTML =
-      '<div class="reco-card-top">'+
-        '<div class="reco-avs">'+
-          '<div class="reco-av" style="background:'+fc.bg+';color:'+fc.tx+'">'+initials(r.from)+'</div>'+
-          '<div class="reco-av" style="background:'+tc.bg+';color:'+tc.tx+'">'+initials(r.to)+'</div>'+
-        '</div>'+
-        '<span class="reco-status '+st.cls+'">'+st.label+'</span>'+
-      '</div>'+
-      '<div class="reco-names">'+r.from+' <span>-&gt;</span> '+r.to+'</div>'+
-      '<div class="reco-desc">'+(r.desc||'')+'</div>'+
-      '<div class="reco-footer">'+
-        '<span class="reco-date">'+(r.date||'')+'</span>'+
-        (r.amount?'<span class="reco-amt">'+r.amount+'</span>':'')+
-      '</div>'+
-      (canEdit?'<button class="reco-edit-btn" data-idx="'+rIdx+'">Modifier</button>':'');
+      '<div class="reco-avs">' +
+        '<div class="reco-av" style="background:'+fc.bg+';color:'+fc.tx+'">'+initials(r.from)+'</div>' +
+        '<div class="reco-av" style="background:'+tc.bg+';color:'+tc.tx+'">'+initials(r.to)+'</div>' +
+      '</div>' +
+      '<div class="reco-names">'+r.from+' <span style="color:var(--gold)">&#x2192;</span> '+r.to+'</div>' +
+      '<div class="reco-desc">'+(r.desc||'')+'</div>' +
+      (r.amount ? '<span class="reco-amt">'+r.amount+'</span>' : '') +
+      '<span class="reco-date">'+(r.date||'')+'</span>' +
+      '<span class="reco-status '+st.cls+'">'+st.label+'</span>' +
+      (canEdit ? '<button class="reco-edit-btn" data-idx="'+rIdx+'">Modifier</button>' : '');
     g.appendChild(card);
   });
 }
