@@ -850,7 +850,7 @@ function populateSel(selId, list, exclude) {
 // ═══════════════════════════════════════════════════
 function doLogin() {
   var u = document.getElementById('li-user').value.trim();
-  var p = document.getElementById('li-pass').value;
+  var p = document.getElementById('li-pass').value.trim();
   var err = document.getElementById('li-err');
   err.textContent = '';
 
@@ -864,7 +864,30 @@ function doLogin() {
     }
   }
 
-  if (!found) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
+  if (!found) {
+    // Recharger les comptes une derniere fois au cas ou
+    gsGet('getAccounts').then(function(data) {
+      if (data && !data.error && data.length) {
+        accounts = data;
+        var hasAdmin = accounts.some(function(a){ return a.username === 'admin'; });
+        if (!hasAdmin) accounts.unshift({name:'Administrateur',username:'admin',email:'cafedesaffaires.cholet@gmail.com',password:'admin1234',role:'admin',status:'active',created:'27/03/2026'});
+      }
+      // Reessayer
+      var retry = null;
+      if (u === 'admin') {
+        retry = {name:'Administrateur', role:'admin', password:'admin1234'};
+      } else {
+        for (var i = 0; i < accounts.length; i++) {
+          if (accounts[i].username === u) { retry = accounts[i]; break; }
+        }
+      }
+      if (!retry) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
+      if (p !== (retry.password || 'membre1234')) { err.textContent = 'Mot de passe incorrect.'; return; }
+      curUser = {username: u, role: retry.role, name: retry.name};
+      applyLogin();
+    });
+    return;
+  }
   if (p !== (found.password || 'membre1234')) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
 
   curUser = {username: u, role: found.role, name: found.name};
@@ -1589,6 +1612,19 @@ function renderNotifications() {
 //  INITIALISATION & EVENEMENTS
 // ═══════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', function() {
+
+  // Charger les comptes depuis Sheets AVANT le login
+  // pour que les membres puissent se connecter
+  gsGet('getAccounts').then(function(data) {
+    if (data && !data.error && data.length) {
+      // Fusionner avec le compte admin local
+      var adminAcct = accounts[0];
+      accounts = data;
+      // S'assurer que l'admin local est toujours present
+      var hasAdmin = accounts.some(function(a){ return a.username === 'admin'; });
+      if (!hasAdmin) accounts.unshift(adminAcct);
+    }
+  });
 
   // Login
   document.getElementById('btn-login').addEventListener('click', doLogin);
