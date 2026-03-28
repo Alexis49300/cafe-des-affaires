@@ -1363,7 +1363,7 @@ function submitMtg() {
 function calcMbrCA(name) {
   var total = 0;
   recos.forEach(function(r) {
-    if (r.from !== name && r.to !== name) return;
+    if (r.from !== name) return;
     if ((r.status||'').toLowerCase() !== 'done') return;
     if (!r.amount) return;
     var clean = String(r.amount).replace(/\s/g,'').replace(',','.').replace(/[^0-9.]/g,'');
@@ -1389,7 +1389,7 @@ function renderMembers(list) {
       '<div class="mbr-role">'+(m.role||'')+'</div>'+
       '<span class="mbr-sector">'+(m.sector||'')+'</span>'+
       '<div class="mbr-stats">'+
-        '<div class="mst-box"><div class="mst-val">'+recos.filter(function(r){return r.from===m.name||r.to===m.name;}).length+'</div><div class="mst-lbl">Recos</div></div>'+
+        '<div class="mst-box"><div class="mst-val">'+recos.filter(function(r){return r.from===m.name;}).length+'</div><div class="mst-lbl">Recos envoyees</div></div>'+
         '<div class="mst-box"><div class="mst-val">'+calcMbrCA(m.name)+'</div><div class="mst-lbl">Montant</div></div>'+
         '<div class="mst-box"><div class="mst-val">'+guests.filter(function(g){return g.invitedBy===m.name;}).length+'</div><div class="mst-lbl">Invites</div></div>'+
       '</div>';
@@ -1401,7 +1401,7 @@ function openMbr(idx) {
   var m = members[idx];
   if (!m) return;
   var c = PAL[idx%PAL.length];
-  var mr = recos.filter(function(r){ return r.from===m.name||r.to===m.name; });
+  var mr = recos.filter(function(r){ return r.from===m.name; });
   var mg = guests.filter(function(g){ return g.invitedBy===m.name; });
   var recoHtml = '';
   if (mr.length) {
@@ -1414,21 +1414,7 @@ function openMbr(idx) {
     mg.map(function(g){ return '<div class="mini-reco"><div class="mini-reco-top"><span style="font-weight:500">'+g.name+'</span><span style="color:var(--text-muted);font-size:11px">'+fmtDate(g.date)+'</span></div><div class="mini-reco-desc">'+(g.company||'')+'</div></div>'; }).join('')+'</div>';
   }
   setEl('m-member-title', 'Fiche membre');
-  document.getElementById('member-modal-body').innerHTML =
-    '<div style="width:72px;height:72px;border-radius:50%;background:'+c.bg+';color:'+c.tx+';display:flex;align-items:center;justify-content:center;font-family:Playfair Display,serif;font-size:24px;font-weight:600;margin:0 auto 14px">'+initials(m.name)+'</div>'+
-    '<div style="font-family:Playfair Display,serif;font-size:22px;font-weight:700;text-align:center;margin-bottom:4px">'+m.name+'</div>'+
-    '<div style="font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:20px">'+(m.role||'')+(m.company?' - '+m.company:'')+'</div>'+
-    '<div class="info-stats-row">'+
-      '<div class="info-stat-box"><div class="info-stat-val">'+mr.length+'</div><div class="info-stat-lbl">Recommandations</div></div>'+
-      '<div class="info-stat-box"><div class="info-stat-val">'+calcMbrCA(m.name)+'</div><div class="info-stat-lbl">Montant recos</div></div>'+
-      '<div class="info-stat-box"><div class="info-stat-val">'+mg.length+'</div><div class="info-stat-lbl">Invites</div></div>'+
-    '</div>'+
-    '<div class="info-row"><span class="info-key">Tel</span><span class="info-val">'+(m.phone||'--')+'</span></div>'+
-    '<div class="info-row"><span class="info-key">Email</span><span class="info-val" style="font-size:12px">'+(m.email||'--')+'</span></div>'+
-    '<div class="info-row"><span class="info-key">Secteur</span><span class="info-val">'+(m.sector||'--')+'</span></div>'+
-    '<div class="info-row"><span class="info-key">Entreprise</span><span class="info-val">'+(m.company||'--')+'</span></div>'+
-    '<div class="info-row"><span class="info-key">Membre depuis</span><span class="info-val">'+(m.join||'--')+'</span></div>'+
-    recoHtml + guestHtml;
+  document.getElementById('member-modal-body').innerHTML = detailHtml;
   openM('m-member');
 }
 
@@ -1550,6 +1536,8 @@ function openEditMember(i) {
     '<div class="form-row"><div class="form-group"><label class="form-label">Entreprise</label><input class="form-control" id="em-company" value="'+(m.company||'')+'"></div>'+
     '<div class="form-group"><label class="form-label">Secteur</label><select class="form-control" id="em-sector">'+sOpts+'</select></div></div>'+
     '<div class="form-group"><label class="form-label">Poste</label><input class="form-control" id="em-role" value="'+(m.role||'')+'"></div>'+
+    '<div class="form-group"><label class="form-label">Description / Presentation</label><textarea class="form-control" id="em-desc" placeholder="Decrivez votre activite, expertise..." style="height:70px">'+(m.description||'')+'</textarea></div>'+
+    '<div class="form-group"><label class="form-label">URL Photo (lien image)</label><input class="form-control" id="em-photo" value="'+(m.photo||'')+'" placeholder="https://... (lien vers votre photo)"></div>'+
     '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">'+
     '<button class="btn-secondary" data-close="m-member">Annuler</button>'+
     '<button class="btn-primary" data-save-member="'+i+'">Enregistrer</button></div>';
@@ -1565,12 +1553,14 @@ function saveMember(i) {
   var phone    = document.getElementById('em-phone').value.trim();
   var company  = document.getElementById('em-company').value.trim();
   var sector   = document.getElementById('em-sector').value;
-  var mbrRole  = document.getElementById('em-role').value.trim();
+  var mbrRole    = document.getElementById('em-role').value.trim();
+  var mbrDesc    = document.getElementById('em-desc') ? document.getElementById('em-desc').value.trim() : (m ? m.description||'' : '');
+  var mbrPhoto   = document.getElementById('em-photo') ? document.getElementById('em-photo').value.trim() : (m ? m.photo||'' : '');
   accounts[i] = Object.assign({},accounts[i],{name:name,username:username,password:password,role:role,email:email});
   gsPost('updateAccount', Object.assign({index:i},accounts[i])).then(function(){ showBanner(!DEMO_MODE); });
   var mi = members.findIndex(function(m){return m.name===name||m.email===email;});
   if (mi>=0) {
-    members[mi] = Object.assign({},members[mi],{name:name,email:email,phone:phone,company:company,sector:sector,role:mbrRole});
+    members[mi] = Object.assign({},members[mi],{name:name,email:email,phone:phone,company:company,sector:sector,role:mbrRole,description:mbrDesc,photo:mbrPhoto});
     gsPost('updateMember', Object.assign({index:mi},members[mi]));
   }
   renderAccounts(); renderMembers(); closeM('m-member');
