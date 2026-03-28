@@ -1383,22 +1383,27 @@ function renderMembers(list) {
   if (!g) return;
   if (!list) list = members;
   g.innerHTML = '';
+  if (!list.length) { g.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:20px 0;">Aucun membre.</p>'; return; }
   list.forEach(function(m, i) {
-    var c = PAL[i%PAL.length];
-    var card = document.createElement('div'); card.className='member-card';
-    card.setAttribute('data-idx', members.indexOf(m));
+    var c = PAL[i % PAL.length];
+    var realIdx = members.indexOf(m);
     var avContent = (m.photo && m.photo.trim())
-    var avContent = (m.photo && m.photo.trim())
-      ? '<img src="'+m.photo+'" alt="'+m.name+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+      ? '<img src="' + m.photo + '" alt="' + m.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
       : initials(m.name);
-      '<div class="mbr-av" style="background:'+c.bg+';color:'+c.tx+'">'+avContent+'</div>'+
-      '<div class="mbr-name">'+(m.name||'')+'</div>'+
-      '<div class="mbr-role">'+(m.role||'')+'</div>'+
-      '<span class="mbr-sector">'+(m.sector||'')+'</span>'+
-      '<div class="mbr-stats">'+
-        '<div class="mst-box"><div class="mst-val">'+recos.filter(function(r){return r.from===m.name;}).length+'</div><div class="mst-lbl">Recos envoyees</div></div>'+
-        '<div class="mst-box"><div class="mst-val">'+calcMbrCA(m.name)+'</div><div class="mst-lbl">Montant</div></div>'+
-        '<div class="mst-box"><div class="mst-val">'+guests.filter(function(g){return g.invitedBy===m.name;}).length+'</div><div class="mst-lbl">Invites</div></div>'+
+    var card = document.createElement('div');
+    card.className = 'member-card';
+    card.setAttribute('data-idx', realIdx);
+    card.innerHTML =
+      '<div class="mbr-av" style="background:' + c.bg + ';color:' + c.tx + '">' + avContent + '</div>' +
+      '<div class="mbr-name">' + (m.name || '') + '</div>' +
+      (m.company ? '<div class="mbr-company">' + m.company + '</div>' : '') +
+      '<div class="mbr-role">' + (m.role || '') + '</div>' +
+      (m.description ? '<div class="mbr-desc">' + m.description + '</div>' : '') +
+      '<span class="mbr-sector">' + (m.sector || '') + '</span>' +
+      '<div class="mbr-stats">' +
+        '<div class="mst-box"><div class="mst-val">' + recos.filter(function(r) { return r.from === m.name; }).length + '</div><div class="mst-lbl">Recos</div></div>' +
+        '<div class="mst-box"><div class="mst-val">' + calcMbrCA(m.name) + '</div><div class="mst-lbl">Montant</div></div>' +
+        '<div class="mst-box"><div class="mst-val">' + guests.filter(function(g) { return g.invitedBy === m.name; }).length + '</div><div class="mst-lbl">Invites</div></div>' +
       '</div>';
     g.appendChild(card);
   });
