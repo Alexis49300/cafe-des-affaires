@@ -15,7 +15,7 @@
 :root{--brown:#9B5E1E;--brown-dark:#6B3F10;--brown-deep:#3D2008;--gold:#C8901A;--gold-light:#E8B84B;--gold-pale:#F5E6C8;--cream:#FDF8F2;--cream-dark:#F5EDE0;--white:#FFFFFF;--text-primary:#2C1A08;--text-secondary:#7A5230;--text-muted:#B08A6A;--border:rgba(155,94,30,0.15);--border-strong:rgba(155,94,30,0.3);--shadow:0 2px 16px rgba(61,32,8,0.08);--shadow-md:0 4px 24px rgba(61,32,8,0.12);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-primary);min-height:100vh;overflow-x:hidden;}
-
+ 
 /* LOGIN */
 #login-screen{position:fixed;inset:0;z-index:1000;background:var(--brown-deep);display:flex;align-items:center;justify-content:center;padding:20px;}
 .login-box{background:var(--white);border-radius:20px;width:100%;max-width:380px;padding:40px 36px 32px;box-shadow:0 24px 64px rgba(0,0,0,0.3);}
@@ -28,10 +28,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .btn-login{width:100%;padding:12px;background:var(--gold);color:white;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
 .btn-login:hover{background:var(--brown);}
 .login-error{font-size:12px;color:#C0392B;text-align:center;margin-top:8px;min-height:18px;}
-
+ 
 /* LAYOUT */
 .app-shell{display:flex;min-height:100vh;}
-
+ 
 /* SIDEBAR */
 .sidebar{width:240px;min-height:100vh;background:var(--brown-deep);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;transition:transform .3s ease;}
 .sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px;}
@@ -54,7 +54,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .btn-logout{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:none;background:none;cursor:pointer;font-size:12px;color:rgba(255,255,255,.35);font-family:'DM Sans',sans-serif;width:100%;transition:color .15s,background .15s;margin-top:4px;}
 .btn-logout:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.06);}
 .btn-logout svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;}
-
+ 
 /* MAIN */
 .main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column;}
 .topbar{height:60px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:50;}
@@ -68,12 +68,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .btn-primary svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
 .mob-menu-btn{display:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:none;cursor:pointer;align-items:center;justify-content:center;color:var(--text-secondary);}
 .mob-menu-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;}
-
+ 
 /* PAGES */
 .page{display:none;padding:28px;animation:fadeIn .2s ease;}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
+ 
 /* DASHBOARD */
 .dash-hero{background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown) 100%);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;}
 .dash-hero::before{content:'';position:absolute;right:-20px;top:-30px;width:200px;height:200px;border-radius:50%;border:40px solid rgba(200,144,26,.12);}
@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .activity-text{font-size:13px;color:var(--text-primary);line-height:1.5;}
 .activity-text strong{font-weight:500;}
 .activity-time{font-size:11px;color:var(--text-muted);margin-top:2px;}
-
+ 
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
 .search-wrap{flex:1;min-width:200px;position:relative;}
@@ -133,7 +133,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .search-input:focus{border-color:var(--gold);}
 .search-input::placeholder{color:var(--text-muted);}
 .filter-sel{padding:9px 14px;border:1px solid var(--border);border-radius:9px;background:var(--white);font-size:13px;color:var(--text-secondary);font-family:'DM Sans',sans-serif;cursor:pointer;outline:none;}
-
+ 
 /* RECOS */
 .reco-grid{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .reco-card{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);position:relative;transition:background .15s;flex-wrap:nowrap;}
@@ -153,7 +153,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .st-done{background:#EAF5E9;color:#2E7D32;}
 .reco-edit-btn{display:none;flex-shrink:0;background:var(--cream-dark);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;color:var(--text-secondary);font-family:'DM Sans',sans-serif;}
 .reco-card:hover .reco-edit-btn{display:block;}
-
+ 
 /* PLANNING */
 .plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
 .month-nav{display:flex;align-items:center;gap:12px;}
@@ -190,7 +190,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .tb-regular{background:#FFF8E7;color:#B8860B;}
 .tb-special{background:#E3F0FF;color:#1565C0;}
 .tb-agm{background:#EAF5E9;color:#2E7D32;}
-
+ 
 /* MEMBRES */
 .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
 .member-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px 16px 18px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
@@ -205,7 +205,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .mst-box{text-align:center;}
 .mst-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--gold);}
 .mst-lbl{font-size:9px;color:var(--text-muted);margin-top:1px;text-transform:uppercase;letter-spacing:.04em;}
-
+ 
 /* INVITES */
 .guests-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
 .guests-table{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
@@ -215,7 +215,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .guests-table tr:last-child td{border-bottom:none;}
 .guests-table tr:hover td{background:var(--cream);}
 .guest-tag{font-size:11px;background:#F0E8F8;color:#5E2E8B;padding:2px 8px;border-radius:20px;font-weight:500;}
-
+ 
 /* ADMIN */
 .admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
 .admin-section-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -238,7 +238,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .btn-sm.danger:hover{background:#FFF0EE;}
 .btn-sm.success{color:#2E7D32;border-color:rgba(46,125,50,.3);}
 .btn-sm.success:hover{background:#EAF5E9;}
-
+ 
 /* MODALS */
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,10,0,.5);z-index:300;align-items:center;justify-content:center;padding:20px;}
 .modal-backdrop.open{display:flex;}
@@ -275,7 +275,7 @@ textarea.form-control{resize:none;height:80px;}
 .temp-box-val{font-family:monospace;font-size:18px;font-weight:700;color:var(--brown);letter-spacing:.1em;}
 .temp-box-hint{font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.6;}
 .success-banner{background:#EAF5E9;border-radius:10px;padding:12px 14px;font-size:13px;color:#2E7D32;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-
+ 
 /* NOTIFICATIONS */
 .notif-panel{position:fixed;top:60px;right:16px;width:320px;max-height:400px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-md);z-index:400;display:none;overflow:hidden;flex-direction:column;}
 .notif-panel.open{display:flex;}
@@ -289,7 +289,7 @@ textarea.form-control{resize:none;height:80px;}
 .notif-badge{position:absolute;top:-4px;right:-4px;background:#C0392B;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .notif-empty{padding:24px;text-align:center;color:var(--text-muted);font-size:13px;}
 .sync-banner{position:fixed;top:64px;right:16px;z-index:500;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:500;display:none;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.1);transition:opacity .4s;}
-
+ 
 /* MOBILE */
 .mob-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--brown-deep);padding:8px 0 16px;z-index:100;}
 .mob-nav-inner{display:flex;}
@@ -297,7 +297,7 @@ textarea.form-control{resize:none;height:80px;}
 .mob-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;}
 .mob-nav-btn.active{color:var(--gold-light);}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
-
+ 
 @media(max-width:1100px){.metrics-row{grid-template-columns:1fr 1fr;}}
 @media(max-width:900px){.charts-row{grid-template-columns:1fr;}}
 @media(max-width:768px){
@@ -327,7 +327,7 @@ textarea.form-control{resize:none;height:80px;}
 </style>
 </head>
 <body>
-
+ 
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
@@ -348,11 +348,11 @@ textarea.form-control{resize:none;height:80px;}
     <div class="login-error" id="li-err"></div>
   </div>
 </div>
-
+ 
 <!-- APP -->
 <div class="app-shell" id="app-shell" style="display:none;">
   <div id="sync-banner" class="sync-banner"></div>
-
+ 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
@@ -403,13 +403,13 @@ textarea.form-control{resize:none;height:80px;}
     </div>
   </aside>
   <div class="sidebar-overlay" id="sb-overlay"></div>
-
+ 
   <!-- NOTIF PANEL -->
   <div class="notif-panel" id="notif-panel">
     <div class="notif-head"><span class="notif-title">Notifications</span><button class="notif-close" id="notif-close">x</button></div>
     <div class="notif-list" id="notif-list"></div>
   </div>
-
+ 
   <main class="main">
     <header class="topbar">
       <button class="mob-menu-btn" id="mob-menu-btn"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
@@ -428,7 +428,7 @@ textarea.form-control{resize:none;height:80px;}
         </button>
       </div>
     </header>
-
+ 
     <!-- DASHBOARD -->
     <section class="page active" id="page-dashboard">
       <div class="dash-hero">
@@ -483,7 +483,7 @@ textarea.form-control{resize:none;height:80px;}
         <div class="activity-list" id="activity-list"><div style="padding:20px;color:var(--text-muted);font-size:13px">Chargement...</div></div>
       </div>
     </section>
-
+ 
     <!-- PLANNING -->
     <section class="page" id="page-planning">
       <div class="plan-header">
@@ -508,7 +508,7 @@ textarea.form-control{resize:none;height:80px;}
         <div style="padding:16px 20px;" id="mtg-list"></div>
       </div>
     </section>
-
+ 
     <!-- RECOS -->
     <section class="page" id="page-recos">
       <div class="toolbar">
@@ -524,7 +524,7 @@ textarea.form-control{resize:none;height:80px;}
       </div>
       <div class="reco-grid" id="reco-grid"></div>
     </section>
-
+ 
     <!-- MEMBRES -->
     <section class="page" id="page-members">
       <div class="toolbar">
@@ -540,7 +540,7 @@ textarea.form-control{resize:none;height:80px;}
       </div>
       <div class="members-grid" id="members-grid"></div>
     </section>
-
+ 
     <!-- INVITES -->
     <section class="page" id="page-guests">
       <div class="guests-toolbar">
@@ -555,7 +555,7 @@ textarea.form-control{resize:none;height:80px;}
         <tbody id="guests-tbody"></tbody></table>
       </div>
     </section>
-
+ 
     <!-- ADMIN -->
     <section class="page" id="page-admin">
       <div class="admin-stats">
@@ -575,7 +575,7 @@ textarea.form-control{resize:none;height:80px;}
     </section>
   </main>
 </div>
-
+ 
 <!-- MOBILE NAV -->
 <nav class="mob-bottom-nav">
   <div class="mob-nav-inner">
@@ -587,7 +587,7 @@ textarea.form-control{resize:none;height:80px;}
     <button class="mob-nav-btn" id="mob-admin" onclick="goPage('admin',this,true)"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
   </div>
 </nav>
-
+ 
 <!-- MODALS -->
 <div class="modal-backdrop" id="m-reco">
   <div class="modal-box">
@@ -616,7 +616,7 @@ textarea.form-control{resize:none;height:80px;}
     <div class="modal-footer"><button class="btn-secondary" data-close="m-reco">Annuler</button><button class="btn-primary" id="btn-submit-reco">Enregistrer</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-edit-reco">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title">Modifier la recommandation</span><button class="modal-close" data-close="m-edit-reco">x</button></div>
@@ -637,7 +637,7 @@ textarea.form-control{resize:none;height:80px;}
     <div class="modal-footer"><button class="btn-secondary" data-close="m-edit-reco">Annuler</button><button class="btn-primary" id="btn-save-reco">Enregistrer</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-mtg">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title">Planifier une reunion</span><button class="modal-close" data-close="m-mtg">x</button></div>
@@ -660,21 +660,21 @@ textarea.form-control{resize:none;height:80px;}
     <div class="modal-footer"><button class="btn-secondary" data-close="m-mtg">Annuler</button><button class="btn-primary" id="btn-submit-mtg">Enregistrer</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-mtg-detail">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title">Detail de la reunion</span><button class="modal-close" data-close="m-mtg-detail">x</button></div>
     <div class="modal-body" id="mtg-detail-body"></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-member">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title" id="m-member-title">Fiche membre</span><button class="modal-close" data-close="m-member">x</button></div>
     <div class="modal-body" id="member-modal-body"></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-guest">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title">Ajouter un invite</span><button class="modal-close" data-close="m-guest">x</button></div>
@@ -692,7 +692,7 @@ textarea.form-control{resize:none;height:80px;}
     <div class="modal-footer"><button class="btn-secondary" data-close="m-guest">Annuler</button><button class="btn-primary" id="btn-submit-guest">Enregistrer</button></div>
   </div>
 </div>
-
+ 
 <div class="modal-backdrop" id="m-create-acct">
   <div class="modal-box">
     <div class="modal-head"><span class="modal-head-title">Creer un compte membre</span><button class="modal-close" data-close="m-create-acct">x</button></div>
@@ -710,8 +710,8 @@ textarea.form-control{resize:none;height:80px;}
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Pos
-
-
+ 
+ 
 <!-- MODAL CHANGEMENT MOT DE PASSE -->
 <div class="modal-backdrop" id="m-change-pwd">
   <div class="modal-box">
@@ -749,7 +749,7 @@ textarea.form-control{resize:none;height:80px;}
 // ═══════════════════════════════════════════════════
 var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9yVUjccpZi8ueAg-mb3H8TZRMAWyZoM2rtPzmm2tb_ykRpS_apADqfcdpZ1oHtKbCsA/exec';
 var DEMO_MODE = !SCRIPT_URL || SCRIPT_URL === 'COLLER_VOTRE_URL_ICI';
-
+ 
 // ═══════════════════════════════════════════════════
 //  DONNEES
 // ═══════════════════════════════════════════════════
@@ -766,7 +766,7 @@ var TC = {regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
 var SL = {new:'Nouveau',progress:'En cours',done:'Realise'};
 var SC = {new:'st-new',progress:'st-prog',done:'st-done'};
 var COLORS_DONUT = ['#C8901A','#9B5E1E','#E8B84B','#D4956A','#BFA090','#5E2E8B','#2E7D32','#1565C0','#C0392B','#888'];
-
+ 
 var members  = [];
 var recos    = [];
 var meetings = [];
@@ -778,7 +778,7 @@ var curUser  = null;
 var calY = 2026, calM = 3;
 var selectedYear = new Date().getFullYear();
 var donutChart = null;
-
+ 
 // ═══════════════════════════════════════════════════
 //  API GOOGLE SHEETS
 // ═══════════════════════════════════════════════════
@@ -788,7 +788,7 @@ function gsGet(action) {
     .then(function(r){ return r.json(); })
     .catch(function(){ return null; });
 }
-
+ 
 function gsPost(action, payload) {
   if (DEMO_MODE) return Promise.resolve();
   return fetch(SCRIPT_URL, {
@@ -796,7 +796,7 @@ function gsPost(action, payload) {
     body: JSON.stringify({action: action, payload: payload})
   }).catch(function(){});
 }
-
+ 
 function showBanner(ok) {
   var b = document.getElementById('sync-banner');
   if (!b) return;
@@ -807,17 +807,17 @@ function showBanner(ok) {
   setTimeout(function(){ b.style.opacity='0'; }, 3000);
   setTimeout(function(){ b.style.display='none'; b.style.opacity='1'; }, 3500);
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  UTILITAIRES
 // ═══════════════════════════════════════════════════
 function initials(n) { return (n||'').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase(); }
-
+ 
 function setEl(id, val) { var e = document.getElementById(id); if (e) e.textContent = val; }
-
+ 
 function openM(id) { var e = document.getElementById(id); if (e) e.classList.add('open'); }
 function closeM(id) { var e = document.getElementById(id); if (e) e.classList.remove('open'); }
-
+ 
 function parseDate(val) {
   if (!val) return null;
   if (val instanceof Date) return isNaN(val.getTime()) ? null : val;
@@ -832,23 +832,23 @@ function parseDate(val) {
   var d2 = new Date(s);
   return isNaN(d2.getTime()) ? null : d2;
 }
-
+ 
 function toISO(val) {
   var d = parseDate(val);
   if (!d) return '';
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
-
+ 
 function fmtDate(val) {
   var d = parseDate(val);
   if (!d) return val || '--';
   return d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear();
 }
-
+ 
 function getMtgLabel(t) { return TL[t] || t || 'Reunion'; }
 function getMtgClass(t) { return TC[t] || 'tb-regular'; }
 function getStatus(s) { var k=(s||'new').toLowerCase(); return {label:SL[k]||s,cls:SC[k]||'st-new'}; }
-
+ 
 function slugify(s) {
   return (s||'').toLowerCase()
     .replace(/[\u00e9\u00e8\u00ea\u00eb]/g,'e')
@@ -859,14 +859,14 @@ function slugify(s) {
     .replace(/\u00e7/g,'c')
     .replace(/\s+/g,'');
 }
-
+ 
 function genPass() {
   var c='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   var p='';
   for(var i=0;i<8;i++) p+=c[Math.floor(Math.random()*c.length)];
   return p;
 }
-
+ 
 function populateSel(selId, list, exclude) {
   var s = document.getElementById(selId);
   if (!s) return;
@@ -878,7 +878,7 @@ function populateSel(selId, list, exclude) {
     s.appendChild(o);
   });
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  AUTH
 // ═══════════════════════════════════════════════════
@@ -887,7 +887,7 @@ function doLogin() {
   var p = document.getElementById('li-pass').value.trim();
   var err = document.getElementById('li-err');
   err.textContent = '';
-
+ 
   // Chercher dans les comptes (y compris admin)
   var found = null;
   if (u === 'admin') {
@@ -897,7 +897,7 @@ function doLogin() {
       if (accounts[i].username === u) { found = accounts[i]; break; }
     }
   }
-
+ 
   if (!found) {
     // Recharger les comptes une derniere fois au cas ou
     gsGet('getAccounts').then(function(data) {
@@ -923,11 +923,11 @@ function doLogin() {
     return;
   }
   if (p !== (found.password || 'membre1234')) { err.textContent = 'Identifiant ou mot de passe incorrect.'; return; }
-
+ 
   curUser = {username: u, role: found.role, name: found.name};
   applyLogin();
 }
-
+ 
 function applyLogin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-shell').style.display = 'flex';
@@ -935,7 +935,7 @@ function applyLogin() {
   setEl('sb-role', curUser.role === 'admin' ? 'Administrateur' : 'Membre');
   setEl('sb-av', initials(curUser.name));
   setEl('dash-greet', 'Bonjour, ' + curUser.name.split(' ')[0] + ' !');
-
+ 
   var isAdmin = curUser.role === 'admin';
   ['admin-sep','nav-admin','mob-admin'].forEach(function(id) {
     var e = document.getElementById(id);
@@ -943,10 +943,10 @@ function applyLogin() {
   });
   var btnMtg = document.getElementById('btn-add-mtg');
   if (btnMtg) btnMtg.style.display = isAdmin ? '' : 'none';
-
+ 
   loadAllData();
 }
-
+ 
 function doLogout() {
   curUser = null;
   document.getElementById('app-shell').style.display = 'none';
@@ -954,7 +954,7 @@ function doLogout() {
   document.getElementById('li-user').value = '';
   document.getElementById('li-pass').value = '';
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  CHARGEMENT DONNEES
 // ═══════════════════════════════════════════════════
@@ -983,19 +983,19 @@ function loadAllData() {
     renderNotifications();
   });
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════
 var PT = {dashboard:'Tableau de bord',planning:'Planning des reunions',recos:'Recommandations',members:'Membres',guests:'Invites',admin:'Gestion des comptes'};
-
+ 
 function goPage(id, btn, mob) {
   if (id === 'admin' && !(curUser && curUser.role === 'admin')) return;
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   var page = document.getElementById('page-' + id);
   if (page) page.classList.add('active');
   setEl('page-title', PT[id] || id);
-
+ 
   if (mob) {
     document.querySelectorAll('.mob-nav-btn').forEach(function(b){ b.classList.remove('active'); });
     if (btn) btn.classList.add('active');
@@ -1006,7 +1006,7 @@ function goPage(id, btn, mob) {
   }
   if (id === 'planning') { renderCal(); renderMtgList(); }
 }
-
+ 
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sb-overlay').classList.toggle('open');
@@ -1015,7 +1015,7 @@ function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sb-overlay').classList.remove('open');
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  DASHBOARD
 // ═══════════════════════════════════════════════════
@@ -1034,14 +1034,14 @@ function buildBarChart(monthly) {
     g.appendChild(b); g.appendChild(l); el.appendChild(g);
   });
 }
-
+ 
 function switchYear(y, btn) {
   selectedYear = y;
   document.querySelectorAll('.year-tab').forEach(function(t){ t.classList.remove('active'); });
   if (btn) btn.classList.add('active');
   updateDashboard();
 }
-
+ 
 function updateDashboard() {
   // CA mensuel depuis recos REALISEES uniquement
   var monthly = [0,0,0,0,0,0,0,0,0,0,0,0];
@@ -1059,7 +1059,7 @@ function updateDashboard() {
     }
   });
   buildBarChart(monthly);
-
+ 
   // Affichage montant exact avec separateur de milliers
   function formatEur(n) {
     if (!n || n === 0) return '--';
@@ -1069,17 +1069,17 @@ function updateDashboard() {
   setEl('dash-ca-val',  formatEur(caExact));
   setEl('dash-recos-val', recos.length || '--');
   setEl('dash-invites-val', guests.length || '--');
-
+ 
   var nbDone = recos.filter(function(r){ return (r.status||'').toLowerCase() === 'done'; }).length;
   var rd = document.getElementById('dash-recos-delta');
   if (rd) { rd.textContent = nbDone + ' realise' + (nbDone > 1 ? 's' : ''); rd.className = 'metric-delta ' + (nbDone > 0 ? 'delta-up' : 'delta-neutral'); }
-
+ 
   // Prochaine reunion
   var today = new Date(); today.setHours(0,0,0,0);
   var upcoming = meetings.filter(function(m){
     var d = parseDate(m.date); return d && d >= today;
   }).sort(function(a,b){ return parseDate(a.date) - parseDate(b.date); });
-
+ 
   if (upcoming.length) {
     var nm = upcoming[0];
     var d = parseDate(nm.date);
@@ -1089,11 +1089,11 @@ function updateDashboard() {
     setEl('next-meeting-val', '--');
     setEl('next-meeting-place', '');
   }
-
+ 
   renderDonut();
   renderActivity();
 }
-
+ 
 function renderDonut() {
   var counts = {};
   members.forEach(function(m) { var s = m.sector || 'Autre'; counts[s] = (counts[s]||0)+1; });
@@ -1115,7 +1115,7 @@ function renderDonut() {
     }).join('');
   }
 }
-
+ 
 function renderActivity() {
   var el = document.getElementById('activity-list');
   if (!el) return;
@@ -1138,7 +1138,7 @@ function renderActivity() {
     return '<div class="activity-item"><div class="activity-dot" style="background:'+it.color+'"></div><div><div class="activity-text">'+it.text+'</div><div class="activity-time">'+it.time+'</div></div></div>';
   }).join('');
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  RECOMMANDATIONS
 // ═══════════════════════════════════════════════════
@@ -1170,12 +1170,12 @@ function renderRecos(list) {
     g.appendChild(card);
   });
 }
-
+ 
 function openRecoModal() {
   var isAdmin = curUser && curUser.role === 'admin';
   var adminRow = document.getElementById('f-from-admin-row');
   var memberRow = document.getElementById('f-from-member-row');
-
+ 
   if (isAdmin) {
     adminRow.style.display = '';
     memberRow.style.display = 'none';
@@ -1192,7 +1192,7 @@ function openRecoModal() {
   var st = document.getElementById('f-st'); if(st) st.value='new';
   openM('m-reco');
 }
-
+ 
 function submitReco() {
   var isAdmin = curUser && curUser.role === 'admin';
   var from = isAdmin ? (document.getElementById('f-from').value) : curUser.name;
@@ -1209,7 +1209,7 @@ function submitReco() {
   setEl('reco-badge', recos.length);
   renderRecos(); updateDashboard(); closeM('m-reco');
 }
-
+ 
 function openEditReco(idx) {
   var r = recos[idx];
   if (!r) return;
@@ -1223,7 +1223,7 @@ function openEditReco(idx) {
   document.getElementById('er-status').value = (r.status||'new').toLowerCase();
   openM('m-edit-reco');
 }
-
+ 
 function saveEditReco() {
   var idx  = parseInt(document.getElementById('er-idx').value);
   var isAdmin = curUser && curUser.role === 'admin';
@@ -1237,7 +1237,7 @@ function saveEditReco() {
   gsPost('updateReco', Object.assign({index:idx}, recos[idx])).then(function(){ showBanner(!DEMO_MODE); });
   renderRecos(); updateDashboard(); closeM('m-edit-reco');
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  PLANNING
 // ═══════════════════════════════════════════════════
@@ -1247,7 +1247,7 @@ function changeMonth(dir) {
   if (calM < 0)  { calM=11; calY--; }
   renderCal(); renderMtgList();
 }
-
+ 
 function renderCal() {
   setEl('month-title', MONF[calM] + ' ' + calY);
   var grid = document.getElementById('cal-days');
@@ -1258,7 +1258,7 @@ function renderCal() {
   var dip = new Date(calY, calM, 0).getDate();
   var off = (fd===0?6:fd-1);
   var today = new Date(); today.setHours(0,0,0,0);
-
+ 
   for (var i=off-1; i>=0; i--) {
     var d=document.createElement('div'); d.className='cal-day other';
     var n=document.createElement('div'); n.className='cal-dn'; n.textContent=dip-i;
@@ -1297,21 +1297,21 @@ function renderCal() {
     d.appendChild(n); grid.appendChild(d);
   }
 }
-
+ 
 function renderMtgList() {
   var el = document.getElementById('mtg-list');
   if (!el) return;
   var list = meetings.filter(function(m) {
     var d = parseDate(m.date); return d && d.getFullYear()===calY && d.getMonth()===calM;
   }).sort(function(a,b){ return (parseDate(a.date)||0)-(parseDate(b.date)||0); });
-
+ 
   var gList = guests.filter(function(g) {
     var d = parseDate(g.date); return d && d.getFullYear()===calY && d.getMonth()===calM;
   });
-
+ 
   if (!list.length && !gList.length) { el.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Aucune reunion ce mois-ci.</p>'; return; }
   el.innerHTML = '';
-
+ 
   if (list.length) {
     var w = document.createElement('div'); w.className='meetings-list';
     list.forEach(function(m) {
@@ -1334,7 +1334,7 @@ function renderMtgList() {
     });
     el.appendChild(w);
   }
-
+ 
   if (gList.length) {
     var gs = document.createElement('div');
     gs.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid var(--border)';
@@ -1351,7 +1351,7 @@ function renderMtgList() {
     el.appendChild(gs);
   }
 }
-
+ 
 function openMtgDetail(m) {
   var dt = parseDate(m.date) || new Date();
   var isAdmin = curUser && curUser.role==='admin';
@@ -1374,7 +1374,7 @@ function openMtgDetail(m) {
     (isAdmin?'<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>':'');
   openM('m-mtg-detail');
 }
-
+ 
 function submitMtg() {
   var title = document.getElementById('mt-title').value.trim();
   var date  = document.getElementById('mt-date').value;
@@ -1386,11 +1386,11 @@ function submitMtg() {
   ['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
   closeM('m-mtg'); renderCal(); renderMtgList(); updateDashboard();
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  MEMBRES
 // ═══════════════════════════════════════════════════
-
+ 
 function calcMbrCA(name) {
   var total = 0;
   recos.forEach(function(r) {
@@ -1404,7 +1404,7 @@ function calcMbrCA(name) {
   if (total === 0) return '--';
   return total.toLocaleString('fr-FR', {minimumFractionDigits:0, maximumFractionDigits:0}) + ' EUR';
 }
-
+ 
 function renderMembers(list) {
   var g = document.getElementById('members-grid');
   if (!g) return;
@@ -1435,7 +1435,7 @@ function renderMembers(list) {
     g.appendChild(card);
   });
 }
-
+ 
 function openMbr(idx) {
   var m = members[idx];
   if (!m) return;
@@ -1477,7 +1477,7 @@ function openMbr(idx) {
   document.getElementById('member-modal-body').innerHTML = detailHtml;
   openM('m-member');
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  INVITES
 // ═══════════════════════════════════════════════════
@@ -1505,7 +1505,7 @@ function renderGuests(list) {
     tb.appendChild(tr);
   });
 }
-
+ 
 function openGuestModal(editIdx) {
   var sel = document.getElementById('g-by');
   sel.innerHTML = '<option value="">Selectionner...</option>';
@@ -1529,7 +1529,7 @@ function openGuestModal(editIdx) {
   }
   openM('m-guest');
 }
-
+ 
 function submitGuest() {
   var name    = document.getElementById('g-name').value.trim();
   var company = document.getElementById('g-company').value.trim();
@@ -1550,7 +1550,7 @@ function submitGuest() {
   }
   renderGuests(); updateDashboard(); closeM('m-guest');
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  ADMIN
 // ═══════════════════════════════════════════════════
@@ -1579,7 +1579,7 @@ function renderAccounts() {
   setEl('as-active', accounts.filter(function(a){return a.status==='active';}).length);
   setEl('as-pending', accounts.filter(function(a){return a.status==='pending';}).length);
 }
-
+ 
 function openEditMember(i) {
   var a = accounts[i];
   var m = members.find(function(mb){return mb.name===a.name||mb.email===a.email;})||{};
@@ -1603,7 +1603,7 @@ function openEditMember(i) {
     '<button class="btn-primary" data-save-member="'+i+'">Enregistrer</button></div>';
   openM('m-member');
 }
-
+ 
 function saveMember(i) {
   var name     = document.getElementById('em-name').value.trim();
   var username = document.getElementById('em-user').value.trim();
@@ -1625,7 +1625,7 @@ function saveMember(i) {
   }
   renderAccounts(); renderMembers(); closeM('m-member');
 }
-
+ 
 function submitCreateAcct() {
   var fn=document.getElementById('ac-fn').value.trim(), ln=document.getElementById('ac-ln').value.trim();
   var email=document.getElementById('ac-email').value.trim();
@@ -1645,7 +1645,7 @@ function submitCreateAcct() {
     '<div class="temp-box-hint">Communiquez ces identifiants au membre.</div></div>';
   document.getElementById('ac-footer').innerHTML='<button class="btn-primary" data-close="m-create-acct">Fermer</button>';
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  NOTIFICATIONS
 // ═══════════════════════════════════════════════════
@@ -1665,7 +1665,7 @@ function renderNotifications() {
   if(!list)return;
   list.innerHTML=items.length?items.map(function(it){return '<div class="notif-item"><div class="notif-dot" style="background:'+it.color+'"></div><div>'+it.text+'</div></div>';}).join(''):'<div class="notif-empty">Aucune notification</div>';
 }
-
+ 
 // ═══════════════════════════════════════════════════
 //  INITIALISATION & EVENEMENTS
 // ═══════════════════════════════════════════════════
@@ -1678,21 +1678,21 @@ function openChangePwd() {
   if (err) { err.textContent = ''; err.style.color = '#C0392B'; }
   openM('m-change-pwd');
 }
-
+ 
 function changePassword() {
   var current = document.getElementById('pwd-current').value;
   var newPwd   = document.getElementById('pwd-new').value;
   var confirm  = document.getElementById('pwd-confirm').value;
   var errEl    = document.getElementById('pwd-error');
   errEl.textContent = '';
-
+ 
   // Trouver le compte courant
   var acctIdx = -1;
   for (var i = 0; i < accounts.length; i++) {
     if (accounts[i].username === curUser.username) { acctIdx = i; break; }
   }
   if (acctIdx < 0) { errEl.textContent = 'Compte introuvable.'; return; }
-
+ 
   var acct = accounts[acctIdx];
   if (current !== (acct.password || 'membre1234')) {
     errEl.textContent = 'Mot de passe actuel incorrect.'; return;
@@ -1703,13 +1703,13 @@ function changePassword() {
   if (newPwd !== confirm) {
     errEl.textContent = 'Les mots de passe ne correspondent pas.'; return;
   }
-
+ 
   // Mettre a jour en local et dans Sheets
   accounts[acctIdx].password = newPwd;
   gsPost('updateAccount', Object.assign({index: acctIdx}, accounts[acctIdx])).then(function() {
     showBanner(!DEMO_MODE);
   });
-
+ 
   // Feedback
   document.getElementById('pwd-error').style.color = '#2E7D32';
   errEl.textContent = 'Mot de passe modifie avec succes !';
@@ -1719,9 +1719,9 @@ function changePassword() {
     document.getElementById(id).value = '';
   });
 }
-
+ 
 window.addEventListener('DOMContentLoaded', function() {
-
+ 
   // Charger les comptes depuis Sheets AVANT le login
   // pour que les membres puissent se connecter
   gsGet('getAccounts').then(function(data) {
@@ -1734,28 +1734,28 @@ window.addEventListener('DOMContentLoaded', function() {
       if (!hasAdmin) accounts.unshift(adminAcct);
     }
   });
-
-
-
+ 
+ 
+ 
   // Login
   document.getElementById('btn-login').addEventListener('click', doLogin);
   document.getElementById('li-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
   document.getElementById('btn-logout').addEventListener('click', doLogout);
-
+ 
   // Sidebar mobile
   document.getElementById('mob-menu-btn').addEventListener('click', toggleSidebar);
   document.getElementById('sb-overlay').addEventListener('click', closeSidebar);
-
+ 
   // Modals : fermeture sur backdrop et boutons data-close
   document.querySelectorAll('.modal-backdrop').forEach(function(m){
     m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('open'); });
   });
-
+ 
   // Fermeture generique via data-close
   document.body.addEventListener('click', function(e) {
     var closeId = e.target.getAttribute('data-close') || (e.target.closest('[data-close]') && e.target.closest('[data-close]').getAttribute('data-close'));
     if (closeId) { closeM(closeId); return; }
-
+ 
     // Bouton soumettre mot de passe
     if (e.target.id === 'btn-submit-pwd') { changePassword(); return; }
     // Bouton ouvrir changement mot de passe
@@ -1771,58 +1771,58 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     // Copier mot de passe
     if (e.target.getAttribute('data-copy')) { navigator.clipboard.writeText(e.target.getAttribute('data-copy')); return; }
-
+ 
     // Notif toggle
     if (e.target.id==='notif-btn'||e.target.closest('#notif-btn')) { document.getElementById('notif-panel').classList.toggle('open'); return; }
     if (e.target.id==='notif-close') { closeM('notif-panel'); return; }
     var panel=document.getElementById('notif-panel');
     if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&!document.getElementById('notif-btn').contains(e.target)) panel.classList.remove('open');
-
+ 
     // Carte reco -> modifier
     var editBtn = e.target.closest('.reco-edit-btn');
     if (editBtn) { openEditReco(parseInt(editBtn.getAttribute('data-idx'))); return; }
-
+ 
     // Carte membre -> ouvrir
     var memberCard = e.target.closest('.member-card');
     if (memberCard) { openMbr(parseInt(memberCard.getAttribute('data-idx'))); return; }
-
+ 
     // Carte reunion -> detail
     var mtgCard = e.target.closest('.mtg-card');
     if (mtgCard) { try{ openMtgDetail(JSON.parse(mtgCard.getAttribute('data-mtg'))); }catch(ex){} return; }
-
+ 
     // Cal evt reunion
     var calEvt = e.target.closest('.cal-evt:not(.cal-evt-guest)');
     if (calEvt && calEvt.getAttribute('data-mtg')) { try{ e.stopPropagation(); openMtgDetail(JSON.parse(calEvt.getAttribute('data-mtg'))); }catch(ex){} return; }
-
+ 
     // Supprimer reunion
     var delMtg = e.target.getAttribute('data-del-mtg');
     if (delMtg) { if(!confirm('Supprimer cette reunion ?')) return; try{ var m=JSON.parse(decodeURIComponent(delMtg)); var idx=meetings.findIndex(function(x){return x.title===m.title&&x.date===m.date;}); if(idx>=0){gsPost('deleteMeeting',{index:idx});meetings.splice(idx,1);} }catch(ex){} closeM('m-mtg-detail'); renderCal(); renderMtgList(); updateDashboard(); return; }
-
+ 
     // Modifier invité
     var editGuest = e.target.getAttribute('data-edit-guest');
     if (editGuest!==null&&editGuest!==undefined) { openGuestModal(parseInt(editGuest)); return; }
-
+ 
     // Supprimer invité
     var delGuest = e.target.getAttribute('data-del-guest');
     if (delGuest!==null&&delGuest!==undefined) { if(!confirm('Supprimer cet invite ?'))return; var i=parseInt(delGuest); gsPost('deleteGuest',{index:i}); guests.splice(i,1); renderGuests(); updateDashboard(); return; }
-
+ 
     // Modifier compte admin
     var editAcct = e.target.getAttribute('data-edit-acct');
     if (editAcct!==null&&editAcct!==undefined) { openEditMember(parseInt(editAcct)); return; }
-
+ 
     // Sauvegarder membre
     var saveMbr = e.target.getAttribute('data-save-member');
     if (saveMbr!==null&&saveMbr!==undefined) { saveMember(parseInt(saveMbr)); return; }
-
+ 
     // Activer compte
     var activateAcct = e.target.getAttribute('data-activate-acct');
     if (activateAcct!==null&&activateAcct!==undefined) { var i=parseInt(activateAcct); accounts[i].status='active'; gsPost('updateAccountStatus',{index:i,status:'active'}); renderAccounts(); return; }
-
+ 
     // Supprimer compte
     var delAcct = e.target.getAttribute('data-del-acct');
     if (delAcct!==null&&delAcct!==undefined) { if(!confirm('Supprimer ce compte ?'))return; var i=parseInt(delAcct); gsPost('deleteAccount',{index:i}); accounts.splice(i,1); renderAccounts(); return; }
   });
-
+ 
   // Boutons topbar
   document.getElementById('btn-new-reco').addEventListener('click', openRecoModal);
   document.getElementById('btn-add-reco2').addEventListener('click', openRecoModal);
@@ -1841,7 +1841,7 @@ window.addEventListener('DOMContentLoaded', function() {
     openM('m-create-acct');
     document.getElementById('btn-submit-acct').addEventListener('click', submitCreateAcct);
   });
-
+ 
   // Recherches
   document.getElementById('search-recos').addEventListener('input', function(){
     var q=this.value.toLowerCase();
@@ -1865,12 +1865,12 @@ window.addEventListener('DOMContentLoaded', function() {
     openM('m-change-pwd');
   });
   // btn-submit-pwd géré via délégation dans body click
-
+ 
   document.getElementById('search-guests').addEventListener('input', function(){
     var q=this.value.toLowerCase();
     renderGuests(guests.filter(function(g){return(g.name+''+g.company+''+g.invitedBy).toLowerCase().includes(q);}));
   });
-
+ 
   // Init calendrier
   renderCal();
   document.getElementById('search-members').addEventListener('input', function(){
@@ -1880,21 +1880,21 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('filter-sector').addEventListener('change', function(){
     renderMembers(this.value?members.filter(function(m){return m.sector===this.value;},this):members);
   });
-
+ 
   document.getElementById('search-guests').addEventListener('input', function(){
     var q=this.value.toLowerCase();
     renderGuests(guests.filter(function(g){return(g.name+''+g.company+''+g.invitedBy).toLowerCase().includes(q);}));
   });
-
+ 
   // Init calendrier
   renderCal();
 });
-
-
+ 
+ 
 </script>
-
-
-
+ 
+ 
+ 
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
