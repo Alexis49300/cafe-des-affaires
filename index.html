@@ -394,7 +394,7 @@ textarea.form-control{resize:none;height:80px;}
         <div class="user-av" id="sb-av">AD</div>
         <div class="user-info"><div class="user-name" id="sb-name">Admin</div><div class="user-role" id="sb-role">Administrateur</div></div>
       </div>
-      <button id="btn-change-pwd" class="btn-logout">
+      <button id="btn-change-pwd" class="btn-logout" onclick="openChangePwd()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Changer mon mot de passe
       </button>
@@ -737,7 +737,7 @@ textarea.form-control{resize:none;height:80px;}
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" data-close="m-change-pwd">Annuler</button>
-      <button class="btn-primary" id="btn-submit-pwd">
+      <button class="btn-primary" id="btn-submit-pwd" onclick="changePassword()">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
         Enregistrer
       </button>
@@ -1671,6 +1671,15 @@ function renderNotifications() {
 //  INITIALISATION & EVENEMENTS
 // ═══════════════════════════════════════════════════
 /* -- CHANGEMENT MOT DE PASSE -- */
+function openChangePwd() {
+  ['pwd-current','pwd-new','pwd-confirm'].forEach(function(id) {
+    var e = document.getElementById(id); if (e) e.value = '';
+  });
+  var err = document.getElementById('pwd-error');
+  if (err) { err.textContent = ''; err.style.color = '#C0392B'; }
+  openM('m-change-pwd');
+}
+
 function changePassword() {
   var current = document.getElementById('pwd-current').value;
   var newPwd   = document.getElementById('pwd-new').value;
