@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Le Café des Affaires</title>
-<meta name="theme-color" content="#3D2008">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Cafe des Affaires">
-<link rel="manifest" id="pwa-manifest">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%233D2008'/><circle cx='50' cy='50' r='35' fill='none' stroke='%23C8901A' stroke-width='4'/><circle cx='50' cy='50' r='20' fill='%23C8901A'/></svg>">
+<rect width='100' height='100' fill='%233D2008'/><circle cx='50' cy='50' r='35' fill='none' stroke='%23C8901A' stroke-width='4'/><circle cx='50' cy='50' r='20' fill='%23C8901A'/></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<meta name="theme-color" content="#3D2008">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cafe Affaires">
 <style>
 :root{--brown:#9B5E1E;--brown-dark:#6B3F10;--brown-deep:#3D2008;--gold:#C8901A;--gold-light:#E8B84B;--gold-pale:#F5E6C8;--cream:#FDF8F2;--cream-dark:#F5EDE0;--white:#FFFFFF;--text-primary:#2C1A08;--text-secondary:#7A5230;--text-muted:#B08A6A;--border:rgba(155,94,30,0.15);--border-strong:rgba(155,94,30,0.3);--shadow:0 2px 16px rgba(61,32,8,0.08);--shadow-md:0 4px 24px rgba(61,32,8,0.12);}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -1737,62 +1736,6 @@ window.addEventListener('DOMContentLoaded', function() {
   });
 
 
-  // ── PWA : Installation ──
-  var deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    var btn = document.getElementById('btn-install');
-    if (btn) btn.style.display = 'flex';
-  });
-  window.addEventListener('appinstalled', function() {
-    deferredPrompt = null;
-    var btn = document.getElementById('btn-install');
-    if (btn) btn.style.display = 'none';
-  });
-  var installBtn = document.getElementById('btn-install');
-  if (installBtn) {
-    installBtn.addEventListener('click', function() {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function() { deferredPrompt = null; });
-    });
-  }
-
-  // Enregistrer le Service Worker pour PWA
-  if ('serviceWorker' in navigator) {
-    var swCode = [
-      'var CACHE = \'cda-v1\';',
-      'var ASSETS = [\'/\'];',
-      'self.addEventListener(\'install\', function(e) {',
-      '  e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }));',
-      '});',
-      'self.addEventListener(\'fetch\', function(e) {',
-      '  e.respondWith(caches.match(e.request).then(function(r){ return r || fetch(e.request); }));',
-      '});'
-    ].join('\n');
-    var swBlob = new Blob([swCode], {type: 'application/javascript'});
-    var swUrl = URL.createObjectURL(swBlob);
-    navigator.serviceWorker.register(swUrl).catch(function(){});
-  }
-
-  // Injecter le manifest PWA dynamiquement
-  var manifest = {
-    name: 'Le Cafe des Affaires',
-    short_name: 'Cafe Affaires',
-    description: 'Espace membres du Cafe des Affaires',
-    start_url: '/',
-    display: 'standalone',
-    background_color: '#3D2008',
-    theme_color: '#3D2008',
-    icons: [
-      { src: 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 192 192\'><rect width=\'192\' height=\'192\' fill=\'%233D2008\'/><circle cx=\'96\' cy=\'96\' r=\'70\' fill=\'none\' stroke=\'%23C8901A\' stroke-width=\'8\'/><circle cx=\'96\' cy=\'96\' r=\'40\' fill=\'%23C8901A\'/></svg>', sizes: '192x192', type: 'image/svg+xml' },
-      { src: 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\'><rect width=\'512\' height=\'512\' fill=\'%233D2008\'/><circle cx=\'256\' cy=\'256\' r=\'180\' fill=\'none\' stroke=\'%23C8901A\' stroke-width=\'20\'/><circle cx=\'256\' cy=\'256\' r=\'100\' fill=\'%23C8901A\'/></svg>', sizes: '512x512', type: 'image/svg+xml' }
-    ]
-  };
-  var blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  var manifestUrl = URL.createObjectURL(blob);
-  document.getElementById('pwa-manifest').href = manifestUrl;
 
   // Login
   document.getElementById('btn-login').addEventListener('click', doLogin);
@@ -1820,6 +1763,11 @@ window.addEventListener('DOMContentLoaded', function() {
       ['pwd-current','pwd-new','pwd-confirm'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
       var errEl = document.getElementById('pwd-error'); if(errEl){errEl.textContent='';errEl.style.color='#C0392B';}
       openM('m-change-pwd'); return;
+    }
+    // Installer PWA
+    if (e.target.id === 'btn-install' || e.target.closest('#btn-install')) {
+      if (window.deferredPrompt) { window.deferredPrompt.prompt(); }
+      return;
     }
     // Copier mot de passe
     if (e.target.getAttribute('data-copy')) { navigator.clipboard.writeText(e.target.getAttribute('data-copy')); return; }
@@ -1946,5 +1894,23 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    var sw = "self.addEventListener('fetch',function(e){e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});";
+    var blob = new Blob([sw], {type:'text/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob));
+  });
+}
+// Bouton installation PWA
+window.deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  window.deferredPrompt = e;
+  var btn = document.getElementById('btn-install');
+  if (btn) btn.style.display = 'flex';
+});
+</script>
 </body>
 </html>
