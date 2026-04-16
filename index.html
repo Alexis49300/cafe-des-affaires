@@ -706,12 +706,17 @@ textarea.form-control{resize:none;height:80px;}
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Poste</label><input class="form-control" id="em-role" value=""></div>
+        <div class="form-group"><label class="form-label">Poste</label><input type="text" class="form-control" id="ac-role"></div>
+        <div class="form-group"><label class="form-label">Tel</label><input type="text" class="form-control" id="ac-tel"></div>
       </div>
+      <div class="form-group"><label class="form-label">Role dans l app</label>
+        <select class="form-control" id="ac-approle"><option value="member">Membre</option><option value="admin">Administrateur</option></select>
+      </div>
+      <div id="ac-result"></div>
     </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
-      <button class="btn-secondary" data-close="m-member">Annuler</button>
-      <button class="btn-primary" data-save-member="0">Enregistrer</button>
+    <div class="modal-footer" id="ac-footer">
+      <button class="btn-secondary" data-close="m-create-acct">Annuler</button>
+      <button class="btn-primary" id="btn-submit-acct" onclick="submitCreateAcct()">Creer le compte</button>
     </div>
   </div>
 </div>
@@ -1848,11 +1853,9 @@ function changePassword() {
   document.getElementById('btn-add-guest').addEventListener('click', function(){ openGuestModal(); });
   document.getElementById('btn-submit-guest').addEventListener('click', submitGuest);
   document.getElementById('btn-create-acct').addEventListener('click', function(){
-    document.getElementById('ac-result').innerHTML='';
-    document.getElementById('ac-footer').innerHTML='<button class="btn-secondary" data-close="m-create-acct">Annuler</button><button class="btn-primary" id="btn-submit-acct">Creer le compte</button>';
+    var res=document.getElementById('ac-result'); if(res) res.innerHTML='';
     ['ac-fn','ac-ln','ac-email','ac-co','ac-role','ac-tel'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
     openM('m-create-acct');
-    document.getElementById('btn-submit-acct').addEventListener('click', submitCreateAcct);
   });
 
   // Recherches
