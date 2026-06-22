@@ -956,7 +956,7 @@ function applyLogin() {
     if (e) e.style.display = isAdmin ? '' : 'none';
   });
   var btnMtg = document.getElementById('btn-add-mtg');
-  if (btnMtg) btnMtg.style.display = isAdmin ? '' : 'none';
+  if (btnMtg) btnMtg.style.display = '';
 
   loadAllData();
 }
@@ -1299,9 +1299,7 @@ function renderCal() {
       ev.title = 'Invite par ' + g.invitedBy;
       d.appendChild(ev);
     });
-    if (curUser && curUser.role==='admin') {
-      (function(dateStr){ d.addEventListener('click', function(){ document.getElementById('mt-date').value=dateStr; openM('m-mtg'); }); })(ds);
-    }
+    (function(dateStr){ d.addEventListener('click', function(){ document.getElementById('mt-date').value=dateStr; openM('m-mtg'); }); })(ds);
     grid.appendChild(d);
   }
   var tot = off+dim, rem = (7-tot%7)%7;
@@ -1385,7 +1383,7 @@ function openMtgDetail(m) {
     (m.capacity?'<div class="info-row"><span class="info-key">Capacite</span><span class="info-val">'+m.capacity+' personnes</span></div>':'')+
     (m.notes?'<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.6">'+m.notes+'</div>':'')+
     (m.address?'<a href="https://maps.google.com/?q='+encodeURIComponent(m.address)+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>':'')+
-    (isAdmin?'<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>':'');
+    '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>';
   openM('m-mtg-detail');
 }
 
