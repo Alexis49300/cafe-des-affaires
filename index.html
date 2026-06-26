@@ -187,6 +187,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-p
 .tb-regular{background:#FFF8E7;color:#B8860B;}
 .tb-special{background:#E3F0FF;color:#1565C0;}
 .tb-agm{background:#EAF5E9;color:#2E7D32;}
+.tb-resto{background:#FCE4E4;color:#B83232;}
 
 /* MEMBRES */
 .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
@@ -637,7 +638,7 @@ textarea.form-control{resize:none;height:80px;}
 
 <div class="modal-backdrop" id="m-mtg">
   <div class="modal-box">
-    <div class="modal-head"><span class="modal-head-title">Planifier une reunion</span><button class="modal-close" data-close="m-mtg">x</button></div>
+    <div class="modal-head"><span class="modal-head-title" id="mtg-modal-title">Planifier une reunion</span><button class="modal-close" data-close="m-mtg">x</button></div>
     <div class="modal-body">
       <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-control" id="mt-title" placeholder="Petit-dejeuner mensuel"></div>
       <div class="form-row">
@@ -648,9 +649,15 @@ textarea.form-control{resize:none;height:80px;}
       <div class="form-group"><label class="form-label">Adresse</label><input type="text" class="form-control" id="mt-addr" placeholder="14 rue Lenepveu, 49000 Angers"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Type</label>
-          <select class="form-control" id="mt-type"><option value="regular">Petit-dejeuner</option><option value="special">Reunion speciale</option><option value="agm">Assemblee Generale</option></select>
+          <select class="form-control" id="mt-type"><option value="presentation">Presentation</option><option value="visite">Visite d'entreprise</option><option value="formation">Formation</option><option value="resto">Resto</option></select>
         </div>
         <div class="form-group"><label class="form-label">Capacite</label><input type="number" class="form-control" id="mt-cap" placeholder="20" min="1"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:13px;font-weight:500;color:var(--text-primary);">
+          <input type="checkbox" id="mt-guests-open" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer;" checked>
+          Ouverte a l invitation d invites
+        </label>
       </div>
       <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="mt-notes"></textarea></div>
     </div>
@@ -775,8 +782,8 @@ var PAL = [
 ];
 var MON = ['Jan','Fev','Mar','Avr','Mai','Jun','Jul','Aou','Sep','Oct','Nov','Dec'];
 var MONF = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
-var TL = {regular:'Petit-dejeuner',special:'Reunion speciale',agm:'Assemblee Generale'};
-var TC = {regular:'tb-regular',special:'tb-special',agm:'tb-agm'};
+var TL = {presentation:'Presentation',visite:'Visite d\'entreprise',formation:'Formation',resto:'Resto'};
+var TC = {presentation:'tb-regular',visite:'tb-special',formation:'tb-agm',resto:'tb-resto'};
 var SL = {new:'Nouveau',progress:'En cours',done:'Realise'};
 var SC = {new:'st-new',progress:'st-prog',done:'st-done'};
 var COLORS_DONUT = ['#C8901A','#9B5E1E','#E8B84B','#D4956A','#BFA090','#5E2E8B','#2E7D32','#1565C0','#C0392B','#888'];
@@ -789,7 +796,8 @@ var accounts = [
 ];
 var guests   = [];
 var curUser  = null;
-var calY = 2026, calM = 3;
+var _today = new Date();
+var calY = _today.getFullYear(), calM = _today.getMonth();
 var selectedYear = new Date().getFullYear();
 var donutChart = null;
 
@@ -1381,9 +1389,10 @@ function openMtgDetail(m) {
     '<div class="info-row"><span class="info-key">Lieu</span><span class="info-val">'+(m.place||'--')+'</span></div>'+
     (m.address?'<div class="info-row"><span class="info-key">Adresse</span><span class="info-val" style="font-size:12px">'+m.address+'</span></div>':'')+
     (m.capacity?'<div class="info-row"><span class="info-key">Capacite</span><span class="info-val">'+m.capacity+' personnes</span></div>':'')+
+    '<div class="info-row"><span class="info-key">Invites</span><span class="info-val">'+(m.guestsOpen!=='non'?'Ouverte aux invites':'Reservee aux membres')+'</span></div>'+
     (m.notes?'<div style="margin-top:16px;background:var(--cream);border-radius:10px;padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.6">'+m.notes+'</div>':'')+
     (m.address?'<a href="https://maps.google.com/?q='+encodeURIComponent(m.address)+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;color:#1565C0;font-weight:500;text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Voir sur Google Maps</a>':'')+
-    '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end"><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>';
+    '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px"><button class="btn-sm" data-edit-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Modifier</button><button class="btn-sm danger" data-del-mtg="'+encodeURIComponent(JSON.stringify(m))+'">Supprimer</button></div>';
   openM('m-mtg-detail');
 }
 
@@ -1392,11 +1401,46 @@ function submitMtg() {
   var date  = document.getElementById('mt-date').value;
   var place = document.getElementById('mt-place').value.trim();
   if (!title||!date||!place) { alert('Titre, date et lieu sont requis.'); return; }
-  var obj = {title:title,date:date,time:document.getElementById('mt-time').value,place:place,address:document.getElementById('mt-addr').value.trim(),type:document.getElementById('mt-type').value,capacity:document.getElementById('mt-cap').value||'',notes:document.getElementById('mt-notes').value.trim()};
-  meetings.push(obj);
-  gsPost('addMeeting', obj).then(function(){ showBanner(!DEMO_MODE); });
+  var obj = {
+    title:title, date:date, time:document.getElementById('mt-time').value, place:place,
+    address:document.getElementById('mt-addr').value.trim(),
+    type:document.getElementById('mt-type').value,
+    capacity:document.getElementById('mt-cap').value||'',
+    guestsOpen: document.getElementById('mt-guests-open').checked ? 'oui' : 'non',
+    notes:document.getElementById('mt-notes').value.trim()
+  };
+  var modal = document.getElementById('m-mtg');
+  var editIdx = modal.getAttribute('data-edit-idx');
+  if (editIdx !== null && editIdx !== undefined && editIdx !== '') {
+    var i = parseInt(editIdx);
+    meetings[i] = obj;
+    gsPost('updateMeeting', Object.assign({index:i}, obj)).then(function(){ showBanner(!DEMO_MODE); });
+    modal.removeAttribute('data-edit-idx');
+  } else {
+    meetings.push(obj);
+    gsPost('addMeeting', obj).then(function(){ showBanner(!DEMO_MODE); });
+  }
   ['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  document.getElementById('mt-guests-open').checked = true;
+  document.getElementById('mtg-modal-title').textContent = 'Planifier une reunion';
   closeM('m-mtg'); renderCal(); renderMtgList(); updateDashboard();
+}
+
+function openEditMtg(m) {
+  var idx = meetings.findIndex(function(x){ return x.title===m.title && x.date===m.date && x.time===m.time; });
+  document.getElementById('mt-title').value = m.title || '';
+  document.getElementById('mt-date').value  = toISO(m.date) || m.date || '';
+  document.getElementById('mt-time').value  = m.time || '08:00';
+  document.getElementById('mt-place').value = m.place || '';
+  document.getElementById('mt-addr').value  = m.address || '';
+  document.getElementById('mt-type').value  = m.type || 'presentation';
+  document.getElementById('mt-cap').value   = m.capacity || '';
+  document.getElementById('mt-guests-open').checked = (m.guestsOpen !== 'non');
+  document.getElementById('mt-notes').value = m.notes || '';
+  document.getElementById('mtg-modal-title').textContent = 'Modifier la reunion';
+  document.getElementById('m-mtg').setAttribute('data-edit-idx', idx);
+  closeM('m-mtg-detail');
+  openM('m-mtg');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1811,6 +1855,9 @@ function changePassword() {
     if (calEvt && calEvt.getAttribute('data-mtg')) { try{ e.stopPropagation(); openMtgDetail(JSON.parse(calEvt.getAttribute('data-mtg'))); }catch(ex){} return; }
 
     // Supprimer reunion
+    var editMtg = e.target.getAttribute('data-edit-mtg');
+    if (editMtg) { try{ var m=JSON.parse(decodeURIComponent(editMtg)); openEditMtg(m); }catch(ex){} return; }
+
     var delMtg = e.target.getAttribute('data-del-mtg');
     if (delMtg) { if(!confirm('Supprimer cette reunion ?')) return; try{ var m=JSON.parse(decodeURIComponent(delMtg)); var idx=meetings.findIndex(function(x){return x.title===m.title&&x.date===m.date;}); if(idx>=0){gsPost('deleteMeeting',{index:idx});meetings.splice(idx,1);} }catch(ex){} closeM('m-mtg-detail'); renderCal(); renderMtgList(); updateDashboard(); return; }
 
@@ -1844,7 +1891,14 @@ function changePassword() {
   document.getElementById('btn-add-reco2').addEventListener('click', openRecoModal);
   document.getElementById('btn-submit-reco').addEventListener('click', submitReco);
   document.getElementById('btn-save-reco').addEventListener('click', saveEditReco);
-  document.getElementById('btn-add-mtg').addEventListener('click', function(){ openM('m-mtg'); });
+  document.getElementById('btn-add-mtg').addEventListener('click', function(){
+    document.getElementById('m-mtg').removeAttribute('data-edit-idx');
+    ['mt-title','mt-date','mt-addr','mt-cap','mt-notes'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+    document.getElementById('mt-time').value = '08:00';
+    document.getElementById('mt-guests-open').checked = true;
+    document.getElementById('mtg-modal-title').textContent = 'Planifier une reunion';
+    openM('m-mtg');
+  });
   document.getElementById('btn-submit-mtg').addEventListener('click', submitMtg);
   document.getElementById('btn-prev-month').addEventListener('click', function(){ changeMonth(-1); });
   document.getElementById('btn-next-month').addEventListener('click', function(){ changeMonth(1); });
